@@ -1,528 +1,325 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.5">
-  <style type="text/css">
-    p.p1 {margin: 8.0px 0.0px 0.0px 0.0px; text-align: right; font: 15.0px '.SF NS'; color: #000000; color: rgba(0, 0, 0, 0.85); background-color: #000000; background-color: rgba(0, 0, 0, 0)}
-    p.p2 {margin: 8.0px 0.0px 0.0px 0.0px; text-align: right; font: 15.0px '.SF NS'; color: #000000; color: rgba(0, 0, 0, 0.85); background-color: #000000; background-color: rgba(0, 0, 0, 0); min-height: 18.0px}
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>صندوق مساعدة الحالات الطارئة</title>
+    
+    <!-- تحميل خط تجوال من Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- تحميل Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- تخصيص إعدادات Tailwind لتشمل الخط المخصص وألوان محددة -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#001f54',
+                        secondary: '#003b8e',
+                        accent: '#d4a84f',
+                        gold: '#c89b3c'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f0f4f8;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
 </head>
-<body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="ar" dir="rtl"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="description" content="منصة خيرية لعرض بيانات المتبرعين للحالات الطارئة - بحث وتكريم العطاء" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;صندوق مساعدة الحالات الطارئة | سجل العطاء&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>* {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-sizing: border-box;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(145deg, #f5f3ef 0%, #e9e6df 100%);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>min-height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 28px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: 'Segoe UI', 'Tajawal', 'Cairo', system-ui, -apple-system, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>/* الحاوية الرئيسية */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.emergency-card {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 980px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #ffffff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 44px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 28px 48px -18px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.08);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: transform 0.2s ease;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid rgba(200, 155, 60, 0.4);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>/* الهيدر - زخرفي وعاطفي */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.hero-section {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(135deg, #002642 0%, #0f3f5c 100%);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 42px 28px 38px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-bottom: 6px solid #e4b363;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.hero-section::before {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>content: "⚕️";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>right: 28px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 28px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 48px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0.3;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.hero-section::after {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>content: "🤝";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>left: 28px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>bottom: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 44px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0.25;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.hero-section h1 {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 2.4rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing: -0.5px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 800;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(135deg, #fff, #ffecb3);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background-clip: text;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>-webkit-background-clip: text;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: transparent;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-shadow: 0 2px 5px rgba(0,0,0,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.hero-section p {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.2rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #f7e3af;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.total-stats {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: rgba(255, 255, 255, 0.12);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 80px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px 24px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: inline-flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 24px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>backdrop-filter: blur(4px);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.total-stats span {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.4rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 800;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #ffdf8c;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>/* المحتوى الأساسي */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.main-content {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 38px 32px 42px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #ffffff;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>/* شريط البحث أنيق */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.search-shamsiya {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 32px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #fefaf2;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 16px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 56px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid #eeddbb;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.search-shamsiya label {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.25rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #1f4e6e;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.search-shamsiya label i {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.8rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.input-group {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-wrap: wrap;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.input-group input {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex: 1;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 18px 22px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 2px solid #e2cd9c;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 58px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.05rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>outline: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.25s;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.input-group input:focus {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-color: #c98f2e;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 0 0 4px rgba(201, 143, 46, 0.2);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.input-group button {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(95deg, #1f5e7e, #0e3e58);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 0 32px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 58px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 6px 12px -8px rgba(0,0,0,0.3);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.input-group button:hover {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(95deg, #227c9c, #125073);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: scale(0.97);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 3px 8px rgba(0,0,0,0.2);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>/* بطاقة النتيجة المبهرة */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.result-card {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(115deg, #fefcf7 0%, #fdf9f0 100%);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 32px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-right: 7px solid #e4b363;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 28px 28px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.result-title {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.7rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 800;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #2c5a7a;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-bottom: 2px dashed #e9d7b4;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding-bottom: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.donor-name-highlight {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #eef3fc;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 6px 18px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 48px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.3rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #004070;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 800;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: inline-block;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 10px 0 6px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.donation-note {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #fef1df;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 18px 22px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.05rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>line-height: 1.55;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #6a3e03;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-right: 5px solid #dba13a;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: inset 0 1px 3px #0001, 0 3px 8px rgba(0,0,0,0.02);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.no-result {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 28px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #b1622c;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.2rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.default-message {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #8b7a64;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.04rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-wrap: wrap;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>/* فوتر مع دعاء */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.footer-bless {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #0b2b3b;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #eedbba;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 22px 16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-top: 1px solid #e4b36360;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing: 0.5px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.small-count {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #e8b86b20;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 8px 14px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.85rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #cca15c;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>@media (max-width: 680px) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.hero-section h1 {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>font-size: 1.7rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.main-content {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>padding: 24px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.input-group {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.input-group button {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>padding: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.result-title {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>font-size: 1.3rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;div class="emergency-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="hero-section"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;🏥 صندوق مساعدة الحالات الطارئة&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;معاً نُطفئ النار، ونُعيد البسمة للأسر المتضررة&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="total-stats"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">      </span>📋 إجمالي المتبرعين المسجلين: &lt;span id="totalDonorsCount"&gt;0&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="main-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="search-shamsiya"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt; 🔍 البحث باسم المتبرع أو المحسن&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="input-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="text" id="searchNameInput" placeholder="مثال: مصطفى الشجاع<span class="Apple-converted-space">  </span>أو<span class="Apple-converted-space">  </span>نضال الغزالي ..." autocomplete="off"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="searchBtn"&gt; ✨ بحث ✨&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="result-card" id="resultCard"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="result-title"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">        </span>📌 نتيجة التبرع</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="dynamicResultArea"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="default-message"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">          </span>🌙 أدخل اسم المتبرع لتظهر مساهمته العظيمة 🌙</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="small-count"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">      </span>💎 أكثر من 70 متبرعًا سجلوا عطاءهم | كل التبرعات موثقة تقديراً للخير</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="footer-bless"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>اللهم اجعل ما قدموه نوراً في قبورهم وزيادة في ميزان حسناتهم 🤍🕊️</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// -------------------------------------------------------------</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">  </span>// بيانات المتبرعين (كاملة كما وردت مع كافة التفاصيل)</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// -------------------------------------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const donors = [</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "مصطفى الشجاع", note: "تبرع بمبلغ 200 دولار ✅ + 36 ألف يمني لمدة 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "أحمد بن أحمد الشجاع", note: "تبرع بمبلغ 200 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "نضال أحمد الشجاع", note: "تبرع بمبلغ 100 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "مفيد الغزالي", note: "تبرع بمبلغ 100 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "بدر الشجاع وإخوانه", note: "تبرع بمبلغ 75 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "محمد علي ناجي الشجاع", note: "تبرع بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "معاد الشجاع", note: "تبرع بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "رافع الشجاع", note: "تبرع بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "أشرف الشجاع", note: "تبرع بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "فاعلة خير", note: "تبرعت بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "نبيل الشجاع", note: "تبرع بمبلغ 50 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "علي عبده مسعد", note: "تبرع بمبلغ 50 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "تمام علي الشجاع", note: "تبرع بمبلغ 50 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "زكريا حزام الشجاع", note: "تبرع بمبلغ 50 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عبد الملك نبيل الشجاع", note: "تبرع بمبلغ 50 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عزيز محمد عبد الله", note: "تبرع بمبلغ 25 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عمار مطهر الشجاع", note: "تبرع بمبلغ 25 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "همدان أحمد الشجاع", note: "تبرع بمبلغ 25 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "مجيد علي ناجي الشجاع", note: "تبرع بمبلغ 25 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عبد الوهاب أحمد الشجاع", note: "تبرع بمبلغ 25 دولار." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "الأمير مصطفى الشجاع", note: "تبرع بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "الأميرة مصطفى الشجاع", note: "تبرعت بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "السلطانة مصطفى الشجاع", note: "تبرعت بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "المصطفى مصطفى الشجاع", note: "تبرع بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "الخليفة مصطفى الشجاع", note: "تبرع بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "سامي خالد الشجاع", note: "تبرع بمبلغ 200 دولار سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "محمد ناجي الشجاع", note: "تبرع بمبلغ 100 ريال سعودي ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "نايف الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "ماجد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عبدالعزيز عزيز الشجاع", note: "تبرع بمبلغ 50 ألف سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "معمر علي بن علي", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "محمد السمه", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "طاهر خشخش", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "علي خشخش", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "غانم خشخش", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "محمد أحمد مسعد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عمرو مسعد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "أحمد صالح خشخش", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عمار محمد أحمد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "هارون محمد أحمد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي إلى روح عمه عمر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "نجم الدين علي الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عزيز ناجي الشجاع", note: "تبرع بمبلغ 25 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عدنان صالح الشجاع", note: "تبرع بمبلغ 25 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عبد ناجي الشجاع", note: "تبرع بمبلغ 25 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "فاعل خير عن أمه من طرف محمد ناجي", note: "تبرع بمبلغ 25 ريال سعودي، رحمها الله." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "محمد عبد ناجي الشجاع", note: "تبرع بمبلغ 25 ريال سعودي." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "إلى روح عمر أحمد خشخش", note: "تبرع بمبلغ 300 ريال سعودي سنوياً ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "محمد ناجي الشجاع - روح والدته مسعدة", note: "تبرع بمبلغ 300 ريال سعودي سنوياً ✅ مدفوع 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "معاذ محمد عبد الشجاع", note: "تبرع بمبلغ 300 ريال سعودي سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "شايف محمد عبده الشجاع", note: "تبرع بمبلغ 50 ريال سعودي شهرياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عبد المجيد ناجي الشجاع", note: "تبرع بمبلغ 300 ريال سعودي سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "خالد علي خشخش", note: "تبرع بمبلغ 500 ريال سعودي سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "الدكتور محمد الشجاع", note: "تبرع بمبلغ 120 ألف يمني سنوياً ✅ مدفوع 115 دولار لمدة 6 أشهر." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "مهيوب محمد عبدالله الشجاع", note: "تبرع بمبلغ 120 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "خالد الشجاع", note: "تبرع بمبلغ 60 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "فيصل الشجاع", note: "تبرع بمبلغ 60 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "ياسر الشجاع", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "يوسف مهيوب", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "ناصر محمد صالح الشجاع", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عبد الرحمن علي الشجاع", note: "تبرع بمبلغ 40 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "فايز أحمد العمامي", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "حميد عبد علي صالح", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "نعمان أحمد الغزالي", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "محمد عبد الغزالي", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عز الدين عبد الغزالي", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عارف عبدالله الحجواني", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "صديق صالح إسماعيل", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عبد السلام الشجاع", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "أسعد علي ناجي الشجاع", note: "تبرع بمبلغ 10 آلاف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "موسى علي الشجاع", note: "تبرع بمبلغ 5000 ريال يمني شهرياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "عبد اللطيف أحمد الشجاع", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "لطف عبد أحمد الشجاع", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "محمد حزام العمامي", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{ name: "علي محمد أحمد محسن", note: "تبرع بمبلغ 36 ألف يمني سنوياً." }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>];</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">  </span>// تحديث عدد المتبرعين في الهيدر</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function updateTotalDonors() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const totalSpan = document.getElementById("totalDonorsCount");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (totalSpan) totalSpan.innerText = donors.length;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">  </span>// دالة البحث الذكية: بحث غير حساس لحالة الأحرف، وتطابق للاسم بتضمن (includes)</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function searchDonorByName(searchTerm) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (!searchTerm || searchTerm.trim() === "") return null;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const term = searchTerm.trim().toLowerCase();</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>// البحث عن أول متبرع يحتوي الاسم على النص المدخل (مرن)</p>
-<p class="p1"><span class="Apple-converted-space">    </span>return donors.find(donor =&gt; donor.name.toLowerCase().includes(term));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">  </span>// دالة عرض النتيجة بشكل جذاب وأنيق</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function renderSearchResult(searchTerm) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const resultArea = document.getElementById("dynamicResultArea");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (!resultArea) return;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (!searchTerm || searchTerm.trim() === "") {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>resultArea.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="default-message"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">          </span>🌙 أدخل اسم المتبرع لتظهر مساهمته العظيمة 🌙&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span style="font-size:0.85rem; margin-top:10px;"&gt;مثال: مصطفى الشجاع ، نضال أحمد الشجاع ، فاعلة خير&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const matchedDonor = searchDonorByName(searchTerm);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (matchedDonor) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>resultArea.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="margin-bottom: 12px;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="donor-name-highlight"&gt;✨ ${matchedDonor.name} ✨&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="donation-note"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>🎁 &lt;strong&gt;تفاصيل العطاء:&lt;/strong&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>${matchedDonor.note}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="margin-top: 20px; font-size:0.9rem; color:#b97f2e; border-top:1px dashed #eedbaa; padding-top:12px;"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">          </span>🤲 جزاهم الله عن المحتاجين خير الجزاء</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>resultArea.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="no-result"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">          </span>😔 لا يوجد متبرع بهذا الاسم: "&lt;strong&gt;${escapeHtml(searchTerm.trim())}&lt;/strong&gt;"&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span style="font-size:0.9rem;"&gt;تأكد من الاسم أو ابحث باسم آخر من قائمة العطاء.&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="margin-top: 18px; background:#fff1e0; border-radius:28px; padding:10px; font-size:0.85rem;"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">            </span>💡 أسماء مميزة: مصطفى الشجاع ، نضال أحمد الشجاع ، فاعلة خير ، الدكتور محمد الشجاع</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">  </span>// دالة بسيطة لتجنب XSS</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function escapeHtml(str) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (!str) return '';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>return str.replace(/[&amp;&lt;&gt;]/g, function(m) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (m === '&amp;') return '&amp;amp;';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (m === '&lt;') return '&amp;lt;';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (m === '&gt;') return '&amp;gt;';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return m;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">  </span>// معالج البحث من الزر</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function performSearch() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const inputElement = document.getElementById("searchNameInput");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const query = inputElement.value;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>renderSearchResult(query);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">  </span>// البحث الفوري عند الضغط على Enter</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function handleKeyPress(event) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (event.key === "Enter") {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>event.preventDefault();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>performSearch();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">  </span>// إضافة بعض التألق: عند تحميل الصفحة نعرض إحصائيات ونتيجة ترحيبية</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function initSite() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>updateTotalDonors();</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>// ربط الأحداث</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const searchBtn = document.getElementById("searchBtn");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const searchInput = document.getElementById("searchNameInput");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (searchBtn) searchBtn.addEventListener("click", performSearch);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (searchInput) searchInput.addEventListener("keypress", handleKeyPress);</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">    </span>// عرض إكرامي أولي (رسالة ترحيب)</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const resultArea = document.getElementById("dynamicResultArea");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (resultArea) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>resultArea.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="default-message"&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">          </span>🤍 أكثر من ${donors.length} متبرع كريم سجلوا عطاءهم ..&lt;br&gt;</p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">          </span>ابحث عن اسمك أو اسم من تحب لترى عظيم أثره.</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p dir="rtl" class="p1"><span class="Apple-converted-space">  </span>// بدء تشغيل الموقع بعد تحميل DOM</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.addEventListener("DOMContentLoaded", initSite);</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+<body class="min-h-screen flex justify-center items-center p-4 sm:p-6 md:p-10">
+
+    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col">
+        
+        <!-- الهيدر -->
+        <header class="bg-gradient-to-r from-primary to-secondary text-white relative overflow-hidden py-12 px-6 text-center shadow-md border-b-4 border-gold">
+            <!-- زخرفة خلفية -->
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-5 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-accent opacity-10 rounded-full blur-2xl"></div>
+            
+            <div class="relative z-10 flex flex-col items-center justify-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-accent mb-2 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow-lg">صندوق مساعدة الحالات الطارئة</h1>
+                <p class="text-accent text-lg md:text-xl font-medium mt-2 drop-shadow">معاً نخفف الألم ونرسم الأمل</p>
+            </div>
+        </header>
+
+        <!-- المحتوى -->
+        <main class="flex-grow p-6 md:p-10">
+            
+            <!-- قسم البحث -->
+            <div class="mb-8 bg-gray-50 p-6 rounded-2xl border border-gray-100 shadow-inner">
+                <label for="searchInput" class="block mb-3 text-lg md:text-xl font-bold text-primary">البحث باسم المتبرع</label>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="w-full pl-4 pr-12 py-4 rounded-xl border-2 border-gray-200 focus:border-accent focus:ring-4 focus:ring-accent/20 text-gray-700 text-lg transition-all outline-none shadow-sm"
+                            placeholder="اكتب اسم المتبرع كاملاً هنا..."
+                            onkeypress="handleKeyPress(event)"
+                        >
+                    </div>
+                    <button 
+                        onclick="searchDonor()" 
+                        class="bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-blue-700 text-white font-bold text-lg py-4 px-10 rounded-xl shadow-lg transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-secondary/30 active:translate-y-0 flex justify-center items-center gap-2">
+                        <span>بحث</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- قسم النتائج -->
+            <div class="bg-white rounded-2xl border-2 border-dashed border-accent/60 p-6 md:p-8 min-h-[250px]">
+                <div class="flex items-center gap-3 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <h3 class="text-2xl font-bold text-primary">نتائج البحث</h3>
+                </div>
+
+                <!-- حاوية النتائج الديناميكية -->
+                <div id="resultsContainer" class="text-center text-gray-500 py-10 flex flex-col items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16l2.879-2.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="text-lg">قم بكتابة اسم المتبرع في حقل البحث لإظهار البيانات.</p>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- الفوتر -->
+        <footer class="bg-slate-50 border-t border-gray-200 p-6 text-center">
+            <p class="text-primary font-bold text-lg flex items-center justify-center gap-2">
+                اللهم اجعل ما قدموه في ميزان حسناتهم 
+                <span class="text-red-500 animate-pulse">🤍</span>
+            </p>
+            <!-- إضافة حقوق التصميم -->
+            <div class="mt-4 pt-4 border-t border-gray-200 inline-block">
+                <p class="text-sm text-gray-600 font-medium">
+                    تم التصميم بواسطة <span class="text-secondary font-extrabold text-base">عمرو مسعد الشجاع</span>
+                </p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // بيانات المتبرعين
+        const donors = [
+            { name: "مصطفى الشجاع", note: "تبرع بمبلغ 200 دولار ✅ يمني لمدة 6 أشهر." },
+            { name: "أحمد بن أحمد الشجاع", note: "تبرع بمبلغ 200 دولار." },
+            { name: "نضال أحمد الشجاع", note: "تبرع بمبلغ 100 دولار." },
+            { name: "مفيد الغزالي", note: "تبرع بمبلغ 100 دولار." },
+            { name: "بدر الشجاع وإخوانه", note: "تبرع بمبلغ 75 دولار." },
+            { name: "محمد علي ناجي الشجاع", note: "تبرع بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },
+            { name: "معاد الشجاع", note: "تبرع بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },
+            { name: "رافع الشجاع", note: "تبرع بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },
+            { name: "أشرف الشجاع", note: "تبرع بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },
+            { name: "فاعلة خير", note: "تبرعت بمبلغ 50 دولار ✅ مدفوع 6 أشهر." },
+            { name: "نبيل الشجاع", note: "تبرع بمبلغ 50 دولار." },
+            { name: "علي عبده مسعد", note: "تبرع بمبلغ 50 دولار." },
+            { name: "تمام علي الشجاع", note: "تبرع بمبلغ 50 دولار." },
+            { name: "زكريا حزام الشجاع", note: "تبرع بمبلغ 50 دولار." },
+            { name: "عبد الملك نبيل الشجاع", note: "تبرع بمبلغ 50 دولار." },
+            { name: "عزيز محمد عبد الله", note: "تبرع بمبلغ 25 دولار." },
+            { name: "عمار مطهر الشجاع", note: "تبرع بمبلغ 25 دولار." },
+            { name: "همدان أحمد الشجاع", note: "تبرع بمبلغ 25 دولار." },
+            { name: "مجيد علي ناجي الشجاع", note: "تبرع بمبلغ 25 دولار." },
+            { name: "عبد الوهاب أحمد الشجاع", note: "تبرع بمبلغ 25 دولار." },
+            { name: "الأمير مصطفى الشجاع", note: "تبرع بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },
+            { name: "الأميرة مصطفى الشجاع", note: "تبرعت بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },
+            { name: "السلطانة مصطفى الشجاع", note: "تبرعت بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },
+            { name: "المصطفى مصطفى الشجاع", note: "تبرع بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },
+            { name: "الخليفة مصطفى الشجاع", note: "تبرع بمبلغ 20 دولار ✅ مدفوع 6 أشهر." },
+            { name: "سامي خالد الشجاع", note: "تبرع بمبلغ 200 دولار سنوياً." },
+            { name: "محمد ناجي الشجاع", note: "تبرع بمبلغ 100 ريال سعودي ✅ مدفوع 6 أشهر." },
+            { name: "نايف الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "ماجد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "عبدالعزيز عزيز الشجاع", note: "تبرع بمبلغ 50 ألف سنوياً." },
+            { name: "معمر علي بن علي", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "محمد السمه", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "طاهر خشخش", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "علي خشخش", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "غانم خشخش", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "محمد أحمد مسعد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "عمرو مسعد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "أحمد صالح خشخش", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "عمار محمد أحمد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "هارون محمد أحمد الشجاع", note: "تبرع بمبلغ 50 ريال سعودي إلى روح عمه عمر." },
+            { name: "نجم الدين علي الشجاع", note: "تبرع بمبلغ 50 ريال سعودي." },
+            { name: "عزيز ناجي الشجاع", note: "تبرع بمبلغ 25 ريال سعودي." },
+            { name: "عدنان صالح الشجاع", note: "تبرع بمبلغ 25 ريال سعودي." },
+            { name: "عبد ناجي الشجاع", note: "تبرع بمبلغ 25 ريال سعودي." },
+            { name: "فاعل خير عن أمه من طرف محمد ناجي", note: "تبرع بمبلغ 25 ريال سعودي، رحمها الله." },
+            { name: "محمد عبد ناجي الشجاع", note: "تبرع بمبلغ 25 ريال سعودي." },
+            { name: "إلى روح عمر أحمد خشخش", note: "تبرع بمبلغ 300 ريال سعودي سنوياً ✅ مدفوع 6 أشهر." },
+            { name: "محمد ناجي الشجاع - روح والدته مسعدة", note: "تبرع بمبلغ 300 ريال سعودي سنوياً ✅ مدفوع 6 أشهر." },
+            { name: "معاذ محمد عبد الشجاع", note: "تبرع بمبلغ 300 ريال سعودي سنوياً." },
+            { name: "شايف محمد عبده الشجاع", note: "تبرع بمبلغ 50 ريال سعودي شهرياً." },
+            { name: "عبد المجيد ناجي الشجاع", note: "تبرع بمبلغ 300 ريال سعودي سنوياً." },
+            { name: "خالد علي خشخش", note: "تبرع بمبلغ 500 ريال سعودي سنوياً." },
+            { name: "الدكتور محمد الشجاع", note: "تبرع بمبلغ 120 ألف يمني سنوياً ✅ مدفوع 115 دولار لمدة 6 أشهر." },
+            { name: "مهيوب محمد عبدالله الشجاع", note: "تبرع بمبلغ 120 ألف يمني سنوياً." },
+            { name: "خالد الشجاع", note: "تبرع بمبلغ 60 ألف يمني سنوياً." },
+            { name: "فيصل الشجاع", note: "تبرع بمبلغ 60 ألف يمني سنوياً." },
+            { name: "ياسر الشجاع", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },
+            { name: "يوسف مهيوب", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },
+            { name: "ناصر محمد صالح الشجاع", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },
+            { name: "عبد الرحمن علي الشجاع", note: "تبرع بمبلغ 40 ألف يمني سنوياً." },
+            { name: "فايز أحمد العمامي", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },
+            { name: "حميد عبد علي صالح", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },
+            { name: "نعمان أحمد الغزالي", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },
+            { name: "محمد عبد الغزالي", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },
+            { name: "عز الدين عبد الغزالي", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },
+            { name: "عارف عبدالله الحجواني", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },
+            { name: "صديق صالح إسماعيل", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },
+            { name: "عبد السلام الشجاع", note: "تبرع بمبلغ 36 ألف يمني سنوياً." },
+            { name: "أسعد علي ناجي الشجاع", note: "تبرع بمبلغ 10 آلاف يمني سنوياً." },
+            { name: "موسى علي الشجاع", note: "تبرع بمبلغ 5000 ريال يمني شهرياً." },
+            { name: "عبد اللطيف أحمد الشجاع", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },
+            { name: "لطف عبد أحمد الشجاع", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },
+            { name: "محمد حزام العمامي", note: "تبرع بمبلغ 50 ألف يمني سنوياً." },
+            { name: "علي محمد أحمد محسن", note: "تبرع بمبلغ 36 ألف يمني سنوياً." }
+        ];
+
+        
+        // دالة للتعامل مع الضغط على زر الإدخال (Enter)
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchDonor();
+            }
+        }
+
+        // دالة البحث والفلترة
+        function searchDonor() {
+            const input = document.getElementById("searchInput").value.trim();
+            const container = document.getElementById("resultsContainer");
+            
+            // تفريغ الحاوية وتجهيزها
+            container.innerHTML = '';
+            container.classList.remove("text-center", "py-10", "items-center", "flex-col");
+            container.classList.add("flex", "flex-col", "gap-4");
+
+            // حالة الحقل الفارغ
+            if (input === "") {
+                container.classList.add("text-center", "py-10", "items-center", "flex-col");
+                container.classList.remove("gap-4");
+                container.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-yellow-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <p class="text-lg font-semibold text-gray-700">يرجى كتابة اسم للبحث عنه.</p>
+                `;
+                return;
+            }
+
+            // البحث عن تطابق تام لاسم المتبرع وعدم إظهار الأسماء المشابهة
+            const matchingDonors = donors.filter(d => d.name === input);
+
+            if (matchingDonors.length > 0) {
+                // إضافة رسالة توضح عدد النتائج
+                const countMsg = document.createElement("p");
+                countMsg.className = "text-sm text-gray-500 mb-2 fade-in";
+                countMsg.innerText = `تم العثور على (${matchingDonors.length}) نتيجة مطابقة:`;
+                container.appendChild(countMsg);
+
+                // بناء بطاقة لكل نتيجة
+                matchingDonors.forEach((donor, index) => {
+                    // تحديد إذا كان المتبرع قد دفع بناءً على وجود علامة ✅ في الملاحظة
+                    const isPaid = donor.note.includes('✅');
+                    const noteColor = isPaid ? 'bg-green-50 border-green-500 text-green-800' : 'bg-amber-50 border-amber-500 text-amber-900';
+                    const iconColor = isPaid ? 'text-green-500' : 'text-amber-500';
+
+                    // إضافة الجمل التحفيزية
+                    const motivationalPhrase = isPaid 
+                        ? '<span class="block mt-2 text-green-700 font-bold text-sm">بارك الله في مالك وعيالك، شكراً لسرعة استجابتك وعطائك الطيب! 🌟</span>'
+                        : '<span class="block mt-2 text-amber-700 font-bold text-sm">ننتظر عطاءك الكريم بشوق.. مساهمتك ستصنع أملاً، بادر بالدفع لتعظيم الأجر! 🚀</span>';
+
+                    const card = document.createElement("div");
+                    card.className = `fade-in bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden`;
+                    // تأخير خفيف لكل بطاقة لتعطي تأثير ظهور متسلسل
+                    card.style.animationDelay = `${index * 0.05}s`;
+
+                    card.innerHTML = `
+                        <div class="absolute top-0 right-0 w-2 h-full ${isPaid ? 'bg-green-500' : 'bg-amber-500'}"></div>
+                        <h4 class="text-xl font-bold text-primary mb-3 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ${iconColor}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            ${donor.name}
+                        </h4>
+                        <div class="${noteColor} p-4 rounded-lg border-r-4 text-base font-medium flex items-start gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p>${donor.note}</p>
+                                ${motivationalPhrase}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } else {
+                // حالة عدم وجود نتائج
+                container.classList.add("text-center", "py-10", "items-center", "flex-col");
+                container.classList.remove("gap-4");
+                container.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="text-xl font-bold text-primary mb-2">عذراً، لا توجد نتائج!</p>
+                    <p class="text-gray-500">لم نتمكن من العثور على متبرع باسم "${input}". تأكد من صحة الإملاء وحاول مجدداً.</p>
+                `;
+            }
+        }
+    </script>
 </body>
 </html>
