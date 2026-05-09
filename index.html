@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- منع التكبير التلقائي عند الضغط على الحقول لضمان ثبات التصميم -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>صندوق مساعدة الحالات الطارئة</title>
     
     <!-- Tailwind CSS -->
@@ -30,6 +31,8 @@
             background-color: #f9fafb;
             -webkit-font-smoothing: antialiased;
             letter-spacing: -0.01em;
+            /* منع حركات السحب للتحديث في بعض المتصفحات للحفاظ على الثبات */
+            overscroll-behavior-y: contain;
         }
         
         .fade-in {
@@ -41,79 +44,85 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
         /* تحسين مظهر شريط التنبيه */
         .sticky-alert {
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         /* تصغير حجم الخطوط العامة */
-        h1 { font-size: 1.75rem !important; }
-        .stat-value { font-size: 1.5rem !important; }
-        .stat-label { font-size: 0.7rem !important; letter-spacing: 0.05em; }
+        h1 { font-size: 1.5rem !important; }
+        .stat-value { font-size: 1.25rem !important; }
+        .stat-label { font-size: 0.65rem !important; letter-spacing: 0.05em; }
+
+        /* لضمان عدم التكبير في الآيفون، يجب أن يكون حجم خط المدخلات 16px على الأقل برمجياً */
+        #searchInput {
+            font-size: 16px !important;
+            touch-action: manipulation;
+        }
+
+        /* إخفاء شريط التمرير العرضي تماماً */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 
 <body class="min-h-screen flex flex-col items-center">
 
-    <!-- شريط التنبيه العلوي - خط صغير واحترافي -->
+    <!-- شريط التنبيه العلوي - خط صغير جداً واحترافي -->
     <div class="sticky-alert w-full bg-red-600/95 text-white py-1.5 px-4 shadow-sm text-center">
-        <p class="text-[11px] md:text-xs font-light tracking-wide flex items-center justify-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <p class="text-[10px] md:text-xs font-light tracking-wide flex items-center justify-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             الرجاء الدفع قبل تاريخ 2026/6/1 تجنباً للإحراج
         </p>
     </div>
 
-    <div class="w-full max-w-3xl bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden flex flex-col my-6 md:my-8 mx-4">
+    <div class="w-full max-w-2xl bg-white rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden flex flex-col my-4 md:my-8 mx-4">
         
         <!-- Header - تصميم أنيق وبسيط -->
-        <header class="bg-primary text-white py-8 px-6 text-center relative">
+        <header class="bg-primary text-white py-6 px-6 text-center relative">
             <div class="relative z-10">
-                <h1 class="font-bold tracking-tight mb-1">صندوق مساعدة الحالات الطارئة</h1>
-                <p class="text-slate-400 text-xs font-medium uppercase tracking-[0.2em]">عطاؤكم يحيي الأمل</p>
+                <h1 class="font-bold tracking-tight mb-0.5">صندوق مساعدة الحالات الطارئة</h1>
+                <p class="text-slate-400 text-[10px] font-medium uppercase tracking-[0.2em]">عطاؤكم يحيي الأمل</p>
             </div>
-            <div class="absolute bottom-0 left-0 w-full h-[3px] bg-gold opacity-80"></div>
+            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gold opacity-60"></div>
         </header>
 
-        <!-- Stats - بطاقات أصغر وأكثر ترتيباً -->
-        <div class="grid grid-cols-3 gap-3 px-6 -mt-5 relative z-20">
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center">
-                <span class="stat-label text-slate-400 font-bold uppercase mb-1">الإجمالي</span>
+        <!-- Stats - بطاقات صغيرة ومرتبة جداً -->
+        <div class="grid grid-cols-3 gap-2 px-6 -mt-4 relative z-20">
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center">
+                <span class="stat-label text-slate-400 font-bold uppercase mb-0.5">المتعهدين</span>
                 <span id="totalDonors" class="stat-value font-bold text-primary">0</span>
             </div>
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center border-b-emerald-400 border-b-2">
-                <span class="stat-label text-emerald-500 font-bold uppercase mb-1">تم السداد</span>
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center border-b-emerald-400 border-b-2">
+                <span class="stat-label text-emerald-500 font-bold uppercase mb-0.5">تم السداد</span>
                 <span id="paidDonors" class="stat-value font-bold text-emerald-600">0</span>
             </div>
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center border-b-amber-400 border-b-2">
-                <span class="stat-label text-amber-500 font-bold uppercase mb-1">الانتظار</span>
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center border-b-amber-400 border-b-2">
+                <span class="stat-label text-amber-500 font-bold uppercase mb-0.5">الانتظار</span>
                 <span id="unpaidDonors" class="stat-value font-bold text-amber-600">0</span>
             </div>
         </div>
 
         <!-- البحث -->
-        <main class="p-6 md:p-10">
-            <div class="mb-8">
+        <main class="p-6">
+            <div class="mb-6">
                 <div class="flex gap-2">
                     <div class="relative flex-grow">
                         <input 
                             type="text" 
                             id="searchInput" 
-                            class="w-full pr-10 pl-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-primary focus:ring-0 text-sm transition-all outline-none placeholder:text-slate-400"
+                            inputmode="text"
+                            class="w-full pr-10 pl-4 py-2.5 bg-slate-50 rounded-lg border border-slate-200 focus:border-primary focus:ring-0 transition-all outline-none placeholder:text-slate-400"
                             placeholder="ابحث عن اسم المتبرع..."
                             onkeypress="handleKeyPress(event)"
                         >
-                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -121,31 +130,31 @@
                     </div>
                     <button 
                         onclick="searchDonor()" 
-                        class="bg-primary text-white text-xs font-bold py-3 px-6 rounded-xl hover:bg-slate-800 transition-colors shadow-sm">
+                        class="bg-primary text-white text-[11px] font-bold py-2.5 px-5 rounded-lg hover:bg-slate-800 transition-colors">
                         بـحث
                     </button>
                 </div>
-                <p class="mt-2 text-[10px] text-slate-400 mr-1 italic">أدخل الاسم كاملاً للحصول على أدق نتيجة.</p>
+                <p class="mt-2 text-[9px] text-slate-400 mr-1 italic text-center">أدخل الاسم كاملاً للحصول على النتيجة.</p>
             </div>
 
             <!-- حاوية النتائج -->
-            <div id="resultsContainer" class="min-h-[180px] flex items-center justify-center border border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-                <p class="text-xs font-medium text-slate-400">تظهر تفاصيل المتبرع هنا..</p>
+            <div id="resultsContainer" class="min-h-[140px] flex items-center justify-center border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+                <p class="text-[10px] font-medium text-slate-400">ستظهر النتائج هنا..</p>
             </div>
         </main>
 
-        <footer class="bg-white border-t border-slate-100 p-6">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                <p class="text-[11px] text-primary/70 font-serif italic">"وما تقدموا لأنفسكم من خير تجدوه عند الله"</p>
-                <div class="flex gap-4 items-center">
+        <footer class="bg-white border-t border-slate-100 p-4">
+            <div class="flex flex-row items-center justify-between">
+                <p class="text-[9px] text-primary/60 font-serif italic">"تجدوه عند الله"</p>
+                <div class="flex gap-3 items-center">
                     <div class="text-right">
-                        <p class="text-[9px] text-slate-400 font-bold uppercase mb-0.5">تطوير</p>
-                        <p class="text-xs font-bold text-primary">عمرو الشجاع</p>
+                        <p class="text-[8px] text-slate-400 font-bold uppercase">تطوير</p>
+                        <p class="text-[10px] font-bold text-primary">عمرو الشجاع</p>
                     </div>
-                    <div class="w-px h-6 bg-slate-200"></div>
+                    <div class="w-px h-4 bg-slate-200"></div>
                     <div class="text-right">
-                        <p class="text-[9px] text-slate-400 font-bold uppercase mb-0.5">إشراف</p>
-                        <p class="text-xs font-bold text-primary">مصطفى الشجاع</p>
+                        <p class="text-[8px] text-slate-400 font-bold uppercase">إشراف</p>
+                        <p class="text-[10px] font-bold text-primary">مصطفى الشجاع</p>
                     </div>
                 </div>
             </div>
@@ -272,20 +281,19 @@
             if (result) {
                 const isPaid = result.note.includes('✅');
                 container.innerHTML = `
-                    <div class="fade-in w-full p-6 text-center">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">معلومات المتبرع</span>
-                        <h4 class="text-xl font-bold text-primary mb-3">${result.name}</h4>
-                        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm inline-block min-w-[200px]">
-                            <p class="text-xs text-slate-600 font-medium">${result.note}</p>
+                    <div class="fade-in w-full p-4 text-center">
+                        <h4 class="text-sm font-bold text-primary mb-2">${result.name}</h4>
+                        <div class="bg-white rounded-lg p-3 border border-slate-100 shadow-sm inline-block">
+                            <p class="text-[10px] text-slate-600 font-medium">${result.note}</p>
                         </div>
                         
                         ${!isPaid ? `
-                            <div class="mt-5 text-[11px] font-bold text-red-600 py-2 px-4 bg-red-50 rounded-lg inline-flex items-center gap-2 border border-red-100">
-                                <span class="w-1.5 h-1.5 bg-red-600 rounded-full animate-ping"></span>
+                            <div class="mt-4 text-[9px] font-bold text-red-600 py-1.5 px-3 bg-red-50 rounded-md inline-flex items-center gap-2 border border-red-100">
+                                <span class="w-1 h-1 bg-red-600 rounded-full animate-ping"></span>
                                 الرجاء الدفع قبل تاريخ 2026/6/1 تجنباً للإحراج
                             </div>
                         ` : `
-                            <div class="mt-5 text-[11px] font-bold text-emerald-600 py-2 px-4 bg-emerald-50 rounded-lg inline-flex items-center gap-2 border border-emerald-100">
+                            <div class="mt-4 text-[9px] font-bold text-emerald-600 py-1.5 px-3 bg-emerald-50 rounded-md inline-flex items-center gap-1 border border-emerald-100">
                                 نشكر عطاءكم المستمر ✓
                             </div>
                         `}
@@ -293,8 +301,8 @@
                 `;
             } else {
                 container.innerHTML = `
-                    <div class="fade-in text-center p-6">
-                        <p class="text-xs font-bold text-slate-400 italic">عذراً، لم يتم العثور على الاسم بدقة.</p>
+                    <div class="fade-in text-center p-4">
+                        <p class="text-[10px] font-bold text-slate-400 italic">الاسم غير موجود أو غير دقيق.</p>
                     </div>
                 `;
             }
