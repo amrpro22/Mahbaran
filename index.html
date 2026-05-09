@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>صندوق مساعدة الحالات الطارئة - بحث دقيق</title>
     
-    <!-- Google Fonts: Tajawal -->
+    <!-- Google Fonts: Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,7 +18,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Tajawal', 'sans-serif'],
+                        sans: ['Cairo', 'sans-serif'],
                     },
                     colors: {
                         primary: '#001f54',
@@ -32,7 +32,7 @@
 
     <style>
         body {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             background-color: #f8fafc;
             background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
             background-size: 30px 30px;
@@ -298,12 +298,15 @@
 
             const searchKey = normalizeArabic(inputVal);
             
+            // البحث عن الاسم
             const result = donors.find(d => normalizeArabic(d.name) === searchKey);
 
             container.innerHTML = '';
 
             if (result) {
+                // التحقق من حالة الدفع عبر وجود علامة ✅ في الملاحظة
                 const isPaid = result.note.includes('✅');
+                
                 container.innerHTML = `
                     <div class="fade-in p-8 rounded-3xl border-2 w-full max-w-2xl ${isPaid ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200'} shadow-lg flex flex-col items-center text-center">
                         <div class="${isPaid ? 'bg-emerald-500' : 'bg-amber-500'} text-white p-4 rounded-full mb-4 shadow-md">
@@ -313,10 +316,18 @@
                         </div>
                         <h4 class="text-3xl font-black text-primary mb-2">${result.name}</h4>
                         <div class="h-px w-20 bg-slate-300 my-4"></div>
-                        <p class="text-xl text-slate-700 leading-relaxed font-medium">${result.note}</p>
-                        ${isPaid ? 
-                            '<div class="mt-6 px-6 py-2 bg-emerald-500 text-white rounded-full font-bold">تم السداد بنجاح ✓</div>' : 
-                            '<div class="mt-6 px-6 py-2 bg-amber-500 text-white rounded-full font-bold">في انتظار السداد !</div>'}
+                        <p class="text-xl text-slate-700 leading-relaxed font-bold">${result.note}</p>
+                        
+                        <!-- إضافة عبارة المطالبة بالدفع في حال عدم السداد -->
+                        ${!isPaid ? `
+                            <div class="mt-6 p-4 bg-red-600 text-white rounded-2xl font-black text-lg shadow-xl border-2 border-white animate-bounce">
+                               الرجاء الدفع قبل تاريخ 2026/6/1 تجنباً للاحراج
+                            </div>
+                        ` : ''}
+
+                        <div class="mt-6 px-8 py-3 ${isPaid ? 'bg-emerald-500' : 'bg-amber-500'} text-white rounded-full font-black shadow-lg">
+                            ${isPaid ? 'تم السداد بنجاح ✓' : 'في انتظار السداد !'}
+                        </div>
                     </div>
                 `;
             } else {
@@ -327,8 +338,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                         </div>
-                        <p class="text-xl font-bold text-slate-600">لم يتم العثور على اسم مطابق لـ "${inputVal}"</p>
-                        <p class="text-slate-400 mt-2">يرجى كتابة الاسم الرباعي أو الكامل كما هو مسجل في الكشوفات.</p>
+                        <p class="text-xl font-black text-slate-600">لم يتم العثور على اسم مطابق لـ "${inputVal}"</p>
+                        <p class="text-slate-400 mt-2 font-bold">يرجى التأكد من كتابة الاسم كما هو في كشف المتعهدين.</p>
                     </div>
                 `;
             }
