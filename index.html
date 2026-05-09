@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>صندوق مساعدة الحالات الطارئة - بحث دقيق</title>
     
-    <!-- Google Fonts: Cairo -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -18,7 +13,8 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Cairo', 'sans-serif'],
+                        // استخدام خط SF Pro مع الاحتياطيات لمتصفحات آبل والمتصفحات الأخرى
+                        sans: ['-apple-system', 'SF Pro Text', 'SF Pro Display', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Cairo', 'sans-serif'],
                     },
                     colors: {
                         primary: '#001f54',
@@ -32,10 +28,11 @@
 
     <style>
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #f8fafc;
             background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
             background-size: 30px 30px;
+            -webkit-font-smoothing: antialiased;
         }
         
         .fade-in {
@@ -57,6 +54,12 @@
         input:not(:placeholder-shown) + .clear-btn {
             display: flex;
         }
+
+        /* تنسيق خاص للخط العريض في SF Pro ليعطي طابع آبل */
+        .font-sf-heavy {
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
     </style>
 </head>
 
@@ -68,8 +71,8 @@
         <header class="bg-gradient-to-br from-primary via-secondary to-blue-900 text-white relative overflow-hidden py-10 px-8 text-center border-b-[6px] border-gold">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
             <div class="relative z-10 flex flex-col items-center gap-2">
-                <h1 class="text-3xl md:text-5xl font-black tracking-tight drop-shadow-md">صندوق مساعدة الحالات الطارئة</h1>
-                <p class="text-gold/90 text-lg md:text-xl font-medium tracking-wide">عطاؤكم يحيي الأمل ويصنع الفرق</p>
+                <h1 class="text-3xl md:text-5xl font-sf-heavy tracking-tight drop-shadow-md">صندوق مساعدة الحالات الطارئة</h1>
+                <p class="text-gold/90 text-lg md:text-xl font-semibold tracking-wide">عطاؤكم يحيي الأمل ويصنع الفرق</p>
             </div>
         </header>
 
@@ -81,8 +84,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0" />
                     </svg>
                 </div>
-                <span class="text-slate-500 font-bold text-sm">إجمالي المتعهدين</span>
-                <span id="totalDonors" class="text-3xl font-black text-primary mt-1">0</span>
+                <span class="text-slate-500 font-bold text-sm uppercase tracking-wider">إجمالي المتعهدين</span>
+                <span id="totalDonors" class="text-3xl font-sf-heavy text-primary mt-1">0</span>
             </div>
 
             <div class="counter-card bg-white p-6 rounded-3xl shadow-xl border border-slate-100 flex flex-col items-center text-center">
@@ -91,8 +94,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <span class="text-emerald-600 font-bold text-sm">تم السداد</span>
-                <span id="paidDonors" class="text-3xl font-black text-emerald-600 mt-1">0</span>
+                <span class="text-emerald-600 font-bold text-sm uppercase tracking-wider">تم السداد</span>
+                <span id="paidDonors" class="text-3xl font-sf-heavy text-emerald-600 mt-1">0</span>
             </div>
 
             <div class="counter-card bg-white p-6 rounded-3xl shadow-xl border border-slate-100 flex flex-col items-center text-center">
@@ -101,8 +104,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <span class="text-amber-600 font-bold text-sm">قيد الانتظار</span>
-                <span id="unpaidDonors" class="text-3xl font-black text-amber-600 mt-1">0</span>
+                <span class="text-amber-600 font-bold text-sm uppercase tracking-wider">قيد الانتظار</span>
+                <span id="unpaidDonors" class="text-3xl font-sf-heavy text-amber-600 mt-1">0</span>
             </div>
         </div>
 
@@ -121,7 +124,7 @@
                             type="text" 
                             id="searchInput" 
                             autocomplete="off"
-                            class="w-full pl-12 pr-14 py-5 rounded-2xl border-2 border-slate-200 focus:border-gold focus:ring-8 focus:ring-gold/10 text-slate-700 text-xl transition-all outline-none shadow-sm placeholder:text-slate-400"
+                            class="w-full pl-12 pr-14 py-5 rounded-2xl border-2 border-slate-200 focus:border-gold focus:ring-8 focus:ring-gold/10 text-slate-700 text-xl transition-all outline-none shadow-sm placeholder:text-slate-400 font-semibold"
                             placeholder="اكتب الاسم الكامل للمتبرع..."
                             onkeypress="handleKeyPress(event)"
                         >
@@ -133,16 +136,16 @@
                     </div>
                     <button 
                         onclick="searchDonor()" 
-                        class="bg-primary hover:bg-secondary text-white font-black text-xl py-5 px-12 rounded-2xl shadow-lg transform hover:-translate-y-1 transition-all duration-300 active:scale-95">
+                        class="bg-primary hover:bg-secondary text-white font-sf-heavy text-xl py-5 px-12 rounded-2xl shadow-lg transform hover:-translate-y-1 transition-all duration-300 active:scale-95">
                         بـحـث
                     </button>
                 </div>
-                <p class="mt-3 text-xs text-slate-400 mr-2">* يجب كتابة الاسم كما هو مسجل تماماً لإظهار النتيجة.</p>
+                <p class="mt-3 text-xs text-slate-400 mr-2 font-medium">* يجب كتابة الاسم كما هو مسجل تماماً لإظهار النتيجة.</p>
             </div>
 
             <div id="mainResultsWrapper" class="bg-white rounded-3xl border-2 border-dashed border-slate-200 p-4 md:p-8 min-h-[250px] relative">
                 <div id="resultsContainer" class="flex flex-col items-center justify-center py-12 text-center text-slate-400">
-                    <p class="text-lg font-medium text-slate-500">نتائج البحث ستظهر هنا عند كتابة الاسم الصحيح.</p>
+                    <p class="text-lg font-semibold text-slate-500">نتائج البحث ستظهر هنا عند كتابة الاسم الصحيح.</p>
                 </div>
             </div>
 
@@ -150,17 +153,17 @@
 
         <footer class="bg-slate-50 border-t border-slate-200 p-8 text-center">
             <div class="mb-6">
-                <p class="text-primary font-black text-xl italic leading-relaxed">"وَمَا تُقَدِّمُوا لِأَنفُسِكُم مِّنْ خَيْرٍ تَجِدُوهُ عِندَ اللَّهِ"</p>
+                <p class="text-primary font-sf-heavy text-xl italic leading-relaxed">"وَمَا تُقَدِّمُوا لِأَنفُسِكُم مِّنْ خَيْرٍ تَجِدُوهُ عِندَ اللَّهِ"</p>
             </div>
             <div class="pt-6 border-t border-slate-200 flex flex-col md:flex-row items-center justify-center gap-6">
                 <div class="flex flex-col items-center">
                     <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">تصميم وتطوير</span>
-                    <span class="text-primary font-black text-lg">عمرو مسعد الشجاع</span>
+                    <span class="text-primary font-sf-heavy text-lg">عمرو مسعد الشجاع</span>
                 </div>
                 <div class="w-px h-8 bg-slate-200 hidden md:block"></div>
                 <div class="flex flex-col items-center">
                     <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">إشراف عام</span>
-                    <span class="text-primary font-black text-lg">مصطفى الشجاع</span>
+                    <span class="text-primary font-sf-heavy text-lg">مصطفى الشجاع</span>
                 </div>
             </div>
         </footer>
@@ -283,7 +286,7 @@
             const input = document.getElementById("searchInput");
             input.value = "";
             input.focus();
-            document.getElementById("resultsContainer").innerHTML = `<p class="text-lg font-medium text-slate-500">نتائج البحث ستظهر هنا عند كتابة الاسم الصحيح.</p>`;
+            document.getElementById("resultsContainer").innerHTML = `<p class="text-lg font-semibold text-slate-500">نتائج البحث ستظهر هنا عند كتابة الاسم الصحيح.</p>`;
         }
 
         function handleKeyPress(event) {
@@ -297,14 +300,11 @@
             if (inputVal === "") return;
 
             const searchKey = normalizeArabic(inputVal);
-            
-            // البحث عن الاسم
             const result = donors.find(d => normalizeArabic(d.name) === searchKey);
 
             container.innerHTML = '';
 
             if (result) {
-                // التحقق من حالة الدفع عبر وجود علامة ✅ في الملاحظة
                 const isPaid = result.note.includes('✅');
                 
                 container.innerHTML = `
@@ -314,18 +314,17 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
-                        <h4 class="text-3xl font-black text-primary mb-2">${result.name}</h4>
+                        <h4 class="text-3xl font-sf-heavy text-primary mb-2">${result.name}</h4>
                         <div class="h-px w-20 bg-slate-300 my-4"></div>
                         <p class="text-xl text-slate-700 leading-relaxed font-bold">${result.note}</p>
                         
-                        <!-- إضافة عبارة المطالبة بالدفع في حال عدم السداد -->
                         ${!isPaid ? `
-                            <div class="mt-6 p-4 bg-red-600 text-white rounded-2xl font-black text-lg shadow-xl border-2 border-white animate-bounce">
-                               الرجاء الدفع قبل تاريخ 2026/6/1 تجنباً للاحراج
+                            <div class="mt-6 p-5 bg-red-600 text-white rounded-2xl font-sf-heavy text-lg shadow-xl border-2 border-white animate-bounce">
+                                الرجاء الدفع قبل تاريخ 2026/6/1 تجنباً للاحراج
                             </div>
                         ` : ''}
 
-                        <div class="mt-6 px-8 py-3 ${isPaid ? 'bg-emerald-500' : 'bg-amber-500'} text-white rounded-full font-black shadow-lg">
+                        <div class="mt-6 px-10 py-3 ${isPaid ? 'bg-emerald-500' : 'bg-amber-500'} text-white rounded-full font-sf-heavy shadow-lg">
                             ${isPaid ? 'تم السداد بنجاح ✓' : 'في انتظار السداد !'}
                         </div>
                     </div>
@@ -338,8 +337,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                         </div>
-                        <p class="text-xl font-black text-slate-600">لم يتم العثور على اسم مطابق لـ "${inputVal}"</p>
-                        <p class="text-slate-400 mt-2 font-bold">يرجى التأكد من كتابة الاسم كما هو في كشف المتعهدين.</p>
+                        <p class="text-xl font-sf-heavy text-slate-600">لم يتم العثور على اسم مطابق لـ "${inputVal}"</p>
+                        <p class="text-slate-400 mt-2 font-semibold">يرجى التأكد من كتابة الاسم الكامل كما هو مسجل.</p>
                     </div>
                 `;
             }
