@@ -7,19 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>صندوق مساعدة الحالات الطارئة</title>
     
-    <!-- Tailwind CSS -->
+    <!-- تحميل مكتبة التنسيق -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- تحميل مكتبات Firebase بالنمط التقليدي (Compatibility Version) لضمان العمل على كل الهواتف -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Cairo', 'sans-serif'],
+                        sans: ['Segoe UI', 'Roboto', 'Cairo', 'sans-serif'],
                     },
                     colors: {
                         primary: '#001f54',
-                        secondary: '#003b8e',
                         gold: '#c89b3c',
                     }
                 }
@@ -31,114 +35,95 @@
         body {
             background-color: #f9fafb;
             -webkit-font-smoothing: antialiased;
-            letter-spacing: -0.01em;
-            overscroll-behavior-y: contain;
-            /* منع ظهور مشاكل في بعض متصفحات الجوال */
-            min-height: -webkit-fill-available;
+            min-height: 100vh;
         }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .sticky-alert { position: sticky; top: 0; z-index: 100; }
-        h1 { font-size: 1.5rem !important; }
-        .stat-value { font-size: 1.4rem !important; }
-        .stat-label { font-size: 0.65rem !important; letter-spacing: 0.02em; }
-        #searchInput { font-size: 16px !important; } /* تمنع عمل Zoom تلقائي في آيفون */
-        .progress-bar { height: 4px; border-radius: 2px; background: #e2e8f0; overflow: hidden; }
-        .progress-fill { height: 100%; transition: width 0.5s ease-in-out; }
+        #searchInput { font-size: 16px !important; border: 1px solid #e2e8f0; }
+        .progress-bar { height: 6px; border-radius: 3px; background: #f1f5f9; overflow: hidden; }
+        .progress-fill { height: 100%; transition: width 0.8s ease-in-out; }
     </style>
 </head>
 
-<body class="min-h-screen flex flex-col items-center">
+<body class="flex flex-col items-center">
 
-    <!-- Emergency Alert Bar -->
-    <div class="sticky-alert w-full bg-red-600/95 text-white py-1.5 px-4 shadow-sm text-center">
-        <p class="text-[10px] md:text-xs font-light tracking-wide flex items-center justify-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            الرجاء الدفع قبل تاريخ 2026/6/1 تجنباً للإحراج
-        </p>
+    <!-- شريط التنبيه العلوي -->
+    <div class="sticky-alert w-full bg-red-600 text-white py-2 px-4 shadow-md text-center text-xs font-bold">
+        الرجاء الدفع قبل تاريخ 2026/6/1 تجنباً للإحراج
     </div>
 
-    <div class="w-full max-w-2xl bg-white rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden flex flex-col my-4 md:my-8 mx-4">
+    <div class="w-full max-w-md bg-white shadow-xl flex flex-col min-h-screen md:min-h-0 md:my-8 md:rounded-3xl overflow-hidden border border-slate-100">
         
-        <!-- App Header -->
-        <header class="bg-primary text-white py-6 px-6 text-center relative">
-            <div class="relative z-10">
-                <h1 class="font-bold tracking-tight mb-0.5 text-white">صندوق مساعدة الحالات الطارئة</h1>
-                <p class="text-slate-400 text-[10px] font-medium uppercase tracking-[0.2em]">قرية محبران</p>
-            </div>
-            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gold opacity-60"></div>
+        <!-- الرأس -->
+        <header class="bg-primary text-white py-8 px-6 text-center">
+            <h1 class="font-bold text-xl mb-1">صندوق مساعدة الحالات الطارئة</h1>
+            <p class="text-slate-400 text-[10px] tracking-[0.2em] uppercase">قرية محبران</p>
         </header>
 
-        <!-- Statistics -->
-        <div class="grid grid-cols-3 gap-2 px-4 -mt-4 relative z-20">
-            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center">
-                <span class="stat-label text-slate-400 font-bold mb-0.5">إجمالي المشتركين</span>
-                <span id="statTotal" class="stat-value font-black text-primary">0</span>
+        <!-- الإحصائيات -->
+        <div class="grid grid-cols-3 gap-2 px-4 -mt-6">
+            <div class="bg-white p-3 rounded-2xl shadow-lg border border-slate-50 flex flex-col items-center">
+                <span class="text-[9px] text-slate-400 font-bold mb-1">المشتركين</span>
+                <span id="statTotal" class="text-lg font-black text-primary">0</span>
             </div>
-            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center">
-                <span class="stat-label text-emerald-500 font-bold mb-0.5">المسددين</span>
-                <span id="statPaid" class="stat-value font-black text-emerald-600">0</span>
+            <div class="bg-white p-3 rounded-2xl shadow-lg border border-slate-50 flex flex-col items-center">
+                <span class="text-[9px] text-emerald-500 font-bold mb-1">المسددين</span>
+                <span id="statPaid" class="text-lg font-black text-emerald-600">0</span>
             </div>
-            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center">
-                <span class="stat-label text-rose-400 font-bold mb-0.5">الانتظار</span>
-                <span id="statPending" class="stat-value font-black text-rose-600">0</span>
+            <div class="bg-white p-3 rounded-2xl shadow-lg border border-slate-50 flex flex-col items-center">
+                <span class="text-[9px] text-rose-400 font-bold mb-1">الانتظار</span>
+                <span id="statPending" class="text-lg font-black text-rose-600">0</span>
             </div>
         </div>
 
-        <main class="p-6">
-            <div class="mb-6">
-                <div class="flex gap-2">
-                    <div class="relative flex-grow">
-                        <input 
-                            type="text" 
-                            id="searchInput" 
-                            class="w-full pr-4 pl-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-primary focus:ring-0 transition-all outline-none placeholder:text-slate-400 text-sm"
-                            placeholder="اكتب الاسم الكامل للبحث..."
-                            autocomplete="off"
-                        >
-                    </div>
-                    <button 
-                        onclick="window.searchDonor()" 
-                        class="bg-primary text-white text-[11px] font-bold py-3 px-6 rounded-xl hover:bg-slate-800 transition-colors active:scale-95">
-                        بـحث
-                    </button>
-                </div>
+        <main class="p-6 flex-grow">
+            <!-- حقل البحث -->
+            <div class="flex gap-2 mb-8">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="flex-grow pr-4 py-4 bg-slate-50 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+                    placeholder="اكتب الاسم الكامل هنا..."
+                    autocomplete="off"
+                >
+                <button 
+                    onclick="searchDonor()" 
+                    class="bg-primary text-white px-6 rounded-2xl font-bold text-sm active:scale-95 transition-transform">
+                    بحث
+                </button>
             </div>
 
-            <div id="resultsContainer" class="min-h-[160px] flex items-center justify-center border border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-                <p id="initialMsg" class="text-[10px] font-medium text-slate-400">ستظهر النتائج هنا..</p>
-                <div id="loadingIndicator" class="hidden animate-pulse text-[10px] text-primary font-bold">جاري تحميل البيانات...</div>
+            <!-- منطقة النتائج -->
+            <div id="resultsContainer" class="min-h-[200px] flex flex-col items-center justify-center border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/30">
+                <div id="loadingIndicator" class="hidden flex flex-col items-center">
+                    <div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+                    <p class="text-[10px] text-primary font-bold">جاري تحميل البيانات...</p>
+                </div>
+                <p id="initialMsg" class="text-xs text-slate-400">النتائج ستظهر هنا عند البحث</p>
             </div>
         </main>
 
-        <footer class="bg-white border-t border-slate-100 p-6">
-            <div class="flex flex-col gap-4">
-                <div class="flex flex-wrap justify-center gap-6 md:justify-between items-start text-center md:text-right">
-                    <div class="flex flex-col items-center md:items-start">
-                        <p class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-1">إشراف</p>
-                        <p class="text-[11px] font-bold text-primary border-b-2 border-gold/40 pb-0.5">مصطفى الشجاع</p>
-                    </div>
-                    <div class="flex flex-col items-center md:items-start">
-                        <p class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-1">تدقيق مالي</p>
-                        <p class="text-[11px] font-bold text-primary">ياسر الشجاع</p>
-                    </div>
-                    <div class="flex flex-col items-center md:items-start">
-                        <p class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-1">تطوير</p>
-                        <p class="text-[11px] font-bold text-primary">عمرو مسعد الشجاع</p>
-                    </div>
+        <footer class="p-6 bg-slate-50/50 border-t border-slate-100">
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div>
+                    <p class="text-[8px] text-slate-400 font-bold mb-1">إشراف</p>
+                    <p class="text-[10px] font-bold text-primary">مصطفى الشجاع</p>
+                </div>
+                <div>
+                    <p class="text-[8px] text-slate-400 font-bold mb-1">تدقيق</p>
+                    <p class="text-[10px] font-bold text-primary">ياسر الشجاع</p>
+                </div>
+                <div>
+                    <p class="text-[8px] text-slate-400 font-bold mb-1">تطوير</p>
+                    <p class="text-[10px] font-bold text-primary">عمرو الشجاع</p>
                 </div>
             </div>
         </footer>
     </div>
 
-    <script type="module">
-        // استخدام إصدار محدد ومستقر من Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
+    <script>
+        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
             authDomain: "amr4admin.firebaseapp.com",
@@ -148,138 +133,123 @@
             appId: "1:177280788092:web:44f16c8f585a5b3e484bf9"
         };
 
-        // المحاولة والتقاط الأخطاء لمنع الشاشة الرمادية
-        try {
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const db = getFirestore(app);
-            const appId = "amr4admin";
-            const donorsCol = collection(db, 'artifacts', appId, 'public', 'data', 'donors');
+        // تهيئة التطبيق بالنمط التقليدي المتوافق مع كل الجوالات
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const appId = "amr4admin";
 
-            let donorsData = [];
+        let donorsData = [];
 
-            const parseDonorInfo = (d) => {
-                const note = d.note || "";
-                const totalMatch = note.match(/T:(\d+(\.\d+)?)/);
-                const paidMatch = note.match(/P:(\d+(\.\d+)?)/);
-                const durationMatch = note.match(/D:([a-z0-9]+)/);
-                
-                const total = totalMatch ? parseFloat(totalMatch[1]) : 0;
-                const paid = paidMatch ? parseFloat(paidMatch[1]) : 0;
-                const durationKey = durationMatch ? durationMatch[1] : 'none';
+        function parseDonorInfo(d) {
+            const note = d.note || "";
+            const total = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
+            const paid = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
+            const durationKey = (note.match(/D:([a-z0-9]+)/) || [0, 'none'])[1];
+            
+            let curr = 'sar';
+            if (note.toUpperCase().includes('C:USD')) curr = 'usd';
+            else if (note.toUpperCase().includes('C:YER')) curr = 'yer';
 
-                let curr = 'sar';
-                if (note.toUpperCase().includes('C:USD')) curr = 'usd';
-                else if (note.toUpperCase().includes('C:YER')) curr = 'yer';
+            const remaining = Math.max(0, total - paid);
+            const progress = total > 0 ? Math.min(100, (paid / total) * 100) : 0;
+            const isFull = total > 0 && paid >= total;
+            
+            const durationLabels = { '3m': '٣ أشهر', '6m': '٦ أشهر', '1y': 'سنة', 'none': 'دائم' };
+            let statusMessage = '';
+            let color = 'text-amber-600';
+            let isConsideredPaid = false;
 
-                const remaining = Math.max(0, total - paid);
-                const progress = total > 0 ? Math.min(100, (paid / total) * 100) : 0;
-                const isFull = total > 0 && paid >= total;
-                
-                const durationLabels = { '3m': '٣ أشهر', '6m': '٦ أشهر', '1y': 'سنة', 'none': '' };
+            if (isFull || durationKey === '1y') {
+                statusMessage = 'تم الدفع بنجاح ✓ نشكركم';
+                color = 'text-emerald-600';
+                isConsideredPaid = true;
+            } else if (durationKey === '3m') {
+                statusMessage = 'يتم استكمال السداد بتاريخ 2026/9/1';
+                isConsideredPaid = true;
+            } else if (durationKey === '6m') {
+                statusMessage = 'يتم استكمال السداد بتاريخ 2026/12/1';
+                isConsideredPaid = true;
+            } else {
+                statusMessage = 'الموعد النهائي للسداد 2026/6/1';
+                color = 'text-rose-500';
+            }
 
-                let statusMessage = '';
-                let statusColorClass = 'text-amber-600';
-                let isConsideredPaid = false;
-
-                if (isFull || durationKey === '1y') {
-                    statusMessage = 'تم الدفع بالكامل ✓ نشكر عطاءكم';
-                    statusColorClass = 'text-emerald-600';
-                    isConsideredPaid = true;
-                } else if (durationKey === '3m') {
-                    statusMessage = 'يتم استكمال السداد بتاريخ 2026/9/1';
-                    isConsideredPaid = true;
-                } else if (durationKey === '6m') {
-                    statusMessage = 'يتم استكمال السداد بتاريخ 2026/12/1';
-                    isConsideredPaid = true;
-                } else {
-                    statusMessage = 'جاري استكمال السداد.. الموعد النهائي 2026/6/1';
-                    statusColorClass = 'text-rose-500';
-                    isConsideredPaid = false;
-                }
-
-                return { total, paid, remaining, curr, progress, isFull, isConsideredPaid, statusMessage, statusColorClass, duration: durationLabels[durationKey] || '' };
-            };
-
-            window.searchDonor = () => {
-                const term = document.getElementById("searchInput").value.trim().toLowerCase();
-                const container = document.getElementById("resultsContainer");
-                
-                if (!term) {
-                    container.innerHTML = `<p class="text-[10px] font-medium text-slate-400">يرجى كتابة الاسم للبحث..</p>`;
-                    return;
-                }
-
-                const matches = donorsData.filter(d => (d.name || "").trim().toLowerCase() === term);
-
-                if (matches.length > 0) {
-                    let html = '<div class="fade-in w-full p-4 flex flex-col gap-6">';
-                    matches.forEach(m => {
-                        const info = parseDonorInfo(m);
-                        html += `
-                            <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm text-center">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-md">${info.duration || 'دائم'}</span>
-                                    <h4 class="font-bold text-primary text-sm">${m.name}</h4>
-                                    <span class="text-[10px] font-bold text-primary uppercase">${info.curr}</span>
-                                </div>
-                                <div class="flex justify-between text-[11px] mb-3 px-2">
-                                    <div class="flex flex-col">
-                                        <span class="text-slate-400 text-[9px]">المدفوع</span>
-                                        <span class="font-bold text-emerald-600">${info.paid.toLocaleString()}</span>
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <span class="text-slate-400 text-[9px]">المتبقي</span>
-                                        <span class="font-bold text-rose-500">${info.remaining.toLocaleString()}</span>
-                                    </div>
-                                </div>
-                                <div class="progress-bar mb-3">
-                                    <div class="progress-fill ${info.isFull ? 'bg-emerald-500' : 'bg-primary'}" style="width: ${info.progress}%"></div>
-                                </div>
-                                <p class="text-[10px] font-bold ${info.statusColorClass}">${info.statusMessage}</p>
-                            </div>`;
-                    });
-                    html += '</div>';
-                    container.innerHTML = html;
-                } else {
-                    container.innerHTML = `<p class="text-xs text-slate-400 text-center px-4">عذراً، لم يتم العثور على نتيجة مطابقة لهذا الاسم تماماً</p>`;
-                }
-            };
-
-            const updateStats = () => {
-                let paidCount = 0;
-                donorsData.forEach(d => {
-                    if (parseDonorInfo(d).isConsideredPaid) paidCount++;
-                });
-                document.getElementById('statTotal').innerText = donorsData.length;
-                document.getElementById('statPaid').innerText = paidCount;
-                document.getElementById('statPending').innerText = donorsData.length - paidCount;
-            };
-
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    document.getElementById('loadingIndicator').classList.remove('hidden');
-                    onSnapshot(donorsCol, (snap) => {
-                        donorsData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        updateStats();
-                        document.getElementById('loadingIndicator').classList.add('hidden');
-                        document.getElementById('initialMsg').classList.remove('hidden');
-                    }, (err) => {
-                        console.error("Snapshot Error:", err);
-                    });
-                } else {
-                    signInAnonymously(auth).catch(e => console.error("Auth Error:", e));
-                }
-            });
-
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') window.searchDonor();
-            });
-
-        } catch (error) {
-            console.error("Initialization Error:", error);
-            document.getElementById("resultsContainer").innerHTML = `<p class="text-xs text-red-500 p-4">حدث خطأ أثناء تحميل البيانات، يرجى تحديث الصفحة.</p>`;
+            return { total, paid, remaining, curr, progress, statusMessage, color, isConsideredPaid, duration: durationLabels[durationKey] };
         }
+
+        window.searchDonor = function() {
+            const term = document.getElementById("searchInput").value.trim().toLowerCase();
+            const container = document.getElementById("resultsContainer");
+            
+            if (!term) return;
+
+            const matches = donorsData.filter(d => (d.name || "").trim().toLowerCase() === term);
+
+            if (matches.length > 0) {
+                let html = '<div class="fade-in w-full p-4 space-y-4">';
+                matches.forEach(m => {
+                    const info = parseDonorInfo(m);
+                    html += `
+                        <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm text-center">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-[9px] font-bold bg-primary/5 text-primary px-3 py-1 rounded-full">${info.duration}</span>
+                                <h4 class="font-bold text-primary text-sm">${m.name}</h4>
+                                <span class="text-[9px] font-bold text-slate-300 uppercase">${info.curr}</span>
+                            </div>
+                            <div class="flex justify-between mb-4 px-2">
+                                <div class="text-right">
+                                    <p class="text-slate-400 text-[9px] mb-1">المدفوع</p>
+                                    <p class="font-black text-emerald-600 text-sm">${info.paid.toLocaleString()}</p>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-slate-400 text-[9px] mb-1">المتبقي</p>
+                                    <p class="font-black text-rose-500 text-sm">${info.remaining.toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div class="progress-bar mb-4">
+                                <div class="progress-fill ${info.paid >= info.total ? 'bg-emerald-500' : 'bg-primary'}" style="width: ${info.progress}%"></div>
+                            </div>
+                            <p class="text-[10px] font-bold ${info.color}">${info.statusMessage}</p>
+                        </div>`;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = `<p class="text-xs text-slate-400">لم يتم العثور على اسم مطابق تماماً</p>`;
+            }
+        };
+
+        // الدخول التلقائي وجلب البيانات
+        auth.signInAnonymously().then(() => {
+            document.getElementById('loadingIndicator').classList.remove('hidden');
+            document.getElementById('initialMsg').classList.add('hidden');
+
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('donors')
+            .onSnapshot((snap) => {
+                donorsData = snap.docs.map(doc => doc.data());
+                
+                let paid = 0;
+                donorsData.forEach(d => { if(parseDonorInfo(d).isConsideredPaid) paid++; });
+                
+                document.getElementById('statTotal').innerText = donorsData.length;
+                document.getElementById('statPaid').innerText = paid;
+                document.getElementById('statPending').innerText = donorsData.length - paid;
+                
+                document.getElementById('loadingIndicator').classList.add('hidden');
+                document.getElementById('initialMsg').classList.remove('hidden');
+            }, (err) => {
+                console.error("Firestore Error:", err);
+                document.getElementById('initialMsg').innerText = "خطأ في الاتصال بالقاعدة";
+            });
+        }).catch(err => {
+            console.error("Auth Error:", err);
+            document.getElementById('initialMsg').innerText = "خطأ في تسجيل الدخول";
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchDonor();
+        });
     </script>
 </body>
 </html>
