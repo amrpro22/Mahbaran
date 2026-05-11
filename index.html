@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -176,21 +177,26 @@
 
             let statusMessage = '';
             let statusColorClass = 'text-amber-600';
+            let isConsideredPaid = false;
 
             if (isFull || durationKey === '1y') {
                 statusMessage = 'تم الدفع بالكامل ✓ نشكر عطاءكم';
                 statusColorClass = 'text-emerald-600';
+                isConsideredPaid = true;
             } else if (durationKey === '3m') {
                 statusMessage = 'يتم استكمال السداد بتاريخ 2026/9/1';
+                isConsideredPaid = true; // نعتبره مسدد حالياً لأنه مشترك بنظام دفع مجدول
             } else if (durationKey === '6m') {
                 statusMessage = 'يتم استكمال السداد بتاريخ 2026/12/1';
+                isConsideredPaid = true; // نعتبره مسدد حالياً
             } else {
                 statusMessage = 'جاري استكمال السداد.. الموعد النهائي 2026/6/1';
                 statusColorClass = 'text-rose-500';
+                isConsideredPaid = false;
             }
 
             return { 
-                total, paid, remaining, curr, progress, isFull, 
+                total, paid, remaining, curr, progress, isFull, isConsideredPaid,
                 duration: durationLabels[durationKey] || '',
                 durationKey,
                 statusMessage,
@@ -207,7 +213,6 @@
                 return;
             }
 
-            // البحث عن تطابق تام للاسم فقط (تجاهل المسافات الزائدة)
             const matches = donorsData.filter(d => d.name.trim().toLowerCase() === term);
 
             if (matches.length > 0) {
@@ -257,7 +262,7 @@
 
             donorsData.forEach(d => {
                 const info = parseDonorInfo(d);
-                if (info.isFull) {
+                if (info.isConsideredPaid) {
                     paidCount++;
                 } else {
                     pendingCount++;
