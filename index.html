@@ -9,8 +9,10 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Supabase Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- مكتبات Firebase بنسخة التوافق لضمان العمل في بيئات الاتصال المختلفة -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
@@ -50,6 +52,7 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
             outline: none;
             font-size: 16px;
+            text-align: right;
         }
         .result-item {
             background: #fff;
@@ -75,7 +78,7 @@
 <body class="flex justify-center">
 
     <div class="app-card">
-        <!-- شريط التنبيه العلوي -->
+        <!-- شريط التنبيه -->
         <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold">
              ⚠️ يرجى تسديد الاشتراكات قبل تاريخ 2026/06/01
         </div>
@@ -83,10 +86,10 @@
         <!-- الهيدر -->
         <div class="header-gradient">
             <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
-            <p class="text-blue-200 text-[11px] font-semibold tracking-widest uppercase">قرية محبران - اليمن</p>
+            <p class="text-blue-200 text-[11px] font-semibold tracking-widest">قرية محبران</p>
         </div>
 
-        <!-- منطقة البحث -->
+        <!-- البحث -->
         <div class="search-container">
             <div class="relative group">
                 <input type="text" id="searchInput" class="search-input" placeholder="اكتب الاسم الكامل للبحث..." autocomplete="off">
@@ -99,24 +102,24 @@
         <!-- الإحصائيات -->
         <div class="grid grid-cols-3 gap-3 p-5 mt-4">
             <div class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100 shadow-sm">
-                <p class="text-[9px] text-slate-400 font-bold mb-1">المشتركين</p>
+                <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المشتركين</p>
                 <p id="statTotal" class="text-xl font-black text-[#001f54]">0</p>
             </div>
             <div class="bg-emerald-50 p-4 rounded-3xl text-center border border-emerald-100 shadow-sm">
-                <p class="text-[9px] text-emerald-500 font-bold mb-1">المسددين</p>
+                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">المسددين</p>
                 <p id="statPaid" class="text-xl font-black text-emerald-600">0</p>
             </div>
             <div class="bg-rose-50 p-4 rounded-3xl text-center border border-rose-100 shadow-sm">
-                <p class="text-[9px] text-rose-400 font-bold mb-1 uppercase text-xs">الانتظار</p>
+                <p class="text-[9px] text-rose-400 font-bold mb-1 uppercase">الانتظار</p>
                 <p id="statPending" class="text-xl font-black text-rose-600">0</p>
             </div>
         </div>
 
-        <!-- منطقة عرض المحتوى -->
+        <!-- المحتوى -->
         <div class="px-5 flex-grow pb-10">
             <div id="loadingStatus" class="text-center py-10">
                 <div class="spinner"></div>
-                <p id="loadingMsg" class="text-[10px] text-slate-400 mt-3 font-semibold">جاري جلب البيانات من السيرفر...</p>
+                <p class="text-[10px] text-slate-400 mt-3 font-semibold">جاري جلب البيانات من السيرفر...</p>
             </div>
 
             <div id="resultsWrapper" class="mt-4">
@@ -126,7 +129,7 @@
             </div>
         </div>
 
-        <!-- الفوتر -->
+        <!-- الفوتر المعتمد -->
         <footer class="bg-slate-50 border-t border-slate-100 px-6 py-8">
             <div class="grid grid-cols-1 gap-6 text-center">
                 <div class="flex flex-col items-center">
@@ -144,31 +147,34 @@
                         <h3 class="text-[11px] font-bold text-slate-700">ياسر الشجاع</h3>
                     </div>
                 </div>
-                <p id="connectionType" class="text-[8px] text-slate-300 mt-4 uppercase tracking-tighter">الحالة: غير متصل</p>
             </div>
         </footer>
     </div>
 
     <script>
-        // إعدادات Supabase
-        const SUPABASE_URL = "https://cdtzvslfiokmzissqnfgi.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkdHp2c2xmaW9rbXppc3FuZmdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1OTEzODMsImV4cCI6MjA5NDE2NzM4M30.l05IAIvC-Nyk4r0RlL_eF6HJER_ZmuGEravSInevCPs";
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // ⚠️ بيانات احتياطية تظهر في حال فشل الاتصال بالسيرفر
-        const FALLBACK_DATA = [
-            { name: "عمرو مسعد الشجاع", note: "T:1000 P:1000 D:1y" },
-            { name: "مصطفى الشجاع", note: "T:500 P:250 D:3m" },
-            { name: "ياسر الشجاع", note: "T:1000 P:1000 D:none" }
-        ];
+        const firebaseConfig = {
+            apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
+            authDomain: "amr4admin.firebaseapp.com",
+            projectId: "amr4admin",
+            storageBucket: "amr4admin.firebasestorage.app",
+            messagingSenderId: "177280788092",
+            appId: "1:177280788092:web:44f16c8f585a5b3e484bf9"
+        };
 
         let donors = [];
 
-        // محاولة جلب الكاش أولاً لسرعة الاستجابة
+        // تهيئة Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            var db = firebase.firestore();
+            var auth = firebase.auth();
+        } catch(e) { console.error("Firebase init fail"); }
+
+        // التخزين المؤقت لضمان العمل في حال ضعف الإنترنت
         const localData = localStorage.getItem('donors_backup');
         if(localData) {
             donors = JSON.parse(localData);
-            updateStats();
+            setTimeout(updateStats, 500);
         }
 
         function getInfo(d) {
@@ -221,10 +227,10 @@
                 filtered.forEach(m => {
                     const i = getInfo(m);
                     html += `
-                        <div class="result-item shadow-sm border border-slate-50">
+                        <div class="result-item shadow-sm">
                             <div class="flex justify-between items-center mb-5">
                                 <span class="bg-blue-50 text-[#001f54] text-[9px] px-3 py-1 rounded-full font-bold border border-blue-100">${i.dur}</span>
-                                <h3 class="font-bold text-gray-800 text-sm text-right">${m.name}</h3>
+                                <h3 class="font-bold text-gray-800 text-sm">${m.name}</h3>
                             </div>
                             <div class="grid grid-cols-2 gap-4 mb-5">
                                 <div class="text-right">
@@ -244,56 +250,28 @@
                 });
                 wrapper.innerHTML = html + '</div>';
             } else {
-                wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 font-bold">لم يتم العثور على أي نتائج</div>`;
+                wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 font-bold">عذراً، لم يتم العثور على هذا الاسم</div>`;
             }
         };
 
-        async function loadDonors() {
-            const loadingMsg = document.getElementById('loadingMsg');
-            const connType = document.getElementById('connectionType');
-
-            try {
-                // محاولة الاتصال بـ Supabase مع مهلة زمنية 8 ثواني
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-                const { data, error } = await supabaseClient
-                    .from('donors')
-                    .select('*')
-                    .abortSignal(controller.signal);
-
-                clearTimeout(timeoutId);
-
-                if(error) throw error;
-
-                if (data && data.length > 0) {
-                    donors = data;
-                    localStorage.setItem('donors_backup', JSON.stringify(donors));
-                    connType.innerText = "الحالة: متصل بالسيرفر";
-                    connType.className = "text-[8px] text-emerald-500 mt-4 uppercase tracking-tighter";
-                } else {
-                    throw new Error("Empty data");
-                }
-            } catch (err) {
-                console.error("Connection Error:", err);
-                
-                // إذا فشل الاتصال ولم يكن هناك كاش سابق، استخدم البيانات الاحتياطية المدمجة
-                if (donors.length === 0) {
-                    donors = FALLBACK_DATA;
-                }
-                
-                connType.innerText = "الحالة: وضع عدم الاتصال (بيانات مدمجة)";
-                connType.className = "text-[8px] text-orange-400 mt-4 uppercase tracking-tighter";
-            } finally {
+        // جلب البيانات من Firebase
+        auth.signInAnonymously().then(() => {
+            db.collection('artifacts').doc('amr4admin').collection('public').doc('data').collection('donors')
+            .get().then((snap) => {
+                donors = snap.docs.map(doc => doc.data());
+                localStorage.setItem('donors_backup', JSON.stringify(donors));
                 updateStats();
                 document.getElementById('loadingStatus').classList.add('hidden');
-            }
-        }
+            }).catch((err) => {
+                console.error(err);
+                if(donors.length === 0) {
+                    document.getElementById('loadingStatus').innerHTML = '<p class="text-rose-500 text-[10px]">فشل تحديث البيانات، يرجى تشغيل VPN لمرة واحدة</p>';
+                } else {
+                    document.getElementById('loadingStatus').classList.add('hidden');
+                }
+            });
+        });
 
-        // بدء تحميل البيانات
-        loadDonors();
-
-        // تفعيل البحث بضغط زر الإدخال
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') searchDonor();
         });
