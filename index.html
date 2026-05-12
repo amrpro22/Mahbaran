@@ -9,7 +9,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- استخدام نسخ Firebase المتوافقة مع المتصفحات القديمة والإنترنت الضعيف -->
+    <!-- استخدام النسخ التوافقية لضمان العمل على متصفحات اليمن القديمة -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -29,7 +29,6 @@
             background: #fff;
             min-height: 100vh;
             display: flex;
-            flex-grow: 1;
             flex-direction: column;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
@@ -53,11 +52,6 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
             outline: none;
             font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        .search-input:focus {
-            border-color: #001f54;
-            box-shadow: 0 10px 15px -3px rgba(0, 31, 84, 0.1);
         }
         .result-item {
             background: #fff;
@@ -65,13 +59,12 @@
             padding: 24px;
             margin-bottom: 16px;
             border: 1px solid #f1f5f9;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
             animation: fadeIn 0.5s ease;
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .spinner {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border: 3px solid #e2e8f0;
             border-top-color: #001f54;
             border-radius: 50%;
@@ -85,14 +78,14 @@
 
     <div class="app-card">
         <!-- شريط التنبيه -->
-        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold tracking-wide">
+        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold">
              ⚠️ يرجى تسديد الاشتراكات قبل تاريخ 2026/06/01
         </div>
 
         <!-- الهيدر -->
         <div class="header-gradient">
             <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
-            <p class="text-blue-200 text-[11px] font-semibold tracking-[0.15em] opacity-80">قرية محبران</p>
+            <p class="text-blue-200 text-[11px] font-semibold tracking-widest">قرية محبران</p>
         </div>
 
         <!-- البحث -->
@@ -108,67 +101,58 @@
         <!-- الإحصائيات -->
         <div class="grid grid-cols-3 gap-3 p-5 mt-4">
             <div class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100">
-                <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المشتركين</p>
+                <p class="text-[9px] text-slate-400 font-bold mb-1">المشتركين</p>
                 <p id="statTotal" class="text-xl font-black text-[#001f54]">0</p>
             </div>
             <div class="bg-emerald-50 p-4 rounded-3xl text-center border border-emerald-100">
-                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">المسددين</p>
+                <p class="text-[9px] text-emerald-500 font-bold mb-1">المسددين</p>
                 <p id="statPaid" class="text-xl font-black text-emerald-600">0</p>
             </div>
             <div class="bg-rose-50 p-4 rounded-3xl text-center border border-rose-100">
-                <p class="text-[9px] text-rose-400 font-bold mb-1 uppercase">الانتظار</p>
+                <p class="text-[9px] text-rose-400 font-bold mb-1">الانتظار</p>
                 <p id="statPending" class="text-xl font-black text-rose-600">0</p>
             </div>
         </div>
 
-        <!-- محتوى النتائج -->
+        <!-- مساحة عرض النتائج -->
         <div class="px-5 flex-grow pb-10">
             <div id="loadingStatus" class="text-center py-10 hidden">
                 <div class="spinner"></div>
                 <p class="text-[10px] text-slate-400 mt-3 font-semibold">جاري مزامنة البيانات...</p>
+                <p id="vpnNotice" class="text-[9px] text-red-400 mt-1 hidden">في اليمن: يرجى تشغيل VPN لمرة واحدة فقط للتحميل</p>
             </div>
 
             <div id="resultsWrapper" class="mt-4">
                 <div class="text-center py-16 opacity-20">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
                     <p class="text-sm font-bold">ابحث بالاسم لعرض الحالة المالية</p>
                 </div>
             </div>
         </div>
 
-        <!-- الفوتر المحدث -->
+        <!-- الفوتر المطلوبة -->
         <footer class="bg-slate-50 border-t border-slate-100 px-6 py-8">
             <div class="grid grid-cols-1 gap-6 text-center">
-                <!-- المطور -->
                 <div class="flex flex-col items-center">
                     <span class="text-[9px] text-slate-400 font-bold mb-1 tracking-widest uppercase">تصميم وتطوير</span>
                     <h3 class="text-sm font-bold text-[#001f54]">عمرو مسعد الشجاع</h3>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
-                    <!-- الإشراف -->
                     <div class="flex flex-col items-center border-l border-slate-200">
                         <span class="text-[9px] text-slate-400 font-bold mb-1 uppercase">إشراف</span>
                         <h3 class="text-[11px] font-bold text-slate-700">مصطفى الشجاع</h3>
                     </div>
-                    <!-- التدقيق -->
                     <div class="flex flex-col items-center">
                         <span class="text-[9px] text-slate-400 font-bold mb-1 uppercase">تدقيق مالي</span>
                         <h3 class="text-[11px] font-bold text-slate-700">ياسر الشجاع</h3>
                     </div>
-                </div>
-                
-                <div class="pt-4">
-                    <p class="text-[10px] text-slate-300 italic font-medium">صندوق محبران الخيري - لخدمة المجتمع</p>
                 </div>
             </div>
         </footer>
     </div>
 
     <script>
-        const config = {
+        const firebaseConfig = {
             apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
             authDomain: "amr4admin.firebaseapp.com",
             projectId: "amr4admin",
@@ -177,13 +161,20 @@
             appId: "1:177280788092:web:44f16c8f585a5b3e484bf9"
         };
 
+        let donors = [];
+
+        // محاولة استعادة البيانات من الذاكرة المحلية (Cache) لتعمل بدون VPN لاحقاً
+        const localData = localStorage.getItem('donors_backup');
+        if(localData) {
+            donors = JSON.parse(localData);
+            setTimeout(updateStats, 500);
+        }
+
         try {
-            firebase.initializeApp(config);
+            firebase.initializeApp(firebaseConfig);
             var db = firebase.firestore();
             var auth = firebase.auth();
-        } catch(e) { console.error("Initialization error"); }
-
-        let donors = [];
+        } catch(e) { console.error("Firebase fail"); }
 
         function getInfo(d) {
             const n = d.note || "";
@@ -198,44 +189,41 @@
             const r = Math.max(0, t - p);
             const pr = t > 0 ? Math.min(100, (p / t) * 100) : 0;
             const isFull = t > 0 && p >= t;
-            
             const labels = { '3m': '٣ أشهر', '6m': '٦ أشهر', '1y': 'سنة', 'none': 'دائم' };
-            let msg = 'بانتظار السداد..';
+            let msg = 'بانتظار استكمال السداد..';
             let cls = 'text-rose-500';
-            let paid = false;
+            let paid = (isFull || dK === '1y' || dK === '3m' || dK === '6m');
 
-            if (isFull || dK === '1y') {
-                msg = 'تم الدفع بالكامل ✓';
-                cls = 'text-emerald-600';
-                paid = true;
-            } else if (dK === '3m') {
-                msg = 'مجدول (استكمال 2026/09/01)';
-                paid = true;
-            } else if (dK === '6m') {
-                msg = 'مجدول (استكمال 2026/12/01)';
-                paid = true;
-            }
+            if (isFull || dK === '1y') { msg = 'تم الدفع بالكامل ✓'; cls = 'text-emerald-600'; }
+            else if (dK === '3m' || dK === '6m') { msg = 'مجدول (تم الاعتماد)'; cls = 'text-blue-500'; }
 
             return { t, p, r, c, pr, msg, cls, paid, dur: labels[dK] };
+        }
+
+        function updateStats() {
+            let pCnt = 0;
+            donors.forEach(d => { if(getInfo(d).paid) pCnt++; });
+            document.getElementById('statTotal').innerText = donors.length;
+            document.getElementById('statPaid').innerText = pCnt;
+            document.getElementById('statPending').innerText = donors.length - pCnt;
         }
 
         window.searchDonor = function() {
             const term = document.getElementById("searchInput").value.trim().toLowerCase();
             const wrapper = document.getElementById("resultsWrapper");
-            
             if (!term) return;
 
-            const matches = donors.filter(d => (d.name || "").trim().toLowerCase() === term);
+            const filtered = donors.filter(d => (d.name || "").trim().toLowerCase().includes(term));
 
-            if (matches.length > 0) {
+            if (filtered.length > 0) {
                 let html = '<div class="space-y-4">';
-                matches.forEach(m => {
+                filtered.forEach(m => {
                     const i = getInfo(m);
                     html += `
-                        <div class="result-item">
+                        <div class="result-item shadow-sm">
                             <div class="flex justify-between items-center mb-5">
                                 <span class="bg-blue-50 text-[#001f54] text-[9px] px-3 py-1 rounded-full font-bold border border-blue-100">${i.dur}</span>
-                                <h3 class="font-bold text-gray-800 text-sm">${m.name}</h3>
+                                <h3 class="font-bold text-gray-800 text-sm text-right">${m.name}</h3>
                             </div>
                             <div class="grid grid-cols-2 gap-4 mb-5">
                                 <div class="text-right">
@@ -248,44 +236,43 @@
                                 </div>
                             </div>
                             <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-4">
-                                <div class="h-full ${i.p >= i.t ? 'bg-emerald-500' : 'bg-[#001f54]'}" style="width:${i.pr}%"></div>
+                                <div class="h-full ${i.paid ? 'bg-emerald-500' : 'bg-[#001f54]'}" style="width:${i.pr}%"></div>
                             </div>
-                            <p class="text-xs font-bold ${i.cls}">${i.msg}</p>
+                            <p class="text-xs font-bold ${i.cls} text-center">${i.msg}</p>
                         </div>`;
                 });
                 wrapper.innerHTML = html + '</div>';
             } else {
-                wrapper.innerHTML = `<div class="text-center py-12"><p class="text-sm font-bold text-slate-400">عذراً، لم نجد اسماً مطابقاً تماماً.</p><p class="text-[10px] text-slate-300 mt-1">تأكد من كتابة الاسم كما هو في الكشوفات</p></div>`;
+                wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 font-bold">لم يتم العثور على الاسم</div>`;
             }
         };
 
+        // تفعيل الـ VPN لمرة واحدة يحفظ البيانات للأبد في المتصفح
         document.getElementById('loadingStatus').classList.remove('hidden');
-        
+        const vpnTimer = setTimeout(() => {
+            if(donors.length === 0) document.getElementById('vpnNotice').classList.remove('hidden');
+        }, 5000);
+
         auth.signInAnonymously().then(() => {
             db.collection('artifacts').doc('amr4admin').collection('public').doc('data').collection('donors')
             .get().then((snap) => {
-                donors = [];
-                snap.forEach((doc) => donors.push(doc.data()));
-                
-                let pCnt = 0;
-                donors.forEach(d => { if(getInfo(d).paid) pCnt++; });
-                
-                document.getElementById('statTotal').innerText = donors.length;
-                document.getElementById('statPaid').innerText = pCnt;
-                document.getElementById('statPending').innerText = donors.length - pCnt;
-                
+                donors = snap.docs.map(doc => doc.data());
+                // حفظ في الذاكرة المحلية
+                localStorage.setItem('donors_backup', JSON.stringify(donors));
+                updateStats();
                 document.getElementById('loadingStatus').classList.add('hidden');
-            }).catch(e => {
-                document.getElementById('loadingStatus').innerHTML = '<p class="text-rose-500 text-[10px] font-bold">فشل تحديث البيانات، تحقق من الإنترنت</p>';
+                clearTimeout(vpnTimer);
             });
-        }).catch(e => {
-            document.getElementById('loadingStatus').innerHTML = '<p class="text-rose-500 text-[10px] font-bold">خطأ في الاتصال بالخادم</p>';
+        }).catch(() => {
+            if(donors.length === 0) {
+                document.getElementById('loadingStatus').innerHTML = '<p class="text-rose-500 text-[10px]">فشل الاتصال بجوجل (يرجى تشغيل VPN لمرة واحدة فقط)</p>';
+            } else {
+                document.getElementById('loadingStatus').classList.add('hidden');
+            }
         });
 
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchDonor();
-        });
+        document.getElementById('searchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchDonor(); });
     </script>
 </body>
 </html>
-
+```
