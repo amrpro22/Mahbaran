@@ -7,124 +7,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>صندوق مساعدة الحالات الطارئة</title>
     
-    <!-- تحميل مكتبة التنسيق -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- تحميل مكتبات Firebase بالنمط التقليدي (Compatibility Version) لضمان العمل على كل الهواتف -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Segoe UI', 'Roboto', 'Cairo', 'sans-serif'],
-                    },
-                    colors: {
-                        primary: '#001f54',
-                        gold: '#c89b3c',
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- استخدام نسخ Firebase المتوافقة مع المتصفحات القديمة والإنترنت الضعيف -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        
         body {
-            background-color: #f9fafb;
+            background-color: #f8fafc;
+            font-family: 'Cairo', sans-serif;
             -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
         }
-        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .sticky-alert { position: sticky; top: 0; z-index: 100; }
-        #searchInput { font-size: 16px !important; border: 1px solid #e2e8f0; }
-        .progress-bar { height: 6px; border-radius: 3px; background: #f1f5f9; overflow: hidden; }
-        .progress-fill { height: 100%; transition: width 0.8s ease-in-out; }
+        .app-card {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            background: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-grow: 1;
+            flex-direction: column;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .header-gradient {
+            background: linear-gradient(135deg, #001f54 0%, #003b8e 100%);
+            padding: 50px 20px 40px;
+            text-align: center;
+            color: white;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+        .search-container {
+            margin-top: -35px;
+            padding: 0 20px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 20px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            outline: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .search-input:focus {
+            border-color: #001f54;
+            box-shadow: 0 10px 15px -3px rgba(0, 31, 84, 0.1);
+        }
+        .result-item {
+            background: #fff;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #001f54;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
+<body class="flex justify-center">
 
-<body class="flex flex-col items-center">
+    <div class="app-card">
+        <!-- شريط التنبيه -->
+        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold tracking-wide">
+             ⚠️ يرجى تسديد الاشتراكات قبل تاريخ 2026/06/01
+        </div>
 
-    <!-- شريط التنبيه العلوي -->
-    <div class="sticky-alert w-full bg-red-600 text-white py-2 px-4 shadow-md text-center text-xs font-bold">
-        الرجاء الدفع قبل تاريخ 2026/6/1 تجنباً للإحراج
-    </div>
+        <!-- الهيدر -->
+        <div class="header-gradient">
+            <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
+            <p class="text-blue-200 text-[11px] font-semibold tracking-[0.15em] opacity-80">قرية محبران</p>
+        </div>
 
-    <div class="w-full max-w-md bg-white shadow-xl flex flex-col min-h-screen md:min-h-0 md:my-8 md:rounded-3xl overflow-hidden border border-slate-100">
-        
-        <!-- الرأس -->
-        <header class="bg-primary text-white py-8 px-6 text-center">
-            <h1 class="font-bold text-xl mb-1">صندوق مساعدة الحالات الطارئة</h1>
-            <p class="text-slate-400 text-[10px] tracking-[0.2em] uppercase">قرية محبران</p>
-        </header>
-
-        <!-- الإحصائيات -->
-        <div class="grid grid-cols-3 gap-2 px-4 -mt-6">
-            <div class="bg-white p-3 rounded-2xl shadow-lg border border-slate-50 flex flex-col items-center">
-                <span class="text-[9px] text-slate-400 font-bold mb-1">المشتركين</span>
-                <span id="statTotal" class="text-lg font-black text-primary">0</span>
-            </div>
-            <div class="bg-white p-3 rounded-2xl shadow-lg border border-slate-50 flex flex-col items-center">
-                <span class="text-[9px] text-emerald-500 font-bold mb-1">المسددين</span>
-                <span id="statPaid" class="text-lg font-black text-emerald-600">0</span>
-            </div>
-            <div class="bg-white p-3 rounded-2xl shadow-lg border border-slate-50 flex flex-col items-center">
-                <span class="text-[9px] text-rose-400 font-bold mb-1">الانتظار</span>
-                <span id="statPending" class="text-lg font-black text-rose-600">0</span>
+        <!-- البحث -->
+        <div class="search-container">
+            <div class="relative group">
+                <input type="text" id="searchInput" class="search-input" placeholder="اكتب الاسم الكامل للبحث..." autocomplete="off">
+                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold active:scale-95 transition-all">
+                    بـحـث
+                </button>
             </div>
         </div>
 
-        <main class="p-6 flex-grow">
-            <!-- حقل البحث -->
-            <div class="flex gap-2 mb-8">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    class="flex-grow pr-4 py-4 bg-slate-50 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm"
-                    placeholder="اكتب الاسم الكامل هنا..."
-                    autocomplete="off"
-                >
-                <button 
-                    onclick="searchDonor()" 
-                    class="bg-primary text-white px-6 rounded-2xl font-bold text-sm active:scale-95 transition-transform">
-                    بحث
-                </button>
+        <!-- الإحصائيات -->
+        <div class="grid grid-cols-3 gap-3 p-5 mt-4">
+            <div class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100">
+                <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المشتركين</p>
+                <p id="statTotal" class="text-xl font-black text-[#001f54]">0</p>
+            </div>
+            <div class="bg-emerald-50 p-4 rounded-3xl text-center border border-emerald-100">
+                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">المسددين</p>
+                <p id="statPaid" class="text-xl font-black text-emerald-600">0</p>
+            </div>
+            <div class="bg-rose-50 p-4 rounded-3xl text-center border border-rose-100">
+                <p class="text-[9px] text-rose-400 font-bold mb-1 uppercase">الانتظار</p>
+                <p id="statPending" class="text-xl font-black text-rose-600">0</p>
+            </div>
+        </div>
+
+        <!-- محتوى النتائج -->
+        <div class="px-5 flex-grow pb-10">
+            <div id="loadingStatus" class="text-center py-10 hidden">
+                <div class="spinner"></div>
+                <p class="text-[10px] text-slate-400 mt-3 font-semibold">جاري مزامنة البيانات...</p>
             </div>
 
-            <!-- منطقة النتائج -->
-            <div id="resultsContainer" class="min-h-[200px] flex flex-col items-center justify-center border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/30">
-                <div id="loadingIndicator" class="hidden flex flex-col items-center">
-                    <div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
-                    <p class="text-[10px] text-primary font-bold">جاري تحميل البيانات...</p>
+            <div id="resultsWrapper" class="mt-4">
+                <div class="text-center py-16 opacity-20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <p class="text-sm font-bold">ابحث بالاسم لعرض الحالة المالية</p>
                 </div>
-                <p id="initialMsg" class="text-xs text-slate-400">النتائج ستظهر هنا عند البحث</p>
             </div>
-        </main>
+        </div>
 
-        <footer class="p-6 bg-slate-50/50 border-t border-slate-100">
-            <div class="grid grid-cols-3 gap-2 text-center">
-                <div>
-                    <p class="text-[8px] text-slate-400 font-bold mb-1">إشراف</p>
-                    <p class="text-[10px] font-bold text-primary">مصطفى الشجاع</p>
+        <!-- الفوتر المحدث -->
+        <footer class="bg-slate-50 border-t border-slate-100 px-6 py-8">
+            <div class="grid grid-cols-1 gap-6 text-center">
+                <!-- المطور -->
+                <div class="flex flex-col items-center">
+                    <span class="text-[9px] text-slate-400 font-bold mb-1 tracking-widest uppercase">تصميم وتطوير</span>
+                    <h3 class="text-sm font-bold text-[#001f54]">عمرو مسعد الشجاع</h3>
                 </div>
-                <div>
-                    <p class="text-[8px] text-slate-400 font-bold mb-1">تدقيق</p>
-                    <p class="text-[10px] font-bold text-primary">ياسر الشجاع</p>
+                
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+                    <!-- الإشراف -->
+                    <div class="flex flex-col items-center border-l border-slate-200">
+                        <span class="text-[9px] text-slate-400 font-bold mb-1 uppercase">إشراف</span>
+                        <h3 class="text-[11px] font-bold text-slate-700">مصطفى الشجاع</h3>
+                    </div>
+                    <!-- التدقيق -->
+                    <div class="flex flex-col items-center">
+                        <span class="text-[9px] text-slate-400 font-bold mb-1 uppercase">تدقيق مالي</span>
+                        <h3 class="text-[11px] font-bold text-slate-700">ياسر الشجاع</h3>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-[8px] text-slate-400 font-bold mb-1">تطوير</p>
-                    <p class="text-[10px] font-bold text-primary">عمرو الشجاع</p>
+                
+                <div class="pt-4">
+                    <p class="text-[10px] text-slate-300 italic font-medium">صندوق محبران الخيري - لخدمة المجتمع</p>
                 </div>
             </div>
         </footer>
     </div>
 
     <script>
-        // إعدادات Firebase
-        const firebaseConfig = {
+        const config = {
             apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
             authDomain: "amr4admin.firebaseapp.com",
             projectId: "amr4admin",
@@ -133,118 +177,109 @@
             appId: "1:177280788092:web:44f16c8f585a5b3e484bf9"
         };
 
-        // تهيئة التطبيق بالنمط التقليدي المتوافق مع كل الجوالات
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-        const appId = "amr4admin";
+        try {
+            firebase.initializeApp(config);
+            var db = firebase.firestore();
+            var auth = firebase.auth();
+        } catch(e) { console.error("Initialization error"); }
 
-        let donorsData = [];
+        let donors = [];
 
-        function parseDonorInfo(d) {
-            const note = d.note || "";
-            const total = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
-            const paid = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
-            const durationKey = (note.match(/D:([a-z0-9]+)/) || [0, 'none'])[1];
+        function getInfo(d) {
+            const n = d.note || "";
+            const t = parseFloat((n.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
+            const p = parseFloat((n.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
+            const dK = (n.match(/D:([a-z0-9]+)/) || [0, 'none'])[1];
             
-            let curr = 'sar';
-            if (note.toUpperCase().includes('C:USD')) curr = 'usd';
-            else if (note.toUpperCase().includes('C:YER')) curr = 'yer';
+            let c = 'SAR';
+            if (n.toUpperCase().includes('C:USD')) c = 'USD';
+            else if (n.toUpperCase().includes('C:YER')) c = 'YER';
 
-            const remaining = Math.max(0, total - paid);
-            const progress = total > 0 ? Math.min(100, (paid / total) * 100) : 0;
-            const isFull = total > 0 && paid >= total;
+            const r = Math.max(0, t - p);
+            const pr = t > 0 ? Math.min(100, (p / t) * 100) : 0;
+            const isFull = t > 0 && p >= t;
             
-            const durationLabels = { '3m': '٣ أشهر', '6m': '٦ أشهر', '1y': 'سنة', 'none': 'دائم' };
-            let statusMessage = '';
-            let color = 'text-amber-600';
-            let isConsideredPaid = false;
+            const labels = { '3m': '٣ أشهر', '6m': '٦ أشهر', '1y': 'سنة', 'none': 'دائم' };
+            let msg = 'بانتظار السداد..';
+            let cls = 'text-rose-500';
+            let paid = false;
 
-            if (isFull || durationKey === '1y') {
-                statusMessage = 'تم الدفع بنجاح ✓ نشكركم';
-                color = 'text-emerald-600';
-                isConsideredPaid = true;
-            } else if (durationKey === '3m') {
-                statusMessage = 'يتم استكمال السداد بتاريخ 2026/9/1';
-                isConsideredPaid = true;
-            } else if (durationKey === '6m') {
-                statusMessage = 'يتم استكمال السداد بتاريخ 2026/12/1';
-                isConsideredPaid = true;
-            } else {
-                statusMessage = 'الموعد النهائي للسداد 2026/6/1';
-                color = 'text-rose-500';
+            if (isFull || dK === '1y') {
+                msg = 'تم الدفع بالكامل ✓';
+                cls = 'text-emerald-600';
+                paid = true;
+            } else if (dK === '3m') {
+                msg = 'مجدول (استكمال 2026/09/01)';
+                paid = true;
+            } else if (dK === '6m') {
+                msg = 'مجدول (استكمال 2026/12/01)';
+                paid = true;
             }
 
-            return { total, paid, remaining, curr, progress, statusMessage, color, isConsideredPaid, duration: durationLabels[durationKey] };
+            return { t, p, r, c, pr, msg, cls, paid, dur: labels[dK] };
         }
 
         window.searchDonor = function() {
             const term = document.getElementById("searchInput").value.trim().toLowerCase();
-            const container = document.getElementById("resultsContainer");
+            const wrapper = document.getElementById("resultsWrapper");
             
             if (!term) return;
 
-            const matches = donorsData.filter(d => (d.name || "").trim().toLowerCase() === term);
+            const matches = donors.filter(d => (d.name || "").trim().toLowerCase() === term);
 
             if (matches.length > 0) {
-                let html = '<div class="fade-in w-full p-4 space-y-4">';
+                let html = '<div class="space-y-4">';
                 matches.forEach(m => {
-                    const info = parseDonorInfo(m);
+                    const i = getInfo(m);
                     html += `
-                        <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm text-center">
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="text-[9px] font-bold bg-primary/5 text-primary px-3 py-1 rounded-full">${info.duration}</span>
-                                <h4 class="font-bold text-primary text-sm">${m.name}</h4>
-                                <span class="text-[9px] font-bold text-slate-300 uppercase">${info.curr}</span>
+                        <div class="result-item">
+                            <div class="flex justify-between items-center mb-5">
+                                <span class="bg-blue-50 text-[#001f54] text-[9px] px-3 py-1 rounded-full font-bold border border-blue-100">${i.dur}</span>
+                                <h3 class="font-bold text-gray-800 text-sm">${m.name}</h3>
                             </div>
-                            <div class="flex justify-between mb-4 px-2">
+                            <div class="grid grid-cols-2 gap-4 mb-5">
                                 <div class="text-right">
-                                    <p class="text-slate-400 text-[9px] mb-1">المدفوع</p>
-                                    <p class="font-black text-emerald-600 text-sm">${info.paid.toLocaleString()}</p>
+                                    <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المدفوع (${i.c})</p>
+                                    <p class="text-lg font-black text-emerald-600">${i.p.toLocaleString()}</p>
                                 </div>
                                 <div class="text-left">
-                                    <p class="text-slate-400 text-[9px] mb-1">المتبقي</p>
-                                    <p class="font-black text-rose-500 text-sm">${info.remaining.toLocaleString()}</p>
+                                    <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المتبقي</p>
+                                    <p class="text-lg font-black text-rose-500">${i.r.toLocaleString()}</p>
                                 </div>
                             </div>
-                            <div class="progress-bar mb-4">
-                                <div class="progress-fill ${info.paid >= info.total ? 'bg-emerald-500' : 'bg-primary'}" style="width: ${info.progress}%"></div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-4">
+                                <div class="h-full ${i.p >= i.t ? 'bg-emerald-500' : 'bg-[#001f54]'}" style="width:${i.pr}%"></div>
                             </div>
-                            <p class="text-[10px] font-bold ${info.color}">${info.statusMessage}</p>
+                            <p class="text-xs font-bold ${i.cls}">${i.msg}</p>
                         </div>`;
                 });
-                html += '</div>';
-                container.innerHTML = html;
+                wrapper.innerHTML = html + '</div>';
             } else {
-                container.innerHTML = `<p class="text-xs text-slate-400">لم يتم العثور على اسم مطابق تماماً</p>`;
+                wrapper.innerHTML = `<div class="text-center py-12"><p class="text-sm font-bold text-slate-400">عذراً، لم نجد اسماً مطابقاً تماماً.</p><p class="text-[10px] text-slate-300 mt-1">تأكد من كتابة الاسم كما هو في الكشوفات</p></div>`;
             }
         };
 
-        // الدخول التلقائي وجلب البيانات
+        document.getElementById('loadingStatus').classList.remove('hidden');
+        
         auth.signInAnonymously().then(() => {
-            document.getElementById('loadingIndicator').classList.remove('hidden');
-            document.getElementById('initialMsg').classList.add('hidden');
-
-            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('donors')
-            .onSnapshot((snap) => {
-                donorsData = snap.docs.map(doc => doc.data());
+            db.collection('artifacts').doc('amr4admin').collection('public').doc('data').collection('donors')
+            .get().then((snap) => {
+                donors = [];
+                snap.forEach((doc) => donors.push(doc.data()));
                 
-                let paid = 0;
-                donorsData.forEach(d => { if(parseDonorInfo(d).isConsideredPaid) paid++; });
+                let pCnt = 0;
+                donors.forEach(d => { if(getInfo(d).paid) pCnt++; });
                 
-                document.getElementById('statTotal').innerText = donorsData.length;
-                document.getElementById('statPaid').innerText = paid;
-                document.getElementById('statPending').innerText = donorsData.length - paid;
+                document.getElementById('statTotal').innerText = donors.length;
+                document.getElementById('statPaid').innerText = pCnt;
+                document.getElementById('statPending').innerText = donors.length - pCnt;
                 
-                document.getElementById('loadingIndicator').classList.add('hidden');
-                document.getElementById('initialMsg').classList.remove('hidden');
-            }, (err) => {
-                console.error("Firestore Error:", err);
-                document.getElementById('initialMsg').innerText = "خطأ في الاتصال بالقاعدة";
+                document.getElementById('loadingStatus').classList.add('hidden');
+            }).catch(e => {
+                document.getElementById('loadingStatus').innerHTML = '<p class="text-rose-500 text-[10px] font-bold">فشل تحديث البيانات، تحقق من الإنترنت</p>';
             });
-        }).catch(err => {
-            console.error("Auth Error:", err);
-            document.getElementById('initialMsg').innerText = "خطأ في تسجيل الدخول";
+        }).catch(e => {
+            document.getElementById('loadingStatus').innerHTML = '<p class="text-rose-500 text-[10px] font-bold">خطأ في الاتصال بالخادم</p>';
         });
 
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
@@ -253,4 +288,4 @@
     </script>
 </body>
 </html>
-```
+
