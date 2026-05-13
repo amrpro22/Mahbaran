@@ -9,7 +9,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- مكتبات Firebase بنسخة التوافق لضمان العمل في بيئات الاتصال المختلفة -->
+    <!-- مكتبات Firebase المتوافقة مع لوحة التحكم -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -54,148 +54,131 @@
             font-size: 16px;
             text-align: right;
         }
-        .result-item {
-            background: #fff;
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 16px;
-            border: 1px solid #f1f5f9;
-            animation: fadeIn 0.5s ease;
+        /* تصميم النافذة المنبثقة */
+        #thanksModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 31, 84, 0.8);
+            backdrop-filter: blur(12px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-card {
+            background: #fff;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 35px;
+            padding: 35px;
+            text-align: center;
+            position: relative;
+            animation: modalBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        @keyframes modalBounce { from { opacity: 0; transform: scale(0.7) translateY(40px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
         .spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid #e2e8f0;
-            border-top-color: #001f54;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            display: inline-block;
+            width: 24px; height: 24px; border: 3px solid #e2e8f0;
+            border-top-color: #001f54; border-radius: 50%;
+            animation: spin 0.8s linear infinite; display: inline-block;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* تنسيق الشريط الإخباري */
         .news-ticker {
-            background: #f1f5f9;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-            margin: 15px 20px 0;
-            border-radius: 10px;
-            border: 1px inset #e2e8f0;
-        }
-        .ticker-label {
-            background: #001f54;
-            color: #fff;
-            padding: 0 15px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            font-weight: 900;
-            font-size: 11px;
-            z-index: 10;
-            box-shadow: 5px 0 10px rgba(0,0,0,0.1);
+            background: #f1f5f9; height: 35px; display: flex; align-items: center;
+            overflow: hidden; margin: 15px 20px 0; border-radius: 10px;
         }
         .ticker-content {
-            white-space: nowrap;
-            display: inline-block;
-            animation: ticker 35s linear infinite; /* زيادة الوقت لتناسب طول النص الجديد */
-            padding-right: 100%;
-            color: #ef4444; /* لون أحمر واضح */
-            font-size: 12px;
-            font-weight: 700;
+            white-space: nowrap; display: inline-block; animation: ticker 45s linear infinite;
+            padding-right: 100%; color: #ef4444; font-size: 12px; font-weight: 700;
         }
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(100%, 0, 0); }
-        }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
     </style>
 </head>
 <body class="flex justify-center">
 
+    <!-- نافذة الشكر المنبثقة -->
+    <div id="thanksModal">
+        <div class="modal-card">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner">
+                ❤
+            </div>
+            <h2 class="text-xl font-black text-[#001f54] mb-2">شكراً لأهل العطاء</h2>
+            <p class="text-sm text-slate-500 mb-4 leading-relaxed">تم استلام وتحديث بيانات السداد للأخ:</p>
+            
+            <div id="lastPayerName" class="text-xl font-black text-emerald-600 mb-3 px-6 py-3 bg-emerald-50 rounded-2xl inline-block border border-emerald-100">
+                جاري التحقق...
+            </div>
+            
+            <div id="lastUpdateTime" class="text-[10px] text-slate-400 mb-6 font-bold bg-slate-50 py-1 px-3 rounded-full inline-block">
+                --:--
+            </div>
+
+            <p class="text-[12px] text-slate-600 mb-8 leading-relaxed px-2">
+                بمثل هذا التعاون يستمر عطاء الصندوق ويتحقق الهدف المنشود. جعلها الله في ميزان حسناتكم وبارك لكم في أرزاقكم.
+            </p>
+            
+            <button onclick="closeModal()" class="w-full bg-[#001f54] text-white py-4 rounded-2xl font-bold text-sm shadow-xl active:scale-95 transition-all">
+                إغلاق النافذة
+            </button>
+        </div>
+    </div>
+
     <div class="app-card">
-        <!-- شريط التنبيه العلوي -->
         <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold">
-             ⚠️ يرجى تسديد الاشتراكات قبل تاريخ 2026/06/01
+             ⚠️ يرجى تسديد المبالغ المتبقية قبل تاريخ 2026/06/01
         </div>
 
-        <!-- الهيدر -->
         <div class="header-gradient">
             <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
             <p class="text-blue-200 text-[11px] font-semibold tracking-widest">قرية محبران</p>
         </div>
 
-        <!-- البحث -->
         <div class="search-container">
-            <div class="relative group">
-                <input type="text" id="searchInput" class="search-input" placeholder="اكتب الاسم الكامل للبحث..." autocomplete="off">
-                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold active:scale-95 transition-all">
-                    بـحـث
-                </button>
+            <div class="relative">
+                <input type="text" id="searchInput" class="search-input" placeholder="اكتب اسمك للبحث عن حالتك..." autocomplete="off">
+                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold">بـحـث</button>
             </div>
         </div>
 
-        <!-- الشريط الإخباري باللون الأحمر والنص الجديد -->
+        <!-- شريط الأخبار -->
         <div class="news-ticker">
-            <div class="ticker-label">هام</div>
+            <div class="bg-[#001f54] text-white px-3 h-full flex items-center font-black text-[10px] z-10">هام</div>
             <div class="ticker-content">
-                الرجاء من الجميع استكمال تسديد المبالغ المتبقية في أقرب وقت، فبتعاونكم يكتمل العمل ويستمر العطاء . . . 
-                نأمل من الإخوة الكرام سرعة استكمال المساهمات المتبقية دعماً للمشروع وإنجاحه . . . 
-                نرجو من الجميع المبادرة بتسديد المبالغ المستحقة، ولكم جزيل الشكر والتقدير . . . 
-                مساهمتكم واستكمال التسديد تعكس روح التعاون والوفاء بين الجميع، فجزاكم الله خيراً …..
+                الرجاء من الجميع استكمال تسديد المبالغ المتبقية في أقرب وقت لضمان استمرار عمل الصندوق . . . 
+                مساهمتكم تعكس روح الوفاء بيننا، فجزاكم الله خيراً . . .
             </div>
         </div>
 
         <!-- الإحصائيات -->
         <div class="grid grid-cols-3 gap-3 p-5 mt-2">
-            <div class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100 shadow-sm">
+            <div class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100">
                 <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المشتركين</p>
                 <p id="statTotal" class="text-xl font-black text-[#001f54]">0</p>
             </div>
-            <div class="bg-emerald-50 p-4 rounded-3xl text-center border border-emerald-100 shadow-sm">
+            <div class="bg-emerald-50 p-4 rounded-3xl text-center border border-emerald-100">
                 <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">المسددين</p>
                 <p id="statPaid" class="text-xl font-black text-emerald-600">0</p>
             </div>
-            <div class="bg-rose-50 p-4 rounded-3xl text-center border border-rose-100 shadow-sm">
+            <div class="bg-rose-50 p-4 rounded-3xl text-center border border-rose-100">
                 <p class="text-[9px] text-rose-400 font-bold mb-1 uppercase">الانتظار</p>
                 <p id="statPending" class="text-xl font-black text-rose-600">0</p>
             </div>
         </div>
 
-        <!-- المحتوى -->
         <div class="px-5 flex-grow pb-10">
             <div id="loadingStatus" class="text-center py-10">
                 <div class="spinner"></div>
-                <p class="text-[10px] text-slate-400 mt-3 font-semibold">جاري جلب البيانات من السيرفر...</p>
+                <p class="text-[10px] text-slate-400 mt-3 font-semibold">جاري مزامنة البيانات مع لوحة التحكم...</p>
             </div>
-
-            <div id="resultsWrapper" class="mt-4">
-                <div class="text-center py-16 opacity-20">
-                    <p class="text-sm font-bold">ابحث بالاسم لعرض الحالة المالية</p>
-                </div>
-            </div>
+            <div id="resultsWrapper" class="mt-4"></div>
         </div>
 
-        <!-- الفوتر -->
-        <footer class="bg-slate-50 border-t border-slate-100 px-6 py-8">
-            <div class="grid grid-cols-1 gap-6 text-center">
-                <div class="flex flex-col items-center">
-                    <span class="text-[9px] text-slate-400 font-bold mb-1 tracking-widest uppercase">تصميم وتطوير</span>
-                    <h3 class="text-sm font-bold text-[#001f54]">عمرو مسعد الشجاع</h3>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
-                    <div class="flex flex-col items-center border-l border-slate-200">
-                        <span class="text-[9px] text-slate-400 font-bold mb-1 uppercase">إشراف</span>
-                        <h3 class="text-[11px] font-bold text-slate-700">مصطفى الشجاع</h3>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span class="text-[9px] text-slate-400 font-bold mb-1 uppercase">تدقيق مالي</span>
-                        <h3 class="text-[11px] font-bold text-slate-700">ياسر الشجاع</h3>
-                    </div>
-                </div>
-            </div>
+        <footer class="bg-slate-50 border-t border-slate-100 px-6 py-8 text-center">
+            <span class="text-[9px] text-slate-400 font-bold tracking-widest block mb-1">تصميم وتطوير</span>
+            <h3 class="text-sm font-bold text-[#001f54]">عمرو مسعد الشجاع</h3>
         </footer>
     </div>
 
@@ -211,55 +194,77 @@
 
         let donors = [];
 
-        try {
-            firebase.initializeApp(firebaseConfig);
-            var db = firebase.firestore();
-            var auth = firebase.auth();
-        } catch(e) { console.error("Firebase init fail"); }
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
 
-        const localData = localStorage.getItem('donors_backup');
-        if(localData) {
-            donors = JSON.parse(localData);
-            setTimeout(updateStats, 500);
+        function closeModal() {
+            document.getElementById('thanksModal').style.display = 'none';
         }
 
+        // دالة تحليل البيانات المتوافقة مع صيغة لوحة التحكم T:0|P:0|C:SAR|D:none
         function getInfo(d) {
-            const n = d.note || "";
-            const t = parseFloat((n.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
-            const p = parseFloat((n.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
-            const dK = (n.match(/D:([a-z0-9]+)/) || [0, 'none'])[1];
-            
-            let c = 'SAR';
-            if (n.toUpperCase().includes('C:USD')) c = 'USD';
-            else if (n.toUpperCase().includes('C:YER')) c = 'YER';
-
-            const r = Math.max(0, t - p);
-            const pr = t > 0 ? Math.min(100, (p / t) * 100) : 0;
+            const note = d.note || "";
+            const t = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
+            const p = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
             const isFull = t > 0 && p >= t;
-            const labels = { '3m': '٣ أشهر', '6m': '٦ أشهر', '1y': 'سنة', 'none': 'دائم' };
             
-            let msg = 'بانتظار استكمال السداد..';
-            let cls = 'text-rose-500';
-            let paid = (isFull || dK === '1y' || dK === '3m' || dK === '6m');
+            // قراءة تاريخ التحديثUpdatedAt الذي يتم إرساله من لوحة التحكم
+            const updateTime = d.updatedAt || d.createdAt || 0;
 
-            if (isFull || dK === '1y') {
-                msg = 'تم الدفع بالكامل ✓';
-                cls = 'text-emerald-600';
-            } else if (dK === '3m' || dK === '6m') {
-                msg = 'مجدول (تم الاعتماد)';
-                cls = 'text-blue-500';
+            let c = 'SAR';
+            if (note.toUpperCase().includes('C:USD')) c = 'USD';
+            else if (note.toUpperCase().includes('C:YER')) c = 'YER';
+
+            return { t, p, isFull, updateTime, curr: c, rem: Math.max(0, t - p) };
+        }
+
+        // عرض إشعار آخر تحديث
+        function showLastUpdateNotice(list) {
+            // تصفية الذين دفعوا مبلغاً أكبر من صفر
+            const payers = list.filter(d => getInfo(d).p > 0);
+            
+            if (payers.length > 0) {
+                // الفرز حسب حقل updatedAt (الأحدث أولاً)
+                payers.sort((a, b) => getInfo(b).updateTime - getInfo(a).updateTime);
+
+                const latest = payers[0];
+                const info = getInfo(latest);
+
+                document.getElementById('lastPayerName').innerText = latest.name;
+                
+                if (info.updateTime > 0) {
+                    const date = new Date(info.updateTime);
+                    const dateStr = date.toLocaleDateString('ar-YE', { day: 'numeric', month: 'long', year: 'numeric' });
+                    const timeStr = date.toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('lastUpdateTime').innerText = `تاريخ التحديث: ${dateStr} الساعة ${timeStr}`;
+                } else {
+                    document.getElementById('lastUpdateTime').innerText = "تم التحديث مؤخراً";
+                }
+
+                document.getElementById('thanksModal').style.display = 'flex';
             }
-
-            return { t, p, r, c, pr, msg, cls, paid, dur: labels[dK] };
         }
 
-        function updateStats() {
-            let pCnt = 0;
-            donors.forEach(d => { if(getInfo(d).paid) pCnt++; });
-            document.getElementById('statTotal').innerText = donors.length;
-            document.getElementById('statPaid').innerText = pCnt;
-            document.getElementById('statPending').innerText = donors.length - pCnt;
-        }
+        auth.signInAnonymously().then(() => {
+            // الاستماع الحي للتغييرات في لوحة التحكم
+            db.collection('artifacts').doc('amr4admin').collection('public').doc('data').collection('donors')
+            .onSnapshot((snap) => {
+                donors = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                // تحديث الإحصائيات
+                let pCnt = 0;
+                donors.forEach(d => { if(getInfo(d).isFull) pCnt++; });
+                document.getElementById('statTotal').innerText = donors.length;
+                document.getElementById('statPaid').innerText = pCnt;
+                document.getElementById('statPending').innerText = donors.length - pCnt;
+
+                document.getElementById('loadingStatus').classList.add('hidden');
+                
+                // تشغيل النافذة المنبثقة لأحدث تحديث
+                showLastUpdateNotice(donors);
+            });
+        });
 
         window.searchDonor = function() {
             const term = document.getElementById("searchInput").value.trim().toLowerCase();
@@ -273,53 +278,26 @@
                 filtered.forEach(m => {
                     const i = getInfo(m);
                     html += `
-                        <div class="result-item shadow-sm">
-                            <div class="flex justify-between items-center mb-5">
-                                <span class="bg-blue-50 text-[#001f54] text-[9px] px-3 py-1 rounded-full font-bold border border-blue-100">${i.dur}</span>
-                                <h3 class="font-bold text-gray-800 text-sm">${m.name}</h3>
+                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm ${i.isFull ? 'border-r-4 border-r-emerald-500' : 'border-r-4 border-r-rose-400'}">
+                            <h3 class="font-bold text-gray-800 text-sm mb-4">${m.name}</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><p class="text-[9px] text-slate-400 font-bold uppercase">المدفوع (${i.curr})</p><p class="text-lg font-black text-emerald-600">${i.p.toLocaleString()}</p></div>
+                                <div><p class="text-[9px] text-slate-400 font-bold uppercase">المتبقي</p><p class="text-lg font-black text-rose-500">${i.rem.toLocaleString()}</p></div>
                             </div>
-                            <div class="grid grid-cols-2 gap-4 mb-5">
-                                <div class="text-right">
-                                    <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المدفوع (${i.c})</p>
-                                    <p class="text-lg font-black text-emerald-600">${i.p.toLocaleString()}</p>
-                                </div>
-                                <div class="text-left">
-                                    <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المتبقي</p>
-                                    <p class="text-lg font-black text-rose-500">${i.r.toLocaleString()}</p>
-                                </div>
+                            <div class="mt-4 pt-4 border-t border-slate-50 text-center">
+                                <span class="text-[10px] font-black ${i.isFull ? 'text-emerald-600' : 'text-slate-400'}">
+                                    ${i.isFull ? 'تم السداد بالكامل ✓' : 'بانتظار استكمال السداد'}
+                                </span>
                             </div>
-                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-4">
-                                <div class="h-full ${i.paid ? 'bg-emerald-500' : 'bg-[#001f54]'}" style="width:${i.pr}%"></div>
-                            </div>
-                            <p class="text-xs font-bold ${i.cls} text-center">${i.msg}</p>
                         </div>`;
                 });
                 wrapper.innerHTML = html + '</div>';
             } else {
-                wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 font-bold">عذراً، لم يتم العثور على هذا الاسم</div>`;
+                wrapper.innerHTML = `<div class="text-center py-10 text-slate-400 text-xs font-bold">عذراً، الاسم غير مسجل حالياً</div>`;
             }
         };
 
-        auth.signInAnonymously().then(() => {
-            db.collection('artifacts').doc('amr4admin').collection('public').doc('data').collection('donors')
-            .get().then((snap) => {
-                donors = snap.docs.map(doc => doc.data());
-                localStorage.setItem('donors_backup', JSON.stringify(donors));
-                updateStats();
-                document.getElementById('loadingStatus').classList.add('hidden');
-            }).catch((err) => {
-                console.error(err);
-                if(donors.length === 0) {
-                    document.getElementById('loadingStatus').innerHTML = '<p class="text-rose-500 text-[10px]">فشل تحديث البيانات، يرجى تشغيل VPN لمرة واحدة</p>';
-                } else {
-                    document.getElementById('loadingStatus').classList.add('hidden');
-                }
-            });
-        });
-
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchDonor();
-        });
+        document.getElementById('searchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchDonor(); });
     </script>
 </body>
 </html>
