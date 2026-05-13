@@ -116,7 +116,7 @@
                 بارك الله لكم في أرزاقكم وجعلها في ميزان حسناتكم.
             </p>
             <button onclick="closeModal()" class="w-full bg-[#001f54] text-white py-4 rounded-2xl font-bold text-sm shadow-xl transition-all active:scale-95">
-                اغلق النافذة
+                 اغلان النافذة
             </button>
         </div>
     </div>
@@ -144,7 +144,7 @@
         <div class="news-ticker">
             <div class="bg-[#001f54] text-white px-3 h-full flex items-center font-black text-[10px] z-10">هام</div>
             <div class="ticker-content">
-                الرجاء المبادرة باستكمال المبالغ المتبقية لضمان استمرار تقديم المساعدات في وقتها . . . بارك الله في أموالكم وأنفسكم . . .
+                الرجاء المبادرة باستكمال المبالغ المتبقية لضمان استمرار تقديم المساعدات في وقتها . . . بارك الله في أموالكم وأهليكم . . .
             </div>
         </div>
 
@@ -209,11 +209,12 @@
             const t = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
             const p = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
             const isFull = t > 0 && p >= t;
+            const hasPaidSomething = p > 0; // تعريف جديد: أي شخص دفع ولو جزء بسيط
             const updateTime = d.updatedAt || d.createdAt || 0;
             let c = 'SAR';
             if (note.toUpperCase().includes('C:USD')) c = 'USD';
             else if (note.toUpperCase().includes('C:YER')) c = 'YER';
-            return { t, p, isFull, updateTime, curr: c, rem: Math.max(0, t - p) };
+            return { t, p, isFull, hasPaidSomething, updateTime, curr: c, rem: Math.max(0, t - p) };
         }
 
         function showLastUpdateNotice(list) {
@@ -235,11 +236,16 @@
             db.collection('artifacts').doc('amr4admin').collection('public').doc('data').collection('donors')
             .onSnapshot((snap) => {
                 donors = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                let pCnt = 0;
-                donors.forEach(d => { if(getInfo(d).isFull) pCnt++; });
+                let paidCnt = 0;
+                
+                // تحديث المنطق: العداد يحسب كل من دفع شيئاً أكبر من صفر
+                donors.forEach(d => { 
+                    if(getInfo(d).hasPaidSomething) paidCnt++; 
+                });
+
                 document.getElementById('statTotal').innerText = donors.length;
-                document.getElementById('statPaid').innerText = pCnt;
-                document.getElementById('statPending').innerText = donors.length - pCnt;
+                document.getElementById('statPaid').innerText = paidCnt;
+                document.getElementById('statPending').innerText = donors.length - paidCnt;
                 document.getElementById('loadingStatus').classList.add('hidden');
                 
                 const sessionSeen = sessionStorage.getItem('seen_update');
