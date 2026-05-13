@@ -9,7 +9,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- مكتبات Firebase المتوافقة مع لوحة التحكم -->
+    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -54,7 +54,7 @@
             font-size: 16px;
             text-align: right;
         }
-        /* تصميم النافذة المنبثقة */
+        
         #thanksModal {
             display: none;
             position: fixed;
@@ -73,9 +73,7 @@
             border-radius: 35px;
             padding: 35px;
             text-align: center;
-            position: relative;
             animation: modalBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
         @keyframes modalBounce { from { opacity: 0; transform: scale(0.7) translateY(40px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         
@@ -99,29 +97,26 @@
 </head>
 <body class="flex justify-center">
 
-    <!-- نافذة الشكر المنبثقة -->
+    <!-- Modal for Last Update -->
     <div id="thanksModal">
-        <div class="modal-card">
-            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner">
-                ❤
+        <div class="modal-card shadow-2xl">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                ✨
             </div>
-            <h2 class="text-xl font-black text-[#001f54] mb-2">شكراً لأهل العطاء</h2>
-            <p class="text-sm text-slate-500 mb-4 leading-relaxed">تم استلام وتحديث بيانات السداد للأخ:</p>
-            
+            <h2 class="text-xl font-black text-[#001f54] mb-2">تحية إجلال لأهل الجود</h2>
+            <p class="text-sm text-slate-500 mb-4">نفخر بتحديث بيانات العطاء للأخ الكريم:</p>
             <div id="lastPayerName" class="text-xl font-black text-emerald-600 mb-3 px-6 py-3 bg-emerald-50 rounded-2xl inline-block border border-emerald-100">
-                جاري التحقق...
+                جاري التحميل..
             </div>
-            
-            <div id="lastUpdateTime" class="text-[10px] text-slate-400 mb-6 font-bold bg-slate-50 py-1 px-3 rounded-full inline-block">
+            <div id="lastUpdateTime" class="text-[10px] text-slate-400 mb-6 font-bold block">
                 --:--
             </div>
-
-            <p class="text-[12px] text-slate-600 mb-8 leading-relaxed px-2">
-                بمثل هذا التعاون يستمر عطاء الصندوق ويتحقق الهدف المنشود. جعلها الله في ميزان حسناتكم وبارك لكم في أرزاقكم.
+            <p class="text-[12px] text-slate-600 mb-8 leading-relaxed">
+                بمثل هذا السخاء يزدهر مجتمعنا ويستمر أثر الخير. <br>
+                بارك الله لكم في أرزاقكم وجعلها في ميزان حسناتكم.
             </p>
-            
-            <button onclick="closeModal()" class="w-full bg-[#001f54] text-white py-4 rounded-2xl font-bold text-sm shadow-xl active:scale-95 transition-all">
-                إغلاق النافذة
+            <button onclick="closeModal()" class="w-full bg-[#001f54] text-white py-4 rounded-2xl font-bold text-sm shadow-xl transition-all active:scale-95">
+                حفظكم الله
             </button>
         </div>
     </div>
@@ -136,23 +131,23 @@
             <p class="text-blue-200 text-[11px] font-semibold tracking-widest">قرية محبران</p>
         </div>
 
+        <!-- Search Section -->
         <div class="search-container">
             <div class="relative">
-                <input type="text" id="searchInput" class="search-input" placeholder="اكتب اسمك للبحث عن حالتك..." autocomplete="off">
-                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold">بـحـث</button>
+                <input type="text" id="searchInput" class="search-input" placeholder="اكتب الاسمك للبحث..." autocomplete="off">
+                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold shadow-md active:scale-95 transition-all">
+                    بـحـث
+                </button>
             </div>
         </div>
 
-        <!-- شريط الأخبار -->
         <div class="news-ticker">
             <div class="bg-[#001f54] text-white px-3 h-full flex items-center font-black text-[10px] z-10">هام</div>
             <div class="ticker-content">
-                الرجاء من الجميع استكمال تسديد المبالغ المتبقية في أقرب وقت لضمان استمرار عمل الصندوق . . . 
-                مساهمتكم تعكس روح الوفاء بيننا، فجزاكم الله خيراً . . .
+                الرجاء المبادرة باستكمال المبالغ المتبقية لضمان استمرار تقديم المساعدات في وقتها . . . بارك الله في أموالكم وأنفسكم . . .
             </div>
         </div>
 
-        <!-- الإحصائيات -->
         <div class="grid grid-cols-3 gap-3 p-5 mt-2">
             <div class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100">
                 <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المشتركين</p>
@@ -171,14 +166,25 @@
         <div class="px-5 flex-grow pb-10">
             <div id="loadingStatus" class="text-center py-10">
                 <div class="spinner"></div>
-                <p class="text-[10px] text-slate-400 mt-3 font-semibold">جاري مزامنة البيانات مع لوحة التحكم...</p>
+                <p class="text-[10px] text-slate-400 mt-3 font-semibold">جاري المزامنة مع السيرفر...</p>
             </div>
-            <div id="resultsWrapper" class="mt-4"></div>
+            <div id="resultsWrapper" class="mt-4">
+                <div class="text-center py-16 opacity-30">
+                    <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <p class="text-xs font-bold">ابحث بالاسم لتظهر حالتك المالية</p>
+                </div>
+            </div>
         </div>
 
-        <footer class="bg-slate-50 border-t border-slate-100 px-6 py-8 text-center">
-            <span class="text-[9px] text-slate-400 font-bold tracking-widest block mb-1">تصميم وتطوير</span>
-            <h3 class="text-sm font-bold text-[#001f54]">عمرو مسعد الشجاع</h3>
+        <footer class="bg-slate-50 border-t border-slate-100 px-6 py-6 text-center">
+            <div class="space-y-1">
+                <h3 class="text-[12px] font-bold text-[#001f54]">تطوير: عمرو مسعد الشجاع</h3>
+                <div class="flex justify-center items-center gap-4 text-[10px] text-slate-500 font-bold">
+                    <span>إشراف: مصطفى الشجاع</span>
+                    <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                    <span>تدقيق مالي: ياسر الشجاع</span>
+                </div>
+            </div>
         </footer>
     </div>
 
@@ -193,107 +199,118 @@
         };
 
         let donors = [];
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const auth = firebase.auth();
 
-        function closeModal() {
-            document.getElementById('thanksModal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('thanksModal').style.display = 'none'; }
 
-        // دالة تحليل البيانات المتوافقة مع صيغة لوحة التحكم T:0|P:0|C:SAR|D:none
         function getInfo(d) {
             const note = d.note || "";
             const t = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
             const p = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
             const isFull = t > 0 && p >= t;
-            
-            // قراءة تاريخ التحديثUpdatedAt الذي يتم إرساله من لوحة التحكم
             const updateTime = d.updatedAt || d.createdAt || 0;
-
             let c = 'SAR';
             if (note.toUpperCase().includes('C:USD')) c = 'USD';
             else if (note.toUpperCase().includes('C:YER')) c = 'YER';
-
             return { t, p, isFull, updateTime, curr: c, rem: Math.max(0, t - p) };
         }
 
-        // عرض إشعار آخر تحديث
         function showLastUpdateNotice(list) {
-            // تصفية الذين دفعوا مبلغاً أكبر من صفر
             const payers = list.filter(d => getInfo(d).p > 0);
-            
             if (payers.length > 0) {
-                // الفرز حسب حقل updatedAt (الأحدث أولاً)
                 payers.sort((a, b) => getInfo(b).updateTime - getInfo(a).updateTime);
-
                 const latest = payers[0];
                 const info = getInfo(latest);
-
                 document.getElementById('lastPayerName').innerText = latest.name;
-                
                 if (info.updateTime > 0) {
                     const date = new Date(info.updateTime);
-                    const dateStr = date.toLocaleDateString('ar-YE', { day: 'numeric', month: 'long', year: 'numeric' });
-                    const timeStr = date.toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('lastUpdateTime').innerText = `تاريخ التحديث: ${dateStr} الساعة ${timeStr}`;
-                } else {
-                    document.getElementById('lastUpdateTime').innerText = "تم التحديث مؤخراً";
+                    document.getElementById('lastUpdateTime').innerText = date.toLocaleString('ar-YE');
                 }
-
                 document.getElementById('thanksModal').style.display = 'flex';
             }
         }
 
-        auth.signInAnonymously().then(() => {
-            // الاستماع الحي للتغييرات في لوحة التحكم
+        firebase.auth().signInAnonymously().then(() => {
             db.collection('artifacts').doc('amr4admin').collection('public').doc('data').collection('donors')
             .onSnapshot((snap) => {
                 donors = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                // تحديث الإحصائيات
                 let pCnt = 0;
                 donors.forEach(d => { if(getInfo(d).isFull) pCnt++; });
                 document.getElementById('statTotal').innerText = donors.length;
                 document.getElementById('statPaid').innerText = pCnt;
                 document.getElementById('statPending').innerText = donors.length - pCnt;
-
                 document.getElementById('loadingStatus').classList.add('hidden');
                 
-                // تشغيل النافذة المنبثقة لأحدث تحديث
-                showLastUpdateNotice(donors);
+                const sessionSeen = sessionStorage.getItem('seen_update');
+                if (!sessionSeen) {
+                    showLastUpdateNotice(donors);
+                    sessionStorage.setItem('seen_update', 'true');
+                }
             });
         });
 
         window.searchDonor = function() {
             const term = document.getElementById("searchInput").value.trim().toLowerCase();
             const wrapper = document.getElementById("resultsWrapper");
-            if (!term) return;
+            
+            if (!term) {
+                wrapper.innerHTML = `<div class="text-center py-10 text-rose-500 text-xs font-bold">يرجى إدخال اسم للبحث</div>`;
+                return;
+            }
 
-            const filtered = donors.filter(d => (d.name || "").toLowerCase().includes(term));
+            const filtered = donors.filter(d => (d.name || "").toLowerCase() === term);
+            const finalResults = filtered.length > 0 ? filtered : donors.filter(d => (d.name || "").toLowerCase().includes(term));
 
-            if (filtered.length > 0) {
+            if (finalResults.length > 0) {
                 let html = '<div class="space-y-4">';
-                filtered.forEach(m => {
+                finalResults.forEach(m => {
                     const i = getInfo(m);
+                    
+                    let message = "";
+                    let msgClass = "";
+
+                    if (i.isFull) {
+                        message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
+                        msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
+                    } else if (i.p > 0) {
+                        message = "شكرًا جزيلًا على ما قدمتموه من مساهمة، ونحن بانتظار استكمال باقي المبلغ لتعزيز مسيرة الصندوق.";
+                        msgClass = "bg-blue-50 border-blue-100 text-blue-700";
+                    } else {
+                        message = "ندعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
+                        msgClass = "bg-amber-50 border-amber-100 text-amber-700";
+                    }
+
                     html += `
-                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm ${i.isFull ? 'border-r-4 border-r-emerald-500' : 'border-r-4 border-r-rose-400'}">
-                            <h3 class="font-bold text-gray-800 text-sm mb-4">${m.name}</h3>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div><p class="text-[9px] text-slate-400 font-bold uppercase">المدفوع (${i.curr})</p><p class="text-lg font-black text-emerald-600">${i.p.toLocaleString()}</p></div>
-                                <div><p class="text-[9px] text-slate-400 font-bold uppercase">المتبقي</p><p class="text-lg font-black text-rose-500">${i.rem.toLocaleString()}</p></div>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-slate-50 text-center">
-                                <span class="text-[10px] font-black ${i.isFull ? 'text-emerald-600' : 'text-slate-400'}">
-                                    ${i.isFull ? 'تم السداد بالكامل ✓' : 'بانتظار استكمال السداد'}
+                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-lg animate-fadeIn">
+                            <div class="flex justify-between items-center mb-5">
+                                <h3 class="font-bold text-gray-800 text-[13px]">${m.name}</h3>
+                                <span class="text-[9px] px-3 py-1 rounded-full font-black ${i.isFull ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}">
+                                    ${i.isFull ? 'مكتمل ✓' : 'غير مكتمل'}
                                 </span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-5">
+                                <div class="bg-slate-50 p-3 rounded-2xl">
+                                    <p class="text-[8px] text-slate-400 font-bold mb-1 uppercase">المدفوع (${i.curr})</p>
+                                    <p class="text-lg font-black text-emerald-600">${i.p.toLocaleString()}</p>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-2xl">
+                                    <p class="text-[8px] text-slate-400 font-bold mb-1 uppercase">المتبقي</p>
+                                    <p class="text-lg font-black text-rose-500">${i.rem.toLocaleString()}</p>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}">
+                                <p class="text-[11px] leading-relaxed font-bold text-center">
+                                    ${message}
+                                </p>
                             </div>
                         </div>`;
                 });
                 wrapper.innerHTML = html + '</div>';
             } else {
-                wrapper.innerHTML = `<div class="text-center py-10 text-slate-400 text-xs font-bold">عذراً، الاسم غير مسجل حالياً</div>`;
+                wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs font-bold">عذراً، هذا الاسم غير مسجل لدينا</div>`;
             }
         };
 
