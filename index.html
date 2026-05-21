@@ -93,13 +93,66 @@
         }
         @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
         
-        /* إضافة تأثير fadeIn للنتائج */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .result-card {
             animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* تنسيق الشريط الزمني */
+        .timeline-bar {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 6px;
+            overflow: hidden;
+        }
+        .timeline-progress {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        /* البطاقات المميزة للمعلومات */
+        .info-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #eef2ff;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .info-item {
+            background: white;
+            border-radius: 12px;
+            padding: 8px 10px;
+            text-align: center;
+            border: 1px solid #f0f2f5;
+        }
+        .info-item-label {
+            font-size: 9px;
+            color: #94a3b8;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .info-item-value {
+            font-size: 11px;
+            color: #1e293b;
+            font-weight: 700;
+        }
+        
+        /* بطاقة الحالة */
+        .status-badge {
+            display: inline-flex;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 800;
         }
     </style>
 </head>
@@ -216,44 +269,69 @@
         const APP_PATH = "amr4admin";
 
         let donors = [];
-        let currentSearchTerm = '';  // تذكر آخر بحث
+        let currentSearchTerm = '';
         
-        // إعدادات Firestore
         db.settings({ timestampsInSnapshots: true });
 
         function closeModal() { 
             document.getElementById('thanksModal').style.display = 'none'; 
         }
 
-        // دالة استخراج المعلومات (تدعم الهيكل القديم والجديد)
+        // دالة استخراج المعلومات
         function getInfo(d) {
-            // الهيكل الجديد (من لوحة التحكم - totalAmount, paidAmount)
+            let total = 0, paid = 0, currency = 'SAR', duration = 'غير محدد', startDate = '', expiryDate = '';
+            let recordedBy = d.recordedBy || d.dataEntryName || 'غير محدد';
+            let updateTime = d.updatedAt || d.createdAt || 0;
+            
+            // الهيكل الجديد (من لوحة التحكم)
             if (d.totalAmount !== undefined && d.totalAmount !== null) {
-                const total = parseFloat(d.totalAmount) || 0;
-                const paid = parseFloat(d.paidAmount) || 0;
-                const isFull = total > 0 && paid >= total;
-                const hasPaidSomething = paid > 0;
-                const updateTime = d.updatedAt || d.createdAt || 0;
-                let c = d.currency || 'sar';
-                if (c === 'sar') c = 'SAR';
-                else if (c === 'usd') c = 'USD';
-                else if (c === 'yer') c = 'YER';
-                const rem = Math.max(0, total - paid);
-                return { t: total, p: paid, isFull, hasPaidSomething, updateTime, curr: c, rem };
+                total = parseFloat(d.totalAmount) || 0;
+                paid = parseFloat(d.paidAmount) || 0;
+                let curr = d.currency || 'sar';
+                if (curr === 'sar') currency = 'SAR';
+                else if (curr === 'usd') currency = 'USD';
+                else if (curr === 'yer') currency = 'YER';
+                
+                if (d.duration) {
+                    if (d.duration === '3 months') duration = '3 أشهر';
+                    else if (d.duration === '6 months') duration = '6 أشهر';
+                    else if (d.duration === '1 year') duration = 'سنة';
+                    else duration = d.duration;
+                }
+                
+                startDate = d.startDate ? new Date(d.startDate).toLocaleDateString('ar-EG') : 'غير محدد';
+                expiryDate = d.expiryDate ? new Date(d.expiryDate).toLocaleDateString('ar-EG') : 'غير محدد';
             }
             
-            // الهيكل القديم (باستخدام حقل note)
-            const note = d.note || "";
-            const total = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
-            const paid = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
+            // الهيكل القديم
+            else {
+                const note = d.note || "";
+                total = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
+                paid = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
+                
+                if (note.toUpperCase().includes('C:USD')) currency = 'USD';
+                else if (note.toUpperCase().includes('C:YER')) currency = 'YER';
+                else currency = 'SAR';
+                
+                const durationMatch = note.match(/D:(3 months|6 months|1 year|none)/);
+                if (durationMatch) {
+                    if (durationMatch[1] === '3 months') duration = '3 أشهر';
+                    else if (durationMatch[1] === '6 months') duration = '6 أشهر';
+                    else if (durationMatch[1] === '1 year') duration = 'سنة';
+                }
+            }
+            
             const isFull = total > 0 && paid >= total;
             const hasPaidSomething = paid > 0;
-            const updateTime = d.updatedAt || d.createdAt || 0;
-            let c = 'SAR';
-            if (note.toUpperCase().includes('C:USD')) c = 'USD';
-            else if (note.toUpperCase().includes('C:YER')) c = 'YER';
             const rem = Math.max(0, total - paid);
-            return { t: total, p: paid, isFull, hasPaidSomething, updateTime, curr: c, rem };
+            const progress = total > 0 ? (paid / total) * 100 : 0;
+            
+            let progressColor = '#ef4444';
+            if (progress >= 100) progressColor = '#10b981';
+            else if (progress >= 50) progressColor = '#f59e0b';
+            else if (progress > 0) progressColor = '#3b82f6';
+            
+            return { total, paid, isFull, hasPaidSomething, updateTime, currency, rem, progress, progressColor, duration, startDate, expiryDate, recordedBy };
         }
 
         function showLastUpdateNotice(list) {
@@ -271,7 +349,6 @@
             }
         }
 
-        // تحديث الإحصائيات
         function updateStatistics() {
             let paidCnt = donors.filter(d => getInfo(d).hasPaidSomething).length;
             document.getElementById('statTotal').innerText = donors.length;
@@ -279,7 +356,6 @@
             document.getElementById('statPending').innerText = donors.length - paidCnt;
         }
 
-        // إعادة عرض نتائج البحث الحالية
         function refreshSearchResults() {
             if (currentSearchTerm === '') return;
             
@@ -292,42 +368,94 @@
             if (finalResults.length > 0) {
                 let html = '<div class="space-y-4">';
                 finalResults.forEach(m => {
-                    const i = getInfo(m);
+                    const info = getInfo(m);
                     
                     let message = "";
                     let msgClass = "";
+                    let statusText = "";
+                    let statusClass = "";
 
-                    if (i.isFull) {
+                    if (info.isFull) {
                         message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
                         msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
-                    } else if (i.p > 0) {
+                        statusText = "مكتمل ✓";
+                        statusClass = "bg-emerald-100 text-emerald-600";
+                    } else if (info.paid > 0) {
                         message = "شكرًا جزيلًا على ما قدمتموه من مساهمة، ونحن بانتظار استكمال باقي المبلغ لتعزيز مسيرة الصندوق.";
                         msgClass = "bg-blue-50 border-blue-100 text-blue-700";
+                        statusText = "غير مكتمل";
+                        statusClass = "bg-rose-100 text-rose-600";
                     } else {
                         message = "ندعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
                         msgClass = "bg-amber-50 border-amber-100 text-amber-700";
+                        statusText = "غير مكتمل";
+                        statusClass = "bg-rose-100 text-rose-600";
                     }
+                    
+                    const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) : 'غير محدد';
 
                     html += `
-                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-lg result-card">
-                            <div class="flex justify-between items-center mb-5">
-                                <h3 class="font-bold text-gray-800 text-[13px]">${m.name}</h3>
-                                <span class="text-[9px] px-3 py-1 rounded-full font-black ${i.isFull ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}">
-                                    ${i.isFull ? 'مكتمل ✓' : 'غير مكتمل'}
-                                </span>
+                        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
+                            <!-- رأس البطاقة: الاسم والحالة -->
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold text-gray-800 text-[16px]">${m.name}</h3>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
                             </div>
                             
-                            <div class="grid grid-cols-2 gap-4 mb-5">
-                                <div class="bg-slate-50 p-3 rounded-2xl">
-                                    <p class="text-[8px] text-slate-400 font-bold mb-1 uppercase">المدفوع (${i.curr})</p>
-                                    <p class="text-lg font-black text-emerald-600">${i.p.toLocaleString()}</p>
+                            <!-- بطاقة المعلومات المميزة -->
+                            <div class="info-card">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-item-label">مدة الاشتراك</div>
+                                        <div class="info-item-value">${info.duration}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-item-label">مدخل البيانات</div>
+                                        <div class="info-item-value">${info.recordedBy}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-item-label">آخر تحديث</div>
+                                        <div class="info-item-value">${updateDate}</div>
+                                    </div>
+                                    ${info.startDate !== 'غير محدد' ? `
+                                    <div class="info-item">
+                                        <div class="info-item-label">تاريخ البدء</div>
+                                        <div class="info-item-value">${info.startDate}</div>
+                                    </div>
+                                    ` : ''}
+                                    ${info.expiryDate !== 'غير محدد' ? `
+                                    <div class="info-item">
+                                        <div class="info-item-label">تاريخ الانتهاء</div>
+                                        <div class="info-item-value">${info.expiryDate}</div>
+                                    </div>
+                                    ` : ''}
                                 </div>
-                                <div class="bg-slate-50 p-3 rounded-2xl">
-                                    <p class="text-[8px] text-slate-400 font-bold mb-1 uppercase">المتبقي</p>
-                                    <p class="text-lg font-black text-rose-500">${i.rem.toLocaleString()}</p>
+                            </div>
+                            
+                            <!-- الشريط الزمني -->
+                            <div class="mb-4">
+                                <div class="flex justify-between text-[9px] text-slate-500 mb-1">
+                                    <span>نسبة الإنجاز</span>
+                                    <span>${Math.round(info.progress)}%</span>
+                                </div>
+                                <div class="timeline-bar">
+                                    <div class="timeline-progress" style="width: ${info.progress}%; background-color: ${info.progressColor}"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- بطاقة المبالغ -->
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div class="bg-emerald-50 p-3 rounded-2xl text-center border border-emerald-100">
+                                    <p class="text-[9px] text-emerald-600 font-bold mb-1">المدفوع (${info.currency})</p>
+                                    <p class="text-lg font-black text-emerald-700">${info.paid.toLocaleString()}</p>
+                                </div>
+                                <div class="bg-rose-50 p-3 rounded-2xl text-center border border-rose-100">
+                                    <p class="text-[9px] text-rose-500 font-bold mb-1">المتبقي</p>
+                                    <p class="text-lg font-black text-rose-600">${info.rem.toLocaleString()}</p>
                                 </div>
                             </div>
 
+                            <!-- بطاقة الرسالة -->
                             <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}">
                                 <p class="text-[11px] leading-relaxed font-bold text-center">
                                     ${message}
@@ -341,7 +469,6 @@
             }
         }
 
-        // دالة البحث الرئيسية
         window.searchDonor = function() {
             const term = document.getElementById("searchInput").value.trim().toLowerCase();
             currentSearchTerm = term;
@@ -358,39 +485,86 @@
             if (finalResults.length > 0) {
                 let html = '<div class="space-y-4">';
                 finalResults.forEach(m => {
-                    const i = getInfo(m);
+                    const info = getInfo(m);
                     
                     let message = "";
                     let msgClass = "";
+                    let statusText = "";
+                    let statusClass = "";
 
-                    if (i.isFull) {
+                    if (info.isFull) {
                         message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
                         msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
-                    } else if (i.p > 0) {
+                        statusText = "مكتمل ✓";
+                        statusClass = "bg-emerald-100 text-emerald-600";
+                    } else if (info.paid > 0) {
                         message = "شكرًا جزيلًا على ما قدمتموه من مساهمة، ونحن بانتظار استكمال باقي المبلغ لتعزيز مسيرة الصندوق.";
                         msgClass = "bg-blue-50 border-blue-100 text-blue-700";
+                        statusText = "غير مكتمل";
+                        statusClass = "bg-rose-100 text-rose-600";
                     } else {
                         message = "ندعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
                         msgClass = "bg-amber-50 border-amber-100 text-amber-700";
+                        statusText = "غير مكتمل";
+                        statusClass = "bg-rose-100 text-rose-600";
                     }
+                    
+                    const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) : 'غير محدد';
 
                     html += `
-                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-lg result-card">
-                            <div class="flex justify-between items-center mb-5">
-                                <h3 class="font-bold text-gray-800 text-[13px]">${m.name}</h3>
-                                <span class="text-[9px] px-3 py-1 rounded-full font-black ${i.isFull ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}">
-                                    ${i.isFull ? 'مكتمل ✓' : 'غير مكتمل'}
-                                </span>
+                        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold text-gray-800 text-[16px]">${m.name}</h3>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
                             </div>
                             
-                            <div class="grid grid-cols-2 gap-4 mb-5">
-                                <div class="bg-slate-50 p-3 rounded-2xl">
-                                    <p class="text-[8px] text-slate-400 font-bold mb-1 uppercase">المدفوع (${i.curr})</p>
-                                    <p class="text-lg font-black text-emerald-600">${i.p.toLocaleString()}</p>
+                            <div class="info-card">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-item-label">مدة الاشتراك</div>
+                                        <div class="info-item-value">${info.duration}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-item-label">مدخل البيانات</div>
+                                        <div class="info-item-value">${info.recordedBy}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-item-label">آخر تحديث</div>
+                                        <div class="info-item-value">${updateDate}</div>
+                                    </div>
+                                    ${info.startDate !== 'غير محدد' ? `
+                                    <div class="info-item">
+                                        <div class="info-item-label">تاريخ البدء</div>
+                                        <div class="info-item-value">${info.startDate}</div>
+                                    </div>
+                                    ` : ''}
+                                    ${info.expiryDate !== 'غير محدد' ? `
+                                    <div class="info-item">
+                                        <div class="info-item-label">تاريخ الانتهاء</div>
+                                        <div class="info-item-value">${info.expiryDate}</div>
+                                    </div>
+                                    ` : ''}
                                 </div>
-                                <div class="bg-slate-50 p-3 rounded-2xl">
-                                    <p class="text-[8px] text-slate-400 font-bold mb-1 uppercase">المتبقي</p>
-                                    <p class="text-lg font-black text-rose-500">${i.rem.toLocaleString()}</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="flex justify-between text-[9px] text-slate-500 mb-1">
+                                    <span>نسبة الإنجاز</span>
+                                    <span>${Math.round(info.progress)}%</span>
+                                </div>
+                                <div class="timeline-bar">
+                                    <div class="timeline-progress" style="width: ${info.progress}%; background-color: ${info.progressColor}"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div class="bg-emerald-50 p-3 rounded-2xl text-center border border-emerald-100">
+                                    <p class="text-[9px] text-emerald-600 font-bold mb-1">المدفوع (${info.currency})</p>
+                                    <p class="text-lg font-black text-emerald-700">${info.paid.toLocaleString()}</p>
+                                </div>
+                                <div class="bg-rose-50 p-3 rounded-2xl text-center border border-rose-100">
+                                    <p class="text-[9px] text-rose-500 font-bold mb-1">المتبقي</p>
+                                    <p class="text-lg font-black text-rose-600">${info.rem.toLocaleString()}</p>
                                 </div>
                             </div>
 
@@ -407,32 +581,22 @@
             }
         };
 
-        // ========== الحل الأساسي: التزامن الفوري ==========
-        // تسجيل الدخول المجهول والاستماع للبيانات
+        // تسجيل الدخول والاستماع للبيانات
         auth.signInAnonymously()
             .then(() => {
-                console.log("✅ تم تسجيل الدخول anonymously بنجاح");
+                console.log("✅ تم تسجيل الدخول بنجاح");
                 
-                // المسار الصحيح كما في لوحة التحكم
                 const donorsRef = db.collection('artifacts').doc(APP_PATH).collection('public').doc('data').collection('donors');
                 
-                // استماع حيوي للتغييرات - هذا هو الحل!
                 donorsRef.onSnapshot((snapshot) => {
-                    // تحديث المصفوفة بأحدث البيانات
                     donors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    
-                    // تحديث الإحصائيات
                     updateStatistics();
-                    
-                    // إخفاء مؤشر التحميل
                     document.getElementById('loadingStatus').style.display = 'none';
                     
-                    // إذا كان هناك بحث نشط، قم بتحديث النتائج تلقائياً
                     if (currentSearchTerm !== '') {
                         refreshSearchResults();
                     }
                     
-                    // عرض إشعار آخر تحديث (مرة واحدة لكل جلسة)
                     const sessionSeen = sessionStorage.getItem('seen_update');
                     if (!sessionSeen && donors.length > 0) {
                         showLastUpdateNotice(donors);
@@ -440,28 +604,15 @@
                     }
                     
                     console.log(`📊 تم تحديث البيانات - عدد المتبرعين: ${donors.length}`);
-                    
                 }, (error) => {
-                    console.error("❌ خطأ في الاستماع:", error);
-                    document.getElementById('loadingStatus').innerHTML = `
-                        <div class="text-center py-10 text-red-500">
-                            <p class="text-sm font-bold">⚠️ خطأ في الاتصال</p>
-                            <p class="text-xs mt-2">يرجى تحديث الصفحة</p>
-                        </div>
-                    `;
+                    console.error("❌ خطأ:", error);
+                    document.getElementById('loadingStatus').innerHTML = `<div class="text-center py-10 text-red-500"><p class="text-sm font-bold">⚠️ خطأ في الاتصال</p></div>`;
                 });
             })
             .catch((error) => {
                 console.error("❌ فشل تسجيل الدخول:", error);
-                document.getElementById('loadingStatus').innerHTML = `
-                    <div class="text-center py-10 text-red-500">
-                        <p class="text-sm font-bold">⚠️ فشل الاتصال بالخادم</p>
-                        <p class="text-xs mt-2">يرجى التحقق من اتصال الإنترنت</p>
-                    </div>
-                `;
             });
 
-        // البحث عند الضغط على Enter
         document.getElementById('searchInput').addEventListener('keypress', (e) => { 
             if (e.key === 'Enter') searchDonor(); 
         });
