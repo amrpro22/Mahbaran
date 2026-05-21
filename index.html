@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -10,9 +9,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Firebase Libraries -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
@@ -93,6 +92,15 @@
             padding-right: 100%; color: #ef4444; font-size: 12px; font-weight: 700;
         }
         @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
+        
+        /* إضافة تأثير fadeIn للنتائج */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-card {
+            animation: fadeIn 0.3s ease-out;
+        }
     </style>
 </head>
 <body class="flex justify-center">
@@ -177,24 +185,21 @@
         </div>
 
         <footer class="bg-slate-50 border-t border-slate-100 px-4 py-5 text-center">
-            <!-- المشرف العام في الأعلى بشكل بارز ومستقل وبخط صغير ناعم -->
             <div class="text-[11px] font-bold text-[#001f54] mb-2">
                 المشرف العام : مصطفى الشجاع
             </div>
-            
-            <!-- باقي الأسماء في الأسفل بصف واحد أفقي متناسق وحجم أصغر -->
             <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[9.5px] font-semibold text-slate-500">
                 <div class="whitespace-nowrap">المدير المالي : مجدي عبدة علي</div>
                 <span class="text-slate-300 hidden min-[360px]:inline">•</span>
                 <div class="whitespace-nowrap">التدقيق وإدخال البيانات : ياسر الشجاع</div>
                 <span class="text-slate-300 hidden min-[360px]:inline">•</span>
-                <!-- تم تمييز كلمة مطور النظام بلون أغمق وخط عريض هنا -->
                 <div class="whitespace-nowrap"><span class="font-bold text-slate-800">مطور النظام: </span> عمرو مسعد الشجاع</div>
             </div>
         </footer>
     </div>
 
     <script>
+        // نفس إعدادات Firebase المستخدمة في لوحة التحكم
         const firebaseConfig = {
             apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
             authDomain: "amr4admin.firebaseapp.com",
@@ -204,27 +209,55 @@
             appId: "1:177280788092:web:44f16c8f585a5b3e484bf9"
         };
 
-        let donors = [];
+        // تهيئة Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
+        const APP_PATH = "amr4admin";
 
-        function closeModal() { document.getElementById('thanksModal').style.display = 'none'; }
+        let donors = [];
+        let currentSearchTerm = '';  // تذكر آخر بحث
+        
+        // إعدادات Firestore
+        db.settings({ timestampsInSnapshots: true });
 
+        function closeModal() { 
+            document.getElementById('thanksModal').style.display = 'none'; 
+        }
+
+        // دالة استخراج المعلومات (تدعم الهيكل القديم والجديد)
         function getInfo(d) {
+            // الهيكل الجديد (من لوحة التحكم - totalAmount, paidAmount)
+            if (d.totalAmount !== undefined && d.totalAmount !== null) {
+                const total = parseFloat(d.totalAmount) || 0;
+                const paid = parseFloat(d.paidAmount) || 0;
+                const isFull = total > 0 && paid >= total;
+                const hasPaidSomething = paid > 0;
+                const updateTime = d.updatedAt || d.createdAt || 0;
+                let c = d.currency || 'sar';
+                if (c === 'sar') c = 'SAR';
+                else if (c === 'usd') c = 'USD';
+                else if (c === 'yer') c = 'YER';
+                const rem = Math.max(0, total - paid);
+                return { t: total, p: paid, isFull, hasPaidSomething, updateTime, curr: c, rem };
+            }
+            
+            // الهيكل القديم (باستخدام حقل note)
             const note = d.note || "";
-            const t = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
-            const p = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
-            const isFull = t > 0 && p >= t;
-            const hasPaidSomething = p > 0; // تعريف جديد: أي شخص دفع ولو جزء بسيط
+            const total = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
+            const paid = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
+            const isFull = total > 0 && paid >= total;
+            const hasPaidSomething = paid > 0;
             const updateTime = d.updatedAt || d.createdAt || 0;
             let c = 'SAR';
             if (note.toUpperCase().includes('C:USD')) c = 'USD';
             else if (note.toUpperCase().includes('C:YER')) c = 'YER';
-            return { t, p, isFull, hasPaidSomething, updateTime, curr: c, rem: Math.max(0, t - p) };
+            const rem = Math.max(0, total - paid);
+            return { t: total, p: paid, isFull, hasPaidSomething, updateTime, curr: c, rem };
         }
 
         function showLastUpdateNotice(list) {
-            const payers = list.filter(d => getInfo(d).p > 0);
+            const payers = list.filter(d => getInfo(d).hasPaidSomething);
             if (payers.length > 0) {
                 payers.sort((a, b) => getInfo(b).updateTime - getInfo(a).updateTime);
                 const latest = payers[0];
@@ -238,32 +271,80 @@
             }
         }
 
-        firebase.auth().signInAnonymously().then(() => {
-            db.collection('artifacts').doc('amr4admin').collection('public').doc('data').collection('donors')
-            .onSnapshot((snap) => {
-                donors = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                let paidCnt = 0;
-                
-                // تحديث المنطق: العداد يحسب كل من دفع شيئاً أكبر من صفر
-                donors.forEach(d => { 
-                    if(getInfo(d).hasPaidSomething) paidCnt++; 
+        // تحديث الإحصائيات
+        function updateStatistics() {
+            let paidCnt = donors.filter(d => getInfo(d).hasPaidSomething).length;
+            document.getElementById('statTotal').innerText = donors.length;
+            document.getElementById('statPaid').innerText = paidCnt;
+            document.getElementById('statPending').innerText = donors.length - paidCnt;
+        }
+
+        // إعادة عرض نتائج البحث الحالية
+        function refreshSearchResults() {
+            if (currentSearchTerm === '') return;
+            
+            const term = currentSearchTerm;
+            const wrapper = document.getElementById("resultsWrapper");
+            
+            const filtered = donors.filter(d => (d.name || "").toLowerCase() === term);
+            const finalResults = filtered.length > 0 ? filtered : donors.filter(d => (d.name || "").toLowerCase().includes(term));
+
+            if (finalResults.length > 0) {
+                let html = '<div class="space-y-4">';
+                finalResults.forEach(m => {
+                    const i = getInfo(m);
+                    
+                    let message = "";
+                    let msgClass = "";
+
+                    if (i.isFull) {
+                        message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
+                        msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
+                    } else if (i.p > 0) {
+                        message = "شكرًا جزيلًا على ما قدمتموه من مساهمة، ونحن بانتظار استكمال باقي المبلغ لتعزيز مسيرة الصندوق.";
+                        msgClass = "bg-blue-50 border-blue-100 text-blue-700";
+                    } else {
+                        message = "ندعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
+                        msgClass = "bg-amber-50 border-amber-100 text-amber-700";
+                    }
+
+                    html += `
+                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-lg result-card">
+                            <div class="flex justify-between items-center mb-5">
+                                <h3 class="font-bold text-gray-800 text-[13px]">${m.name}</h3>
+                                <span class="text-[9px] px-3 py-1 rounded-full font-black ${i.isFull ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}">
+                                    ${i.isFull ? 'مكتمل ✓' : 'غير مكتمل'}
+                                </span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-5">
+                                <div class="bg-slate-50 p-3 rounded-2xl">
+                                    <p class="text-[8px] text-slate-400 font-bold mb-1 uppercase">المدفوع (${i.curr})</p>
+                                    <p class="text-lg font-black text-emerald-600">${i.p.toLocaleString()}</p>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-2xl">
+                                    <p class="text-[8px] text-slate-400 font-bold mb-1 uppercase">المتبقي</p>
+                                    <p class="text-lg font-black text-rose-500">${i.rem.toLocaleString()}</p>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}">
+                                <p class="text-[11px] leading-relaxed font-bold text-center">
+                                    ${message}
+                                </p>
+                            </div>
+                        </div>`;
                 });
+                wrapper.innerHTML = html + '</div>';
+            } else if (term && term !== '') {
+                wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs font-bold">عذراً، هذا الاسم غير مسجل لدينا</div>`;
+            }
+        }
 
-                document.getElementById('statTotal').innerText = donors.length;
-                document.getElementById('statPaid').innerText = paidCnt;
-                document.getElementById('statPending').innerText = donors.length - paidCnt;
-                document.getElementById('loadingStatus').classList.add('hidden');
-                
-                const sessionSeen = sessionStorage.getItem('seen_update');
-                if (!sessionSeen) {
-                    showLastUpdateNotice(donors);
-                    sessionStorage.setItem('seen_update', 'true');
-                }
-            });
-        });
-
+        // دالة البحث الرئيسية
         window.searchDonor = function() {
             const term = document.getElementById("searchInput").value.trim().toLowerCase();
+            currentSearchTerm = term;
             const wrapper = document.getElementById("resultsWrapper");
             
             if (!term) {
@@ -294,7 +375,7 @@
                     }
 
                     html += `
-                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-lg animate-fadeIn">
+                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-lg result-card">
                             <div class="flex justify-between items-center mb-5">
                                 <h3 class="font-bold text-gray-800 text-[13px]">${m.name}</h3>
                                 <span class="text-[9px] px-3 py-1 rounded-full font-black ${i.isFull ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}">
@@ -326,8 +407,64 @@
             }
         };
 
-        document.getElementById('searchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchDonor(); });
+        // ========== الحل الأساسي: التزامن الفوري ==========
+        // تسجيل الدخول المجهول والاستماع للبيانات
+        auth.signInAnonymously()
+            .then(() => {
+                console.log("✅ تم تسجيل الدخول anonymously بنجاح");
+                
+                // المسار الصحيح كما في لوحة التحكم
+                const donorsRef = db.collection('artifacts').doc(APP_PATH).collection('public').doc('data').collection('donors');
+                
+                // استماع حيوي للتغييرات - هذا هو الحل!
+                donorsRef.onSnapshot((snapshot) => {
+                    // تحديث المصفوفة بأحدث البيانات
+                    donors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    
+                    // تحديث الإحصائيات
+                    updateStatistics();
+                    
+                    // إخفاء مؤشر التحميل
+                    document.getElementById('loadingStatus').style.display = 'none';
+                    
+                    // إذا كان هناك بحث نشط، قم بتحديث النتائج تلقائياً
+                    if (currentSearchTerm !== '') {
+                        refreshSearchResults();
+                    }
+                    
+                    // عرض إشعار آخر تحديث (مرة واحدة لكل جلسة)
+                    const sessionSeen = sessionStorage.getItem('seen_update');
+                    if (!sessionSeen && donors.length > 0) {
+                        showLastUpdateNotice(donors);
+                        sessionStorage.setItem('seen_update', 'true');
+                    }
+                    
+                    console.log(`📊 تم تحديث البيانات - عدد المتبرعين: ${donors.length}`);
+                    
+                }, (error) => {
+                    console.error("❌ خطأ في الاستماع:", error);
+                    document.getElementById('loadingStatus').innerHTML = `
+                        <div class="text-center py-10 text-red-500">
+                            <p class="text-sm font-bold">⚠️ خطأ في الاتصال</p>
+                            <p class="text-xs mt-2">يرجى تحديث الصفحة</p>
+                        </div>
+                    `;
+                });
+            })
+            .catch((error) => {
+                console.error("❌ فشل تسجيل الدخول:", error);
+                document.getElementById('loadingStatus').innerHTML = `
+                    <div class="text-center py-10 text-red-500">
+                        <p class="text-sm font-bold">⚠️ فشل الاتصال بالخادم</p>
+                        <p class="text-xs mt-2">يرجى التحقق من اتصال الإنترنت</p>
+                    </div>
+                `;
+            });
+
+        // البحث عند الضغط على Enter
+        document.getElementById('searchInput').addEventListener('keypress', (e) => { 
+            if (e.key === 'Enter') searchDonor(); 
+        });
     </script>
 </body>
 </html>
-
