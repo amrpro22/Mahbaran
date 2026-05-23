@@ -2,10 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>صندوق مساعدة الحالات الطارئة</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -15,6 +18,7 @@
         body {
             background-color: #f8fafc;
             font-family: 'Cairo', sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
         .app-card {
             width: 100%;
@@ -48,31 +52,138 @@
             font-size: 16px;
             text-align: right;
         }
+        
         .spinner {
             width: 24px; height: 24px; border: 3px solid #e2e8f0;
             border-top-color: #001f54; border-radius: 50%;
             animation: spin 0.8s linear infinite; display: inline-block;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .result-card { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .timeline-bar { background: #e2e8f0; border-radius: 10px; height: 6px; overflow: hidden; }
-        .timeline-progress { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
-        .status-badge { display: inline-flex; padding: 4px 12px; border-radius: 30px; font-size: 10px; font-weight: 800; }
-        .info-card { background: #f8fafc; border-radius: 16px; padding: 12px; margin-bottom: 12px; border: 1px solid #eef2ff; }
-        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .info-item { background: white; border-radius: 12px; padding: 8px 10px; text-align: center; border: 1px solid #f0f2f5; }
-        .info-item-label { font-size: 9px; color: #94a3b8; font-weight: 600; margin-bottom: 4px; }
-        .info-item-value { font-size: 11px; color: #1e293b; font-weight: 700; }
-        .news-ticker { background: #f1f5f9; height: 35px; display: flex; align-items: center; overflow: hidden; margin: 15px 20px 0; border-radius: 10px; }
-        .ticker-content { white-space: nowrap; display: inline-block; animation: ticker 45s linear infinite; padding-right: 100%; color: #ef4444; font-size: 12px; font-weight: 700; }
+
+        .news-ticker {
+            background: #f1f5f9; height: 35px; display: flex; align-items: center;
+            overflow: hidden; margin: 15px 20px 0; border-radius: 10px;
+        }
+        .ticker-content {
+            white-space: nowrap; display: inline-block; animation: ticker 45s linear infinite;
+            padding-right: 100%; color: #ef4444; font-size: 12px; font-weight: 700;
+        }
         @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-card {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .timeline-bar {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 6px;
+            overflow: hidden;
+        }
+        .timeline-progress {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .info-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #eef2ff;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .info-item {
+            background: white;
+            border-radius: 12px;
+            padding: 8px 10px;
+            text-align: center;
+            border: 1px solid #f0f2f5;
+        }
+        .info-item-label {
+            font-size: 9px;
+            color: #94a3b8;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .info-item-value {
+            font-size: 11px;
+            color: #1e293b;
+            font-weight: 700;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+        
+        /* رسالة العيد الجديدة */
+        .eid-message {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-right: 6px solid #d97706;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .eid-message-text {
+            font-size: 18px;
+            font-weight: 800;
+            color: #92400e;
+            line-height: 1.6;
+        }
+        
+        .eid-message-name {
+            font-size: 20px;
+            font-weight: 900;
+            color: #b45309;
+            background: white;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 40px;
+            margin: 8px 0 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .eid-decoration {
+            font-size: 24px;
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+        }
     </style>
 </head>
 <body class="flex justify-center">
 
     <div class="app-card">
-        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold">⚠️ يرجى تسديد المبالغ المتبقية قبل تاريخ 2026/06/01</div>
+        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold">
+             ⚠️ يرجى تسديد المبالغ المتبقية قبل تاريخ 2026/06/01
+        </div>
 
         <div class="header-gradient">
             <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
@@ -82,13 +193,17 @@
         <div class="search-container">
             <div class="relative">
                 <input type="text" id="searchInput" class="search-input" placeholder="اكتب اسمك للبحث..." autocomplete="off">
-                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold shadow-md active:scale-95 transition-all">بـحـث</button>
+                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold shadow-md active:scale-95 transition-all">
+                    بـحـث
+                </button>
             </div>
         </div>
 
         <div class="news-ticker">
             <div class="bg-[#001f54] text-white px-3 h-full flex items-center font-black text-[10px] z-10">هام</div>
-            <div class="ticker-content">الرجاء المبادرة باستكمال المبالغ المتبقية لضمان استمرار تقديم المساعدات في وقتها . . . بارك الله في أموالكم وأهليكم . . .</div>
+            <div class="ticker-content">
+                الرجاء المبادرة باستكمال المبالغ المتبقية لضمان استمرار تقديم المساعدات في وقتها . . . بارك الله في أموالكم وأهليكم . . .
+            </div>
         </div>
 
         <div class="grid grid-cols-3 gap-3 p-5 mt-2">
@@ -120,11 +235,13 @@
         </div>
 
         <footer class="bg-slate-50 border-t border-slate-100 px-4 py-5 text-center">
-            <div class="text-[11px] font-bold text-[#001f54] mb-2">المشرف العام : مصطفى الشجاع</div>
+            <div class="text-[11px] font-bold text-[#001f54] mb-2">
+                المشرف العام : مصطفى الشجاع
+            </div>
             <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[9.5px] font-semibold text-slate-500">
                 <div class="whitespace-nowrap">المدير المالي : مجدي عبدة علي</div>
                 <span class="text-slate-300 hidden min-[360px]:inline">•</span>
-                <div class="whitespace-nowrap">المدقق المالي : ياسر الشجاع</div>
+                <div class="whitespace-nowrap">التدقيق وإدخال البيانات : ياسر الشجاع</div>
                 <span class="text-slate-300 hidden min-[360px]:inline">•</span>
                 <div class="whitespace-nowrap"><span class="font-bold text-slate-800">مطور النظام: </span> عمرو مسعد الشجاع</div>
             </div>
@@ -144,9 +261,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const APP_PATH = "amr4admin";
-        
-        // تعطيل التحقق من المصادقة المؤقتاً (ملاحظة: هذا قد لا يعمل في بعض الإصدارات)
-        // الحل الأفضل هو إضافة المجال في Firebase Console
 
         let donors = [];
         let currentSearchTerm = '';
@@ -224,7 +338,22 @@
             document.getElementById('statPending').innerText = validDonors.length - paidCnt;
         }
 
-        function renderResults(filteredDonors) {
+        // دالة عرض رسالة العيد
+        function renderEidMessage(donorName) {
+            return `
+                <div class="eid-message">
+                    <div class="eid-decoration">🌙✨🎉</div>
+                    <div class="eid-message-text">
+                        من العايدين<br>
+                        <span class="eid-message-name">كل عام وأنت بخير يا ${donorName}</span><br>
+                        أعاده الله علينا وعليكم باليمن والبركات
+                    </div>
+                    <div class="eid-decoration mt-2">🎊🌙✨</div>
+                </div>
+            `;
+        }
+
+        function renderResults(filteredDonors, searchName) {
             const wrapper = document.getElementById("resultsWrapper");
             
             if (filteredDonors.length === 0) {
@@ -232,7 +361,15 @@
                 return;
             }
             
-            let html = '<div class="space-y-4">';
+            let html = '';
+            
+            // إضافة رسالة العيد لكل اسم تم البحث عنه (تظهر مرة واحدة في الأعلى)
+            if (searchName && filteredDonors.length > 0) {
+                html += renderEidMessage(searchName);
+            }
+            
+            html += '<div class="space-y-4">';
+            
             filteredDonors.forEach(m => {
                 const info = getInfo(m);
                 if (!info) return;
@@ -257,11 +394,12 @@
                 }
                 
                 const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG') : 'غير محدد';
+                const donorDisplayName = m.name || m.donorName || 'غير محدد';
                 
                 html += `
                     <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-gray-800 text-[16px]">${m.name}</h3>
+                            <h3 class="font-bold text-gray-800 text-[16px]">${donorDisplayName}</h3>
                             <span class="status-badge ${statusClass}">${statusText}</span>
                         </div>
                         <div class="info-card">
@@ -284,6 +422,7 @@
                         <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}"><p class="text-[11px] leading-relaxed font-bold text-center">${message}</p></div>
                     </div>`;
             });
+            
             wrapper.innerHTML = html + '</div>';
         }
 
@@ -299,10 +438,11 @@
             const termLower = term.toLowerCase();
             const validDonors = donors.filter(d => d.type !== 'zakat');
             const filtered = validDonors.filter(d => (d.name || "").toLowerCase().includes(termLower));
-            renderResults(filtered);
+            
+            // تمرير اسم البحث لعرضه في رسالة العيد
+            renderResults(filtered, term);
         };
 
-        // محاولة قراءة البيانات بدون مصادقة
         DONORS_PATH.get().then((snapshot) => {
             donors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             updateStatistics();
@@ -314,7 +454,6 @@
                 <div class="text-center py-10 text-red-500">
                     <p class="text-sm font-bold">⚠️ خطأ في الاتصال</p>
                     <p class="text-xs mt-2">${error.message}</p>
-                    <p class="text-xs mt-4 text-slate-500">الرجاء إضافة هذا المجال إلى Firebase Console</p>
                 </div>`;
         });
 
