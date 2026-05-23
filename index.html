@@ -2,15 +2,11 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>صندوق مساعدة الحالات الطارئة</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <style>
@@ -19,7 +15,6 @@
         body {
             background-color: #f8fafc;
             font-family: 'Cairo', sans-serif;
-            -webkit-font-smoothing: antialiased;
         }
         .app-card {
             width: 100%;
@@ -53,160 +48,47 @@
             font-size: 16px;
             text-align: right;
         }
-        
-        #thanksModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: rgba(0, 31, 84, 0.8);
-            backdrop-filter: blur(12px);
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-card {
-            background: #fff;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 35px;
-            padding: 35px;
-            text-align: center;
-            animation: modalBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        @keyframes modalBounce { from { opacity: 0; transform: scale(0.7) translateY(40px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        
         .spinner {
             width: 24px; height: 24px; border: 3px solid #e2e8f0;
             border-top-color: #001f54; border-radius: 50%;
             animation: spin 0.8s linear infinite; display: inline-block;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        .news-ticker {
-            background: #f1f5f9; height: 35px; display: flex; align-items: center;
-            overflow: hidden; margin: 15px 20px 0; border-radius: 10px;
-        }
-        .ticker-content {
-            white-space: nowrap; display: inline-block; animation: ticker 45s linear infinite;
-            padding-right: 100%; color: #ef4444; font-size: 12px; font-weight: 700;
-        }
+        .result-card { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .timeline-bar { background: #e2e8f0; border-radius: 10px; height: 6px; overflow: hidden; }
+        .timeline-progress { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+        .status-badge { display: inline-flex; padding: 4px 12px; border-radius: 30px; font-size: 10px; font-weight: 800; }
+        .info-card { background: #f8fafc; border-radius: 16px; padding: 12px; margin-bottom: 12px; border: 1px solid #eef2ff; }
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .info-item { background: white; border-radius: 12px; padding: 8px 10px; text-align: center; border: 1px solid #f0f2f5; }
+        .info-item-label { font-size: 9px; color: #94a3b8; font-weight: 600; margin-bottom: 4px; }
+        .info-item-value { font-size: 11px; color: #1e293b; font-weight: 700; }
+        .news-ticker { background: #f1f5f9; height: 35px; display: flex; align-items: center; overflow: hidden; margin: 15px 20px 0; border-radius: 10px; }
+        .ticker-content { white-space: nowrap; display: inline-block; animation: ticker 45s linear infinite; padding-right: 100%; color: #ef4444; font-size: 12px; font-weight: 700; }
         @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .result-card {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        /* تنسيق الشريط الزمني */
-        .timeline-bar {
-            background: #e2e8f0;
-            border-radius: 10px;
-            height: 6px;
-            overflow: hidden;
-        }
-        .timeline-progress {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-        
-        /* البطاقات المميزة للمعلومات */
-        .info-card {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: 1px solid #eef2ff;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .info-item {
-            background: white;
-            border-radius: 12px;
-            padding: 8px 10px;
-            text-align: center;
-            border: 1px solid #f0f2f5;
-        }
-        .info-item-label {
-            font-size: 9px;
-            color: #94a3b8;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .info-item-value {
-            font-size: 11px;
-            color: #1e293b;
-            font-weight: 700;
-        }
-        
-        /* بطاقة الحالة */
-        .status-badge {
-            display: inline-flex;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 10px;
-            font-weight: 800;
-        }
     </style>
 </head>
 <body class="flex justify-center">
 
-    <!-- Modal for Last Update -->
-    <div id="thanksModal">
-        <div class="modal-card shadow-2xl">
-            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
-                ✨
-            </div>
-            <h2 class="text-xl font-black text-[#001f54] mb-2">تحية إجلال لأهل الجود</h2>
-            <p class="text-sm text-slate-500 mb-4">نفخر بتحديث بيانات العطاء للأخ الكريم:</p>
-            <div id="lastPayerName" class="text-xl font-black text-emerald-600 mb-3 px-6 py-3 bg-emerald-50 rounded-2xl inline-block border border-emerald-100">
-                جاري التحميل..
-            </div>
-            <div id="lastUpdateTime" class="text-[10px] text-slate-400 mb-6 font-bold block">
-                --:--
-            </div>
-            <p class="text-[12px] text-slate-600 mb-8 leading-relaxed">
-                بمثل هذا السخاء يزدهر مجتمعنا ويستمر أثر الخير. <br>
-                بارك الله لكم في أرزاقكم وجعلها في ميزان حسناتكم.
-            </p>
-            <button onclick="closeModal()" class="w-full bg-[#001f54] text-white py-4 rounded-2xl font-bold text-sm shadow-xl transition-all active:scale-95">
-                 إغلاق النافذة
-            </button>
-        </div>
-    </div>
-
     <div class="app-card">
-        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold">
-             ⚠️ يرجى تسديد المبالغ المتبقية قبل تاريخ 2026/06/01
-        </div>
+        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold">⚠️ يرجى تسديد المبالغ المتبقية قبل تاريخ 2026/06/01</div>
 
         <div class="header-gradient">
             <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
             <p class="text-blue-200 text-[11px] font-semibold tracking-widest">قرية محبران</p>
         </div>
 
-        <!-- Search Section -->
         <div class="search-container">
             <div class="relative">
                 <input type="text" id="searchInput" class="search-input" placeholder="اكتب اسمك للبحث..." autocomplete="off">
-                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold shadow-md active:scale-95 transition-all">
-                    بـحـث
-                </button>
+                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold shadow-md active:scale-95 transition-all">بـحـث</button>
             </div>
         </div>
 
         <div class="news-ticker">
             <div class="bg-[#001f54] text-white px-3 h-full flex items-center font-black text-[10px] z-10">هام</div>
-            <div class="ticker-content">
-                الرجاء المبادرة باستكمال المبالغ المتبقية لضمان استمرار تقديم المساعدات في وقتها . . . بارك الله في أموالكم وأهليكم . . .
-            </div>
+            <div class="ticker-content">الرجاء المبادرة باستكمال المبالغ المتبقية لضمان استمرار تقديم المساعدات في وقتها . . . بارك الله في أموالكم وأهليكم . . .</div>
         </div>
 
         <div class="grid grid-cols-3 gap-3 p-5 mt-2">
@@ -238,9 +120,7 @@
         </div>
 
         <footer class="bg-slate-50 border-t border-slate-100 px-4 py-5 text-center">
-            <div class="text-[11px] font-bold text-[#001f54] mb-2">
-                المشرف العام : مصطفى الشجاع
-            </div>
+            <div class="text-[11px] font-bold text-[#001f54] mb-2">المشرف العام : مصطفى الشجاع</div>
             <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[9.5px] font-semibold text-slate-500">
                 <div class="whitespace-nowrap">المدير المالي : مجدي عبدة علي</div>
                 <span class="text-slate-300 hidden min-[360px]:inline">•</span>
@@ -252,7 +132,6 @@
     </div>
 
     <script>
-        // نفس إعدادات Firebase المستخدمة في لوحة التحكم
         const firebaseConfig = {
             apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
             authDomain: "amr4admin.firebaseapp.com",
@@ -262,28 +141,35 @@
             appId: "1:177280788092:web:44f16c8f585a5b3e484bf9"
         };
 
-        // تهيئة Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const auth = firebase.auth();
         const APP_PATH = "amr4admin";
+        
+        // تعطيل التحقق من المصادقة المؤقتاً (ملاحظة: هذا قد لا يعمل في بعض الإصدارات)
+        // الحل الأفضل هو إضافة المجال في Firebase Console
 
         let donors = [];
         let currentSearchTerm = '';
         
-        db.settings({ timestampsInSnapshots: true });
+        const DONORS_PATH = db.collection('artifacts').doc(APP_PATH).collection('public').doc('data').collection('donors');
 
-        function closeModal() { 
-            document.getElementById('thanksModal').style.display = 'none'; 
-        }
-
-        // دالة استخراج المعلومات
         function getInfo(d) {
+            if (d.type === 'zakat') return null;
+            
             let total = 0, paid = 0, currency = 'SAR', duration = 'غير محدد', startDate = '', expiryDate = '';
             let recordedBy = d.recordedBy || d.dataEntryName || 'غير محدد';
-            let updateTime = d.updatedAt || d.createdAt || 0;
+            let updateTime = 0;
             
-            // الهيكل الجديد (من لوحة التحكم)
+            if (d.updatedAt) {
+                if (d.updatedAt.toDate) updateTime = d.updatedAt.toDate().getTime();
+                else if (d.updatedAt.seconds) updateTime = d.updatedAt.seconds * 1000;
+                else updateTime = new Date(d.updatedAt).getTime();
+            } else if (d.createdAt) {
+                if (d.createdAt.toDate) updateTime = d.createdAt.toDate().getTime();
+                else if (d.createdAt.seconds) updateTime = d.createdAt.seconds * 1000;
+                else updateTime = new Date(d.createdAt).getTime();
+            }
+            
             if (d.totalAmount !== undefined && d.totalAmount !== null) {
                 total = parseFloat(d.totalAmount) || 0;
                 paid = parseFloat(d.paidAmount) || 0;
@@ -299,33 +185,29 @@
                     else duration = d.duration;
                 }
                 
-                startDate = d.startDate ? new Date(d.startDate).toLocaleDateString('ar-EG') : 'غير محدد';
-                expiryDate = d.expiryDate ? new Date(d.expiryDate).toLocaleDateString('ar-EG') : 'غير محدد';
-            }
-            
-            // الهيكل القديم
-            else {
+                if (d.startDate) {
+                    if (d.startDate.toDate) startDate = d.startDate.toDate().toLocaleDateString('ar-EG');
+                    else if (d.startDate.seconds) startDate = new Date(d.startDate.seconds * 1000).toLocaleDateString('ar-EG');
+                    else startDate = new Date(d.startDate).toLocaleDateString('ar-EG');
+                }
+                
+                if (d.expiryDate) {
+                    if (d.expiryDate.toDate) expiryDate = d.expiryDate.toDate().toLocaleDateString('ar-EG');
+                    else if (d.expiryDate.seconds) expiryDate = new Date(d.expiryDate.seconds * 1000).toLocaleDateString('ar-EG');
+                    else expiryDate = new Date(d.expiryDate).toLocaleDateString('ar-EG');
+                }
+            } else {
                 const note = d.note || "";
                 total = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
                 paid = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
-                
                 if (note.toUpperCase().includes('C:USD')) currency = 'USD';
                 else if (note.toUpperCase().includes('C:YER')) currency = 'YER';
-                else currency = 'SAR';
-                
-                const durationMatch = note.match(/D:(3 months|6 months|1 year|none)/);
-                if (durationMatch) {
-                    if (durationMatch[1] === '3 months') duration = '3 أشهر';
-                    else if (durationMatch[1] === '6 months') duration = '6 أشهر';
-                    else if (durationMatch[1] === '1 year') duration = 'سنة';
-                }
             }
             
             const isFull = total > 0 && paid >= total;
             const hasPaidSomething = paid > 0;
             const rem = Math.max(0, total - paid);
             const progress = total > 0 ? (paid / total) * 100 : 0;
-            
             let progressColor = '#ef4444';
             if (progress >= 100) progressColor = '#10b981';
             else if (progress >= 50) progressColor = '#f59e0b';
@@ -334,284 +216,107 @@
             return { total, paid, isFull, hasPaidSomething, updateTime, currency, rem, progress, progressColor, duration, startDate, expiryDate, recordedBy };
         }
 
-        function showLastUpdateNotice(list) {
-            const payers = list.filter(d => getInfo(d).hasPaidSomething);
-            if (payers.length > 0) {
-                payers.sort((a, b) => getInfo(b).updateTime - getInfo(a).updateTime);
-                const latest = payers[0];
-                const info = getInfo(latest);
-                document.getElementById('lastPayerName').innerText = latest.name;
-                if (info.updateTime > 0) {
-                    const date = new Date(info.updateTime);
-                    document.getElementById('lastUpdateTime').innerText = date.toLocaleString('ar-YE');
-                }
-                document.getElementById('thanksModal').style.display = 'flex';
-            }
-        }
-
         function updateStatistics() {
-            let paidCnt = donors.filter(d => getInfo(d).hasPaidSomething).length;
-            document.getElementById('statTotal').innerText = donors.length;
+            const validDonors = donors.filter(d => d.type !== 'zakat');
+            let paidCnt = validDonors.filter(d => { const info = getInfo(d); return info && info.hasPaidSomething; }).length;
+            document.getElementById('statTotal').innerText = validDonors.length;
             document.getElementById('statPaid').innerText = paidCnt;
-            document.getElementById('statPending').innerText = donors.length - paidCnt;
+            document.getElementById('statPending').innerText = validDonors.length - paidCnt;
         }
 
-        function refreshSearchResults() {
-            if (currentSearchTerm === '') return;
-            
-            const term = currentSearchTerm;
+        function renderResults(filteredDonors) {
             const wrapper = document.getElementById("resultsWrapper");
             
-            const filtered = donors.filter(d => (d.name || "").toLowerCase() === term);
-            const finalResults = filtered.length > 0 ? filtered : donors.filter(d => (d.name || "").toLowerCase().includes(term));
-
-            if (finalResults.length > 0) {
-                let html = '<div class="space-y-4">';
-                finalResults.forEach(m => {
-                    const info = getInfo(m);
-                    
-                    let message = "";
-                    let msgClass = "";
-                    let statusText = "";
-                    let statusClass = "";
-
-                    if (info.isFull) {
-                        message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
-                        msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
-                        statusText = "مكتمل ✓";
-                        statusClass = "bg-emerald-100 text-emerald-600";
-                    } else if (info.paid > 0) {
-                        message = "شكرًا جزيلًا على ما قدمتموه من مساهمة، ونحن بانتظار استكمال باقي المبلغ لتعزيز مسيرة الصندوق.";
-                        msgClass = "bg-blue-50 border-blue-100 text-blue-700";
-                        statusText = "غير مكتمل";
-                        statusClass = "bg-rose-100 text-rose-600";
-                    } else {
-                        message = "ندعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
-                        msgClass = "bg-amber-50 border-amber-100 text-amber-700";
-                        statusText = "غير مكتمل";
-                        statusClass = "bg-rose-100 text-rose-600";
-                    }
-                    
-                    const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) : 'غير محدد';
-
-                    html += `
-                        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
-                            <!-- رأس البطاقة: الاسم والحالة -->
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-bold text-gray-800 text-[16px]">${m.name}</h3>
-                                <span class="status-badge ${statusClass}">${statusText}</span>
-                            </div>
-                            
-                            <!-- بطاقة المعلومات المميزة -->
-                            <div class="info-card">
-                                <div class="info-grid">
-                                    <div class="info-item">
-                                        <div class="info-item-label">مدة الاشتراك</div>
-                                        <div class="info-item-value">${info.duration}</div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div class="info-item-label">مدخل البيانات</div>
-                                        <div class="info-item-value">${info.recordedBy}</div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div class="info-item-label">آخر تحديث</div>
-                                        <div class="info-item-value">${updateDate}</div>
-                                    </div>
-                                    ${info.startDate !== 'غير محدد' ? `
-                                    <div class="info-item">
-                                        <div class="info-item-label">تاريخ البدء</div>
-                                        <div class="info-item-value">${info.startDate}</div>
-                                    </div>
-                                    ` : ''}
-                                    ${info.expiryDate !== 'غير محدد' ? `
-                                    <div class="info-item">
-                                        <div class="info-item-label">تاريخ الانتهاء</div>
-                                        <div class="info-item-value">${info.expiryDate}</div>
-                                    </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                            
-                            <!-- الشريط الزمني -->
-                            <div class="mb-4">
-                                <div class="flex justify-between text-[9px] text-slate-500 mb-1">
-                                    <span>نسبة الإنجاز</span>
-                                    <span>${Math.round(info.progress)}%</span>
-                                </div>
-                                <div class="timeline-bar">
-                                    <div class="timeline-progress" style="width: ${info.progress}%; background-color: ${info.progressColor}"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- بطاقة المبالغ -->
-                            <div class="grid grid-cols-2 gap-3 mb-4">
-                                <div class="bg-emerald-50 p-3 rounded-2xl text-center border border-emerald-100">
-                                    <p class="text-[9px] text-emerald-600 font-bold mb-1">المدفوع (${info.currency})</p>
-                                    <p class="text-lg font-black text-emerald-700">${info.paid.toLocaleString()}</p>
-                                </div>
-                                <div class="bg-rose-50 p-3 rounded-2xl text-center border border-rose-100">
-                                    <p class="text-[9px] text-rose-500 font-bold mb-1">المتبقي</p>
-                                    <p class="text-lg font-black text-rose-600">${info.rem.toLocaleString()}</p>
-                                </div>
-                            </div>
-
-                            <!-- بطاقة الرسالة -->
-                            <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}">
-                                <p class="text-[11px] leading-relaxed font-bold text-center">
-                                    ${message}
-                                </p>
-                            </div>
-                        </div>`;
-                });
-                wrapper.innerHTML = html + '</div>';
-            } else if (term && term !== '') {
+            if (filteredDonors.length === 0) {
                 wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs font-bold">عذراً، هذا الاسم غير مسجل لدينا</div>`;
+                return;
             }
+            
+            let html = '<div class="space-y-4">';
+            filteredDonors.forEach(m => {
+                const info = getInfo(m);
+                if (!info) return;
+                
+                let message = "", msgClass = "", statusText = "", statusClass = "";
+                
+                if (info.isFull) {
+                    message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
+                    msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
+                    statusText = "مكتمل ✓";
+                    statusClass = "bg-emerald-100 text-emerald-600";
+                } else if (info.paid > 0) {
+                    message = "شكرًا جزيلًا على ما قدمتموه من مساهمة، ونحن بانتظار استكمال باقي المبلغ لتعزيز مسيرة الصندوق.";
+                    msgClass = "bg-blue-50 border-blue-100 text-blue-700";
+                    statusText = "غير مكتمل";
+                    statusClass = "bg-rose-100 text-rose-600";
+                } else {
+                    message = "ندعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
+                    msgClass = "bg-amber-50 border-amber-100 text-amber-700";
+                    statusText = "غير مكتمل";
+                    statusClass = "bg-rose-100 text-rose-600";
+                }
+                
+                const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG') : 'غير محدد';
+                
+                html += `
+                    <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-gray-800 text-[16px]">${m.name}</h3>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-grid">
+                                <div class="info-item"><div class="info-item-label">مدة الاشتراك</div><div class="info-item-value">${info.duration}</div></div>
+                                <div class="info-item"><div class="info-item-label">مدخل البيانات</div><div class="info-item-value">${info.recordedBy}</div></div>
+                                <div class="info-item"><div class="info-item-label">آخر تحديث</div><div class="info-item-value">${updateDate}</div></div>
+                                ${info.startDate ? `<div class="info-item"><div class="info-item-label">تاريخ البدء</div><div class="info-item-value">${info.startDate}</div></div>` : ''}
+                                ${info.expiryDate ? `<div class="info-item"><div class="info-item-label">تاريخ الانتهاء</div><div class="info-item-value">${info.expiryDate}</div></div>` : ''}
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex justify-between text-[9px] text-slate-500 mb-1"><span>نسبة الإنجاز</span><span>${Math.round(info.progress)}%</span></div>
+                            <div class="timeline-bar"><div class="timeline-progress" style="width: ${info.progress}%; background-color: ${info.progressColor}"></div></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-emerald-50 p-3 rounded-2xl text-center"><p class="text-[9px] text-emerald-600 font-bold mb-1">المدفوع (${info.currency})</p><p class="text-lg font-black text-emerald-700">${info.paid.toLocaleString()}</p></div>
+                            <div class="bg-rose-50 p-3 rounded-2xl text-center"><p class="text-[9px] text-rose-500 font-bold mb-1">المتبقي</p><p class="text-lg font-black text-rose-600">${info.rem.toLocaleString()}</p></div>
+                        </div>
+                        <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}"><p class="text-[11px] leading-relaxed font-bold text-center">${message}</p></div>
+                    </div>`;
+            });
+            wrapper.innerHTML = html + '</div>';
         }
 
         window.searchDonor = function() {
-            const term = document.getElementById("searchInput").value.trim().toLowerCase();
+            const term = document.getElementById("searchInput").value.trim();
             currentSearchTerm = term;
-            const wrapper = document.getElementById("resultsWrapper");
             
             if (!term) {
-                wrapper.innerHTML = `<div class="text-center py-10 text-rose-500 text-xs font-bold">يرجى إدخال اسم للبحث</div>`;
+                document.getElementById("resultsWrapper").innerHTML = `<div class="text-center py-10 text-rose-500 text-xs font-bold">يرجى إدخال اسم للبحث</div>`;
                 return;
             }
-
-            const filtered = donors.filter(d => (d.name || "").toLowerCase() === term);
-            const finalResults = filtered.length > 0 ? filtered : donors.filter(d => (d.name || "").toLowerCase().includes(term));
-
-            if (finalResults.length > 0) {
-                let html = '<div class="space-y-4">';
-                finalResults.forEach(m => {
-                    const info = getInfo(m);
-                    
-                    let message = "";
-                    let msgClass = "";
-                    let statusText = "";
-                    let statusClass = "";
-
-                    if (info.isFull) {
-                        message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
-                        msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
-                        statusText = "مكتمل ✓";
-                        statusClass = "bg-emerald-100 text-emerald-600";
-                    } else if (info.paid > 0) {
-                        message = "شكرًا جزيلًا على ما قدمتموه من مساهمة، ونحن بانتظار استكمال باقي المبلغ لتعزيز مسيرة الصندوق.";
-                        msgClass = "bg-blue-50 border-blue-100 text-blue-700";
-                        statusText = "غير مكتمل";
-                        statusClass = "bg-rose-100 text-rose-600";
-                    } else {
-                        message = "ندعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
-                        msgClass = "bg-amber-50 border-amber-100 text-amber-700";
-                        statusText = "غير مكتمل";
-                        statusClass = "bg-rose-100 text-rose-600";
-                    }
-                    
-                    const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) : 'غير محدد';
-
-                    html += `
-                        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-bold text-gray-800 text-[16px]">${m.name}</h3>
-                                <span class="status-badge ${statusClass}">${statusText}</span>
-                            </div>
-                            
-                            <div class="info-card">
-                                <div class="info-grid">
-                                    <div class="info-item">
-                                        <div class="info-item-label">مدة الاشتراك</div>
-                                        <div class="info-item-value">${info.duration}</div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div class="info-item-label">مدخل البيانات</div>
-                                        <div class="info-item-value">${info.recordedBy}</div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div class="info-item-label">آخر تحديث</div>
-                                        <div class="info-item-value">${updateDate}</div>
-                                    </div>
-                                    ${info.startDate !== 'غير محدد' ? `
-                                    <div class="info-item">
-                                        <div class="info-item-label">تاريخ البدء</div>
-                                        <div class="info-item-value">${info.startDate}</div>
-                                    </div>
-                                    ` : ''}
-                                    ${info.expiryDate !== 'غير محدد' ? `
-                                    <div class="info-item">
-                                        <div class="info-item-label">تاريخ الانتهاء</div>
-                                        <div class="info-item-value">${info.expiryDate}</div>
-                                    </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <div class="flex justify-between text-[9px] text-slate-500 mb-1">
-                                    <span>نسبة الإنجاز</span>
-                                    <span>${Math.round(info.progress)}%</span>
-                                </div>
-                                <div class="timeline-bar">
-                                    <div class="timeline-progress" style="width: ${info.progress}%; background-color: ${info.progressColor}"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-3 mb-4">
-                                <div class="bg-emerald-50 p-3 rounded-2xl text-center border border-emerald-100">
-                                    <p class="text-[9px] text-emerald-600 font-bold mb-1">المدفوع (${info.currency})</p>
-                                    <p class="text-lg font-black text-emerald-700">${info.paid.toLocaleString()}</p>
-                                </div>
-                                <div class="bg-rose-50 p-3 rounded-2xl text-center border border-rose-100">
-                                    <p class="text-[9px] text-rose-500 font-bold mb-1">المتبقي</p>
-                                    <p class="text-lg font-black text-rose-600">${info.rem.toLocaleString()}</p>
-                                </div>
-                            </div>
-
-                            <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}">
-                                <p class="text-[11px] leading-relaxed font-bold text-center">
-                                    ${message}
-                                </p>
-                            </div>
-                        </div>`;
-                });
-                wrapper.innerHTML = html + '</div>';
-            } else {
-                wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs font-bold">عذراً، هذا الاسم غير مسجل لدينا</div>`;
-            }
+            
+            const termLower = term.toLowerCase();
+            const validDonors = donors.filter(d => d.type !== 'zakat');
+            const filtered = validDonors.filter(d => (d.name || "").toLowerCase().includes(termLower));
+            renderResults(filtered);
         };
 
-        // تسجيل الدخول والاستماع للبيانات
-        auth.signInAnonymously()
-            .then(() => {
-                console.log("✅ تم تسجيل الدخول بنجاح");
-                
-                const donorsRef = db.collection('artifacts').doc(APP_PATH).collection('public').doc('data').collection('donors');
-                
-                donorsRef.onSnapshot((snapshot) => {
-                    donors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    updateStatistics();
-                    document.getElementById('loadingStatus').style.display = 'none';
-                    
-                    if (currentSearchTerm !== '') {
-                        refreshSearchResults();
-                    }
-                    
-                    const sessionSeen = sessionStorage.getItem('seen_update');
-                    if (!sessionSeen && donors.length > 0) {
-                        showLastUpdateNotice(donors);
-                        sessionStorage.setItem('seen_update', 'true');
-                    }
-                    
-                    console.log(`📊 تم تحديث البيانات - عدد المتبرعين: ${donors.length}`);
-                }, (error) => {
-                    console.error("❌ خطأ:", error);
-                    document.getElementById('loadingStatus').innerHTML = `<div class="text-center py-10 text-red-500"><p class="text-sm font-bold">⚠️ خطأ في الاتصال</p></div>`;
-                });
-            })
-            .catch((error) => {
-                console.error("❌ فشل تسجيل الدخول:", error);
-            });
+        // محاولة قراءة البيانات بدون مصادقة
+        DONORS_PATH.get().then((snapshot) => {
+            donors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            updateStatistics();
+            document.getElementById('loadingStatus').style.display = 'none';
+            console.log(`✅ تم تحميل ${donors.filter(d => d.type !== 'zakat').length} سجل`);
+        }).catch((error) => {
+            console.error("❌ خطأ:", error);
+            document.getElementById('loadingStatus').innerHTML = `
+                <div class="text-center py-10 text-red-500">
+                    <p class="text-sm font-bold">⚠️ خطأ في الاتصال</p>
+                    <p class="text-xs mt-2">${error.message}</p>
+                    <p class="text-xs mt-4 text-slate-500">الرجاء إضافة هذا المجال إلى Firebase Console</p>
+                </div>`;
+        });
 
         document.getElementById('searchInput').addEventListener('keypress', (e) => { 
             if (e.key === 'Enter') searchDonor(); 
