@@ -436,10 +436,19 @@
             }
             
             const termLower = term.toLowerCase();
+            // تصفية دقيقة: نبحث عن اسم مطابق تماماً لما كتبه المستخدم (بدون اقتراحات أو أسماء مشابهة)
+            // نقارن الاسم الكامل كما هو مخزن في قاعدة البيانات مع ما كتبه المستخدم.
+            // نستخدم === للمقارنة الدقيقة بعد تحويل الحالتين إلى صيغة موحدة (أحرف صغيرة وتجاهل المسافات الزائدة)
+            const normalizedSearchTerm = termLower.trim();
             const validDonors = donors.filter(d => d.type !== 'zakat');
-            const filtered = validDonors.filter(d => (d.name || "").toLowerCase().includes(termLower));
             
-            // تمرير اسم البحث لعرضه في رسالة العيد
+            // التصفية: الاسم يجب أن يكون متطابقاً تماماً (بعد إزالة المسافات الزائدة وتحويل الحروف الصغيرة)
+            const filtered = validDonors.filter(d => {
+                const donorName = (d.name || "").toLowerCase().trim();
+                return donorName === normalizedSearchTerm;
+            });
+            
+            // تمرير اسم البحث الأصلي (بشكله الذي كتبه المستخدم) لعرضه في رسالة العيد
             renderResults(filtered, term);
         };
 
