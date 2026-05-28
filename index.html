@@ -1,474 +1,519 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>صندوق مساعدة الحالات الطارئة</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Firebase Libraries -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>صيانة الموقع | عودة قريباً</title>
+    <!-- استخدام خط Apple Pro / SF Pro بشكل آمن مع أنظمة Apple وأيضاً خطوط بديلة حديثة -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-        
-        body {
-            background-color: #f8fafc;
-            font-family: 'Cairo', sans-serif;
-            -webkit-font-smoothing: antialiased;
+        /* تعريف عائلة خط Apple Pro مع احتياطي قوي */
+        @font-face {
+            font-family: 'SF Pro';
+            src: local('SF Pro Text'), local('SF Pro Display'), local('Apple SD Gothic Neo'), local('BlinkMacSystemFont');
+            font-weight: 400;
+            font-style: normal;
         }
-        .app-card {
-            width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-            background: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        @font-face {
+            font-family: 'SF Pro';
+            src: local('SF Pro Text Medium'), local('SF Pro Display Medium');
+            font-weight: 500;
         }
-        .header-gradient {
-            background: linear-gradient(135deg, #001f54 0%, #003b8e 100%);
-            padding: 50px 20px 40px;
-            text-align: center;
-            color: white;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-        }
-        .search-container {
-            margin-top: -35px;
-            padding: 0 20px;
-        }
-        .search-input {
-            width: 100%;
-            padding: 16px 24px;
-            border-radius: 20px;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            outline: none;
-            font-size: 16px;
-            text-align: right;
-        }
-        
-        .spinner {
-            width: 24px; height: 24px; border: 3px solid #e2e8f0;
-            border-top-color: #001f54; border-radius: 50%;
-            animation: spin 0.8s linear infinite; display: inline-block;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .news-ticker {
-            background: #f1f5f9; height: 35px; display: flex; align-items: center;
-            overflow: hidden; margin: 15px 20px 0; border-radius: 10px;
-        }
-        .ticker-content {
-            white-space: nowrap; display: inline-block; animation: ticker 45s linear infinite;
-            padding-right: 100%; color: #ef4444; font-size: 12px; font-weight: 700;
-        }
-        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .result-card {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        .timeline-bar {
-            background: #e2e8f0;
-            border-radius: 10px;
-            height: 6px;
-            overflow: hidden;
-        }
-        .timeline-progress {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-        
-        .info-card {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: 1px solid #eef2ff;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .info-item {
-            background: white;
-            border-radius: 12px;
-            padding: 8px 10px;
-            text-align: center;
-            border: 1px solid #f0f2f5;
-        }
-        .info-item-label {
-            font-size: 9px;
-            color: #94a3b8;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .info-item-value {
-            font-size: 11px;
-            color: #1e293b;
+        @font-face {
+            font-family: 'SF Pro';
+            src: local('SF Pro Text Bold'), local('SF Pro Display Bold');
             font-weight: 700;
         }
-        
-        .status-badge {
-            display: inline-flex;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 10px;
+        @font-face {
+            font-family: 'SF Pro';
+            src: local('SF Pro Text Heavy'), local('SF Pro Display Heavy');
             font-weight: 800;
         }
-        
-        /* رسالة العيد الجديدة */
-        .eid-message {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 20px;
-            text-align: center;
-            border-right: 6px solid #d97706;
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
-            animation: slideDown 0.5s ease-out;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        @keyframes slideDown {
-            from {
+
+        body {
+            /* استخدام خط Apple Pro بشكل رئيسي مع خيارات بديلة لأنظمة ويندوز/لينكس */
+            font-family: 'SF Pro', 'BlinkMacSystemFont', 'Helvetica Neue', 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            direction: rtl;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        /* خلفية نقاط ناعمة بدون أيقونات */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 28px 28px;
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 760px;
+            width: 100%;
+            z-index: 2;
+            position: relative;
+            animation: fadeSlideUp 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        /* بطاقة الاعتذار الأولى بدون أيقونات */
+        .apology-banner {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            padding: 0.9rem 2rem;
+            width: fit-content;
+            margin-right: auto;
+            margin-left: auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .apology-text {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -0.3px;
+        }
+
+        /* البطاقة الرئيسية المميزة */
+        .maintenance-card {
+            background: #ffffff;
+            border-radius: 56px;
+            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            padding: 2.2rem 2rem 2.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .maintenance-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 40px 60px -22px rgba(0, 0, 0, 0.3);
+        }
+
+        /* منطقة العنوان الرئيسي بدون أيقونات */
+        .message-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(120deg, #1e293b, #334155);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.2px;
+        }
+
+        .main-message {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #334155;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        .sub-message {
+            font-size: 1.1rem;
+            font-weight: 450;
+            color: #475569;
+            border-top: 2px dashed #e2e8f0;
+            border-bottom: 2px dashed #e2e8f0;
+            padding: 1.1rem 1rem;
+            margin: 1.5rem 0;
+            background: #fafcff;
+            border-radius: 32px;
+        }
+
+        .timer-section {
+            background: #f1f5f9;
+            border-radius: 50px;
+            padding: 1rem 1rem;
+            margin: 1.8rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .timer-label {
+            font-weight: 600;
+            color: #0f172a;
+            background: #e2e8f0;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.95rem;
+        }
+
+        .countdown {
+            font-family: 'SF Pro', 'Courier New', monospace;
+            font-weight: 700;
+            font-size: 1.7rem;
+            letter-spacing: 3px;
+            background: #0f172a;
+            color: #facc15;
+            padding: 0.3rem 1.2rem;
+            border-radius: 48px;
+            direction: ltr;
+            display: inline-block;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .support-note {
+            background: #fef9e6;
+            padding: 0.8rem;
+            border-radius: 60px;
+            margin: 1.5rem 0 0;
+            color: #b45309;
+            font-weight: 500;
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+
+        .email-highlight {
+            font-weight: 700;
+            background: #fff0db;
+            padding: 0.2rem 0.5rem;
+            border-radius: 32px;
+            display: inline-block;
+            margin-top: 0.2rem;
+            direction: ltr;
+            font-family: monospace;
+            font-size: 0.95rem;
+        }
+
+        /* المطور بدون أيقونات */
+        .developer {
+            margin-top: 2rem;
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 1rem;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            background: rgba(255,255,245,0.6);
+            backdrop-filter: blur(2px);
+            border-radius: 60px;
+            padding: 0.6rem 1rem;
+        }
+
+        .developer-name {
+            font-weight: 800;
+            background: linear-gradient(125deg, #2c3e50, #e67e22);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-size: 1.15rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* حركات أنيقة */
+        @keyframes fadeSlideUp {
+            0% {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(30px);
             }
-            to {
+            100% {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
-        .eid-message-text {
-            font-size: 18px;
-            font-weight: 800;
-            color: #92400e;
-            line-height: 1.6;
+
+        /* توافق الشاشات الصغيرة */
+        @media (max-width: 550px) {
+            .maintenance-card {
+                padding: 1.8rem 1.2rem;
+            }
+            .message-title {
+                font-size: 1.6rem;
+            }
+            .main-message {
+                font-size: 1.2rem;
+            }
+            .apology-text {
+                font-size: 1.3rem;
+            }
+            .countdown {
+                font-size: 1.3rem;
+                letter-spacing: 1px;
+            }
+            .timer-label {
+                font-size: 0.85rem;
+            }
+            .developer-name {
+                font-size: 1rem;
+            }
+        }
+
+        .decoration-line {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 0.5rem 0 1rem;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f97316;
+            border-radius: 10px;
         }
         
-        .eid-message-name {
-            font-size: 20px;
-            font-weight: 900;
-            color: #b45309;
-            background: white;
+        /* إزالة أي أيقونات مرئية من النص الذي قد يحويها */
+        .no-icons {
             display: inline-block;
-            padding: 4px 16px;
-            border-radius: 40px;
-            margin: 8px 0 4px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
-        
-        .eid-decoration {
-            font-size: 24px;
-            margin-bottom: 8px;
-            letter-spacing: 4px;
+        .support-note br {
+            display: none;
         }
     </style>
 </head>
-<body class="flex justify-center">
+<body>
 
-    <div class="app-card">
-        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold">
-             ⚠️ يرجى تسديد المبالغ المتبقية قبل تاريخ 2026/06/01
+<div class="container">
+    <!-- نأسف على الازعاج - بدون أيقونات -->
+    <div class="apology-banner">
+        <div class="apology-text">
+            نأسف على الإزعاج
         </div>
-
-        <div class="header-gradient">
-            <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
-            <p class="text-blue-200 text-[11px] font-semibold tracking-widest">قرية محبران</p>
-        </div>
-
-        <div class="search-container">
-            <div class="relative">
-                <input type="text" id="searchInput" class="search-input" placeholder="اكتب اسمك للبحث..." autocomplete="off">
-                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold shadow-md active:scale-95 transition-all">
-                    بـحـث
-                </button>
-            </div>
-        </div>
-
-        <div class="news-ticker">
-            <div class="bg-[#001f54] text-white px-3 h-full flex items-center font-black text-[10px] z-10">هام</div>
-            <div class="ticker-content">
-                الرجاء المبادرة باستكمال المبالغ المتبقية لضمان استمرار تقديم المساعدات في وقتها . . . بارك الله في أموالكم وأهليكم . . .
-            </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-3 p-5 mt-2">
-            <div class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100">
-                <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المشتركين</p>
-                <p id="statTotal" class="text-xl font-black text-[#001f54]">0</p>
-            </div>
-            <div class="bg-emerald-50 p-4 rounded-3xl text-center border border-emerald-100">
-                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">المسددين</p>
-                <p id="statPaid" class="text-xl font-black text-emerald-600">0</p>
-            </div>
-            <div class="bg-rose-50 p-4 rounded-3xl text-center border border-rose-100">
-                <p class="text-[9px] text-rose-400 font-bold mb-1 uppercase">الانتظار</p>
-                <p id="statPending" class="text-xl font-black text-rose-600">0</p>
-            </div>
-        </div>
-
-        <div class="px-5 flex-grow pb-10">
-            <div id="loadingStatus" class="text-center py-10">
-                <div class="spinner"></div>
-                <p class="text-[10px] text-slate-400 mt-3 font-semibold">جاري المزامنة مع السيرفر...</p>
-            </div>
-            <div id="resultsWrapper" class="mt-4">
-                <div class="text-center py-16 opacity-30">
-                    <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <p class="text-xs font-bold">ابحث بالاسم لتظهر حالتك المالية</p>
-                </div>
-            </div>
-        </div>
-
-        <footer class="bg-slate-50 border-t border-slate-100 px-4 py-5 text-center">
-            <div class="text-[11px] font-bold text-[#001f54] mb-2">
-                المشرف العام : مصطفى الشجاع
-            </div>
-            <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[9.5px] font-semibold text-slate-500">
-                <div class="whitespace-nowrap">المدير المالي : مجدي عبدة علي</div>
-                <span class="text-slate-300 hidden min-[360px]:inline">•</span>
-                <div class="whitespace-nowrap">المدقق المالي : ياسر الشجاع</div>
-                <span class="text-slate-300 hidden min-[360px]:inline">•</span>
-                <div class="whitespace-nowrap"><span class="font-bold text-slate-800">مطور النظام: </span> عمرو مسعد الشجاع</div>
-            </div>
-        </footer>
     </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
-            authDomain: "amr4admin.firebaseapp.com",
-            projectId: "amr4admin",
-            storageBucket: "amr4admin.firebasestorage.app",
-            messagingSenderId: "177280788092",
-            appId: "1:177280788092:web:44f16c8f585a5b3e484bf9"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const APP_PATH = "amr4admin";
-
-        let donors = [];
-        let currentSearchTerm = '';
+    <!-- البطاقة المميزة التي تحوي رسالة الصيانة -->
+    <div class="maintenance-card">
+        <div class="message-title">صيانة دورية</div>
+        <div class="main-message">
+            <strong>الموقع متوقف مؤقتاً بسبب أعمال الصيانة والتطوير.</strong>
+        </div>
+        <p class="sub-message">
+            نعمل على تحسين تجربتك وجعل الموقع أكثر سرعة وأماناً.
+            سيعود الموقع للعمل خلال الساعات القادمة إن شاء الله.
+        </p>
         
-        const DONORS_PATH = db.collection('artifacts').doc(APP_PATH).collection('public').doc('data').collection('donors');
+        <!-- عداد تنازلي تفاعلي -->
+        <div class="timer-section">
+            <span class="timer-label">الوقت المتبقى المقدر</span>
+            <div class="countdown" id="countdownTimer">-- : -- : --</div>
+        </div>
+        
+        <!-- دعم مع اضافة الايميل المطلوب -->
+        <div class="support-note">
+            للاستفسارات العاجلة: 
+            <span class="email-highlight">amrprok99@gmail.com</span>
+            &nbsp;|&nbsp;
+            الدعم متاح خلال ساعات العمل
+        </div>
+        
+        <div class="decoration-line">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+        <p style="font-size: 0.9rem; color:#5b6e8c; margin-top: 12px;">
+            سيتم تحديث النظام آلياً فور انتهاء الصيانة
+        </p>
+    </div>
+    
+    <!-- اسم مطور النظام : عمرو مسعد الشجاع  بدون أيقونات -->
+    <div class="developer">
+        <span>مطور النظام :</span>
+        <span class="developer-name">عمرو مسعد الشجاع</span>
+    </div>
+</div>
 
-        function getInfo(d) {
-            if (d.type === 'zakat') return null;
-            
-            let total = 0, paid = 0, currency = 'SAR', duration = 'غير محدد', startDate = '', expiryDate = '';
-            let recordedBy = d.recordedBy || d.dataEntryName || 'غير محدد';
-            let updateTime = 0;
-            
-            if (d.updatedAt) {
-                if (d.updatedAt.toDate) updateTime = d.updatedAt.toDate().getTime();
-                else if (d.updatedAt.seconds) updateTime = d.updatedAt.seconds * 1000;
-                else updateTime = new Date(d.updatedAt).getTime();
-            } else if (d.createdAt) {
-                if (d.createdAt.toDate) updateTime = d.createdAt.toDate().getTime();
-                else if (d.createdAt.seconds) updateTime = d.createdAt.seconds * 1000;
-                else updateTime = new Date(d.createdAt).getTime();
-            }
-            
-            if (d.totalAmount !== undefined && d.totalAmount !== null) {
-                total = parseFloat(d.totalAmount) || 0;
-                paid = parseFloat(d.paidAmount) || 0;
-                let curr = d.currency || 'sar';
-                if (curr === 'sar') currency = 'SAR';
-                else if (curr === 'usd') currency = 'USD';
-                else if (curr === 'yer') currency = 'YER';
-                
-                if (d.duration) {
-                    if (d.duration === '3 months') duration = '3 أشهر';
-                    else if (d.duration === '6 months') duration = '6 أشهر';
-                    else if (d.duration === '1 year') duration = 'سنة';
-                    else duration = d.duration;
-                }
-                
-                if (d.startDate) {
-                    if (d.startDate.toDate) startDate = d.startDate.toDate().toLocaleDateString('ar-EG');
-                    else if (d.startDate.seconds) startDate = new Date(d.startDate.seconds * 1000).toLocaleDateString('ar-EG');
-                    else startDate = new Date(d.startDate).toLocaleDateString('ar-EG');
-                }
-                
-                if (d.expiryDate) {
-                    if (d.expiryDate.toDate) expiryDate = d.expiryDate.toDate().toLocaleDateString('ar-EG');
-                    else if (d.expiryDate.seconds) expiryDate = new Date(d.expiryDate.seconds * 1000).toLocaleDateString('ar-EG');
-                    else expiryDate = new Date(d.expiryDate).toLocaleDateString('ar-EG');
-                }
+<script>
+    (function() {
+        // --- عداد تنازلي تفاعلي يظهر وقتاً تقديرياً حتى عودة الموقع (محاكاة واقعية) ---
+        // تحديد وقت العودة المقدر (تاريخ الهدف) بعد 4 ساعات و 35 دقيقة من الآن
+        let targetTime = new Date();
+        targetTime.setHours(targetTime.getHours() + 4);
+        targetTime.setMinutes(targetTime.getMinutes() + 35);
+        targetTime.setSeconds(0);
+        
+        // استخدام localStorage للحفاظ على الهدف عبر تحديث الصفحة
+        let storedTarget = localStorage.getItem('maintenance_target_noicons');
+        if (storedTarget && !isNaN(new Date(storedTarget).getTime())) {
+            let parsedTarget = new Date(storedTarget);
+            let now = new Date();
+            if (parsedTarget > now) {
+                targetTime = parsedTarget;
             } else {
-                const note = d.note || "";
-                total = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
-                paid = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
-                if (note.toUpperCase().includes('C:USD')) currency = 'USD';
-                else if (note.toUpperCase().includes('C:YER')) currency = 'YER';
+                // إذا كان الوقت المخزن قد مضى، نضبط وقتاً جديداً بعد ساعتين
+                let newTarget = new Date();
+                newTarget.setHours(newTarget.getHours() + 2);
+                newTarget.setMinutes(newTarget.getMinutes() + 15);
+                targetTime = newTarget;
+                localStorage.setItem('maintenance_target_noicons', targetTime.toString());
             }
-            
-            const isFull = total > 0 && paid >= total;
-            const hasPaidSomething = paid > 0;
-            const rem = Math.max(0, total - paid);
-            const progress = total > 0 ? (paid / total) * 100 : 0;
-            let progressColor = '#ef4444';
-            if (progress >= 100) progressColor = '#10b981';
-            else if (progress >= 50) progressColor = '#f59e0b';
-            else if (progress > 0) progressColor = '#3b82f6';
-            
-            return { total, paid, isFull, hasPaidSomething, updateTime, currency, rem, progress, progressColor, duration, startDate, expiryDate, recordedBy };
+        } else {
+            localStorage.setItem('maintenance_target_noicons', targetTime.toString());
         }
-
-        function updateStatistics() {
-            const validDonors = donors.filter(d => d.type !== 'zakat');
-            let paidCnt = validDonors.filter(d => { const info = getInfo(d); return info && info.hasPaidSomething; }).length;
-            document.getElementById('statTotal').innerText = validDonors.length;
-            document.getElementById('statPaid').innerText = paidCnt;
-            document.getElementById('statPending').innerText = validDonors.length - paidCnt;
-        }
-
-        // دالة عرض رسالة العيد
-        function renderEidMessage(donorName) {
-            return `
-                <div class="eid-message">
-                    <div class="eid-decoration">🌙✨🎉</div>
-                    <div class="eid-message-text">
-                        من العايدين<br>
-                        <span class="eid-message-name">كل عام وأنت بخير يا ${donorName}</span><br>
-                        أعاده الله علينا وعليكم باليمن والبركات
-                    </div>
-                    <div class="eid-decoration mt-2">🎊🌙✨</div>
-                </div>
-            `;
-        }
-
-        function renderResults(filteredDonors, searchName) {
-            const wrapper = document.getElementById("resultsWrapper");
+        
+        // تحديث العداد كل ثانية
+        function updateCountdown() {
+            const now = new Date();
+            const distance = targetTime - now;
+            const countdownElement = document.getElementById('countdownTimer');
+            if (!countdownElement) return;
             
-            if (filteredDonors.length === 0) {
-                wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs font-bold">عذراً، هذا الاسم غير مسجل لدينا</div>`;
-                return;
-            }
-            
-            let html = '';
-            
-            // إضافة رسالة العيد لكل اسم تم البحث عنه (تظهر مرة واحدة في الأعلى)
-            if (searchName && filteredDonors.length > 0) {
-                html += renderEidMessage(searchName);
-            }
-            
-            html += '<div class="space-y-4">';
-            
-            filteredDonors.forEach(m => {
-                const info = getInfo(m);
-                if (!info) return;
-                
-                let message = "", msgClass = "", statusText = "", statusClass = "";
-                
-                if (info.isFull) {
-                    message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
-                    msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
-                    statusText = "مكتمل ✓";
-                    statusClass = "bg-emerald-100 text-emerald-600";
-                } else if (info.paid > 0) {
-                    message = "شكرًا جزيلًا على ما قدمتموه من مساهمة، ونحن بانتظار استكمال باقي المبلغ لتعزيز مسيرة الصندوق.";
-                    msgClass = "bg-blue-50 border-blue-100 text-blue-700";
-                    statusText = "غير مكتمل";
-                    statusClass = "bg-rose-100 text-rose-600";
-                } else {
-                    message = "ندعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
-                    msgClass = "bg-amber-50 border-amber-100 text-amber-700";
-                    statusText = "غير مكتمل";
-                    statusClass = "bg-rose-100 text-rose-600";
+            if (distance <= 0) {
+                countdownElement.innerHTML = `00 : 00 : 00`;
+                countdownElement.style.background = "#2e7d32";
+                countdownElement.style.color = "#ffffff";
+                const timerLabelSpan = document.querySelector('.timer-section .timer-label');
+                if (timerLabelSpan && !document.getElementById('finishedMsgNoIcon')) {
+                    const finishMsg = document.createElement('div');
+                    finishMsg.id = 'finishedMsgNoIcon';
+                    finishMsg.style.marginTop = '8px';
+                    finishMsg.style.fontSize = '0.9rem';
+                    finishMsg.style.fontWeight = 'bold';
+                    finishMsg.style.color = '#15803d';
+                    finishMsg.innerHTML = 'من المتوقع عودة الموقع الآن، جارِ التحديث قريباً';
+                    document.querySelector('.timer-section').appendChild(finishMsg);
                 }
-                
-                const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG') : 'غير محدد';
-                const donorDisplayName = m.name || m.donorName || 'غير محدد';
-                
-                html += `
-                    <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-gray-800 text-[16px]">${donorDisplayName}</h3>
-                            <span class="status-badge ${statusClass}">${statusText}</span>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-grid">
-                                <div class="info-item"><div class="info-item-label">مدة الاشتراك</div><div class="info-item-value">${info.duration}</div></div>
-                                <div class="info-item"><div class="info-item-label">مدخل البيانات</div><div class="info-item-value">${info.recordedBy}</div></div>
-                                <div class="info-item"><div class="info-item-label">آخر تحديث</div><div class="info-item-value">${updateDate}</div></div>
-                                ${info.startDate ? `<div class="info-item"><div class="info-item-label">تاريخ البدء</div><div class="info-item-value">${info.startDate}</div></div>` : ''}
-                                ${info.expiryDate ? `<div class="info-item"><div class="info-item-label">تاريخ الانتهاء</div><div class="info-item-value">${info.expiryDate}</div></div>` : ''}
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <div class="flex justify-between text-[9px] text-slate-500 mb-1"><span>نسبة الإنجاز</span><span>${Math.round(info.progress)}%</span></div>
-                            <div class="timeline-bar"><div class="timeline-progress" style="width: ${info.progress}%; background-color: ${info.progressColor}"></div></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 mb-4">
-                            <div class="bg-emerald-50 p-3 rounded-2xl text-center"><p class="text-[9px] text-emerald-600 font-bold mb-1">المدفوع (${info.currency})</p><p class="text-lg font-black text-emerald-700">${info.paid.toLocaleString()}</p></div>
-                            <div class="bg-rose-50 p-3 rounded-2xl text-center"><p class="text-[9px] text-rose-500 font-bold mb-1">المتبقي</p><p class="text-lg font-black text-rose-600">${info.rem.toLocaleString()}</p></div>
-                        </div>
-                        <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}"><p class="text-[11px] leading-relaxed font-bold text-center">${message}</p></div>
-                    </div>`;
-            });
-            
-            wrapper.innerHTML = html + '</div>';
-        }
-
-        window.searchDonor = function() {
-            const term = document.getElementById("searchInput").value.trim();
-            currentSearchTerm = term;
-            
-            if (!term) {
-                document.getElementById("resultsWrapper").innerHTML = `<div class="text-center py-10 text-rose-500 text-xs font-bold">يرجى إدخال اسم للبحث</div>`;
                 return;
             }
             
-            const termLower = term.toLowerCase();
-            // تصفية دقيقة: نبحث عن اسم مطابق تماماً لما كتبه المستخدم (بدون اقتراحات أو أسماء مشابهة)
-            // نقارن الاسم الكامل كما هو مخزن في قاعدة البيانات مع ما كتبه المستخدم.
-            // نستخدم === للمقارنة الدقيقة بعد تحويل الحالتين إلى صيغة موحدة (أحرف صغيرة وتجاهل المسافات الزائدة)
-            const normalizedSearchTerm = termLower.trim();
-            const validDonors = donors.filter(d => d.type !== 'zakat');
+            const hours = Math.floor(distance / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const formatted = `${hours.toString().padStart(2, '0')} : ${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
+            countdownElement.innerHTML = formatted;
             
-            // التصفية: الاسم يجب أن يكون متطابقاً تماماً (بعد إزالة المسافات الزائدة وتحويل الحروف الصغيرة)
-            const filtered = validDonors.filter(d => {
-                const donorName = (d.name || "").toLowerCase().trim();
-                return donorName === normalizedSearchTerm;
-            });
-            
-            // تمرير اسم البحث الأصلي (بشكله الذي كتبه المستخدم) لعرضه في رسالة العيد
-            renderResults(filtered, term);
-        };
-
-        DONORS_PATH.get().then((snapshot) => {
-            donors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            updateStatistics();
-            document.getElementById('loadingStatus').style.display = 'none';
-            console.log(`✅ تم تحميل ${donors.filter(d => d.type !== 'zakat').length} سجل`);
-        }).catch((error) => {
-            console.error("❌ خطأ:", error);
-            document.getElementById('loadingStatus').innerHTML = `
-                <div class="text-center py-10 text-red-500">
-                    <p class="text-sm font-bold">⚠️ خطأ في الاتصال</p>
-                    <p class="text-xs mt-2">${error.message}</p>
-                </div>`;
+            if (hours === 0 && minutes < 30) {
+                countdownElement.style.animation = "pulse 1s infinite";
+                countdownElement.style.boxShadow = "0 0 8px #facc15";
+            } else {
+                countdownElement.style.animation = "";
+                countdownElement.style.boxShadow = "";
+            }
+        }
+        
+        // إضافة pulse style إذا لم يكن موجوداً
+        if (!document.querySelector('#pulseStyleNoIcon')) {
+            const style = document.createElement('style');
+            style.id = 'pulseStyleNoIcon';
+            style.innerHTML = `@keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.01); background-color: #2d3e5f; } 100% { opacity: 1; transform: scale(1); } }`;
+            document.head.appendChild(style);
+        }
+        
+        updateCountdown();
+        const interval = setInterval(updateCountdown, 1000);
+        
+        window.addEventListener('beforeunload', function() {
+            clearInterval(interval);
         });
+        
+        document.title = "صيانة الموقع | عودة قريباً";
+        
+        // إضافة مؤشر نصي بسيط (بدون أيقونات) يظهر عمليات الخلفية
+        let loadingEffect = document.createElement('div');
+        loadingEffect.style.position = 'fixed';
+        loadingEffect.style.bottom = '20px';
+        loadingEffect.style.left = '20px';
+        loadingEffect.style.backgroundColor = 'rgba(0,0,0,0.55)';
+        loadingEffect.style.backdropFilter = 'blur(4px)';
+        loadingEffect.style.padding = '6px 14px';
+        loadingEffect.style.borderRadius = '40px';
+        loadingEffect.style.fontSize = '11px';
+        loadingEffect.style.fontFamily = "'SF Pro', 'Segoe UI', monospace";
+        loadingEffect.style.color = '#f1f5f9';
+        loadingEffect.style.zIndex = '999';
+        loadingEffect.innerHTML = 'عمليات الصيانة قيد التنفيذ ...';
+        document.body.appendChild(loadingEffect);
+        
+        setTimeout(() => {
+            if (loadingEffect) loadingEffect.style.opacity = '0.7';
+        }, 3000);
+    })();
+</script>
 
-        document.getElementById('searchInput').addEventListener('keypress', (e) => { 
-            if (e.key === 'Enter') searchDonor(); 
-        });
-    </script>
+<!-- تعديلات إضافية لإخفاء أي أيقونات قد تظهر من أي نص افتراضي -->
+<style>
+    /* إزالة أي احتمال لظهور أيقونات من أي كود قديم (ضمان) */
+    .support-note::before, .support-note::after,
+    .developer::before, .developer::after,
+    .apology-banner::before, .apology-banner::after,
+    .main-message::before, .sub-message::before,
+    .message-title::before, .message-title::after {
+        display: none !important;
+        content: none !important;
+    }
+    /* ضمان أن لا تظهر أي أيقونات من الخطوط */
+    i, .fa, .fas, .far, .fab, svg:not(:root) {
+        display: none !important;
+    }
+    /* تجاهل أي أيقونات مخفية */
+    [class*="fa-"], [class^="fa-"] {
+        display: none;
+    }
+    /* إزالة أي أيقونات قد تأتي من pseudo elements المتبقية */
+    *:before, *:after {
+        font-family: inherit !important;
+    }
+    /* خط ابل برو في كل العناصر */
+    body, button, input, div, p, span, h1, h2, h3, h4, a, .developer-name, .countdown {
+        font-family: 'SF Pro', 'BlinkMacSystemFont', 'Helvetica Neue', sans-serif;
+    }
+    .countdown {
+        font-family: 'SF Pro', 'Courier New', monospace;
+    }
+    /* تحسين دعم البريد الإلكتروني */
+    .email-highlight {
+        font-weight: 600;
+        background-color: #f3e8d2;
+        padding: 0.2rem 0.6rem;
+        border-radius: 32px;
+        display: inline-block;
+        direction: ltr;
+        font-family: monospace;
+        font-size: 0.9rem;
+        letter-spacing: 0.2px;
+    }
+    /* تنسيقات إضافية */
+    .developer span {
+        font-weight: 500;
+    }
+    .main-message strong {
+        background: #fef3c7;
+        padding: 0.1rem 0.4rem;
+        border-radius: 20px;
+        font-weight: 700;
+    }
+</style>
+
 </body>
 </html>
