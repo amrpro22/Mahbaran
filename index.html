@@ -33,8 +33,8 @@
 
         :root {
             --bg-color: #f4f7fa; /* خلفية نهارية مريحة للعين */
-            --card-bg: rgba(255, 255, 255, 0.75); /* تأثير زجاجي مضيء */
-            --card-border: rgba(15, 23, 42, 0.06);
+            --card-bg: rgba(255, 255, 255, 0.8); /* تأثير زجاجي مضيء */
+            --card-border: rgba(15, 23, 42, 0.05);
             --text-primary: #0f172a; /* نصوص داكنة وواضحة جداً */
             --text-secondary: #475569;
             --accent-color: #f97316; /* برتقالي حيوي لافت للانتباه */
@@ -60,12 +60,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem 1.5rem;
+            padding: 2.5rem 1.5rem;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* خلفية تفاعلية مذهلة - الهالات المضيئة النهارية الناعمة */
+        /* خلفية تفاعلية مذهلة - الهالات المضيئة النهارية الناعمة بألوان متناسقة مع التحديثات الجديدة */
         .glowing-orbs {
             position: fixed;
             top: 0;
@@ -80,37 +80,37 @@
         .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(130px);
-            opacity: 0.12;
-            animation: float 20s infinite alternate ease-in-out;
+            filter: blur(140px);
+            opacity: 0.14;
+            animation: float 22s infinite alternate ease-in-out;
         }
 
         .orb-1 {
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             background: radial-gradient(circle, #ff9f43 0%, rgba(255,159,67,0) 70%);
-            top: -10%;
+            top: -15%;
             right: -10%;
             animation-duration: 25s;
         }
 
         .orb-2 {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, #3b82f6 0%, rgba(59,130,246,0) 70%);
-            bottom: -20%;
-            left: -10%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, #6366f1 0%, rgba(99,102,241,0) 70%);
+            bottom: -25%;
+            left: -15%;
             animation-duration: 30s;
         }
 
         .orb-3 {
-            width: 400px;
-            height: 400px;
+            width: 500px;
+            height: 500px;
             background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,0) 70%);
-            top: 40%;
-            right: 30%;
-            opacity: 0.06;
-            animation-duration: 18s;
+            top: 35%;
+            right: 25%;
+            opacity: 0.08;
+            animation-duration: 20s;
         }
 
         /* شبكة رقيقة فوق الخلفية للتفاصيل الهندسيّة */
@@ -135,18 +135,51 @@
             animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* تصميم ترويسة الصندوق الفاخرة بألوان متدرجة فريدة في الأعلى */
+        .fund-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fund-title {
+            font-size: 2.1rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            /* تدرج لوني ملكي مذهل يجمع بين الأزرق الداكن والبنفسجي العميق */
+            background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            margin-bottom: 0.6rem;
+            text-shadow: 0 2px 10px rgba(99, 102, 241, 0.05);
+        }
+
+        .fund-location {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+            /* تدرج لوني دافئ مميز لقرية محبران */
+            background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+            padding: 0.4rem 1.5rem;
+            border-radius: 50px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.25);
+            letter-spacing: 0.5px;
+        }
+
         /* بنر الاعتذار العلوي الأنيق للوضع النهاري */
         .apology-banner {
             text-align: center;
-            margin-bottom: 2rem;
-            background: rgba(249, 115, 22, 0.06);
-            border: 1px solid rgba(249, 115, 22, 0.15);
+            margin-bottom: 2.2rem;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(15, 23, 42, 0.06);
             border-radius: 100px;
-            padding: 0.6rem 1.8rem;
+            padding: 0.5rem 1.6rem;
             width: fit-content;
             margin-right: auto;
             margin-left: auto;
-            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.03);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -156,15 +189,15 @@
         .apology-dot {
             width: 8px;
             height: 8px;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, #f97316, #ef4444);
             border-radius: 50%;
             box-shadow: 0 0 8px var(--accent-color);
         }
 
         .apology-text {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 700;
-            color: var(--accent-color);
+            color: var(--text-secondary);
             letter-spacing: 0.5px;
         }
 
@@ -175,9 +208,9 @@
             -webkit-backdrop-filter: blur(24px);
             border-radius: 36px;
             border: 1px solid var(--card-border);
-            padding: 3rem 2.5rem;
-            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.05), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            padding: 3.5rem 2.5rem;
+            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.04), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -186,13 +219,13 @@
 
         .maintenance-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 40px 80px rgba(15, 23, 42, 0.08), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            box-shadow: 0 40px 80px rgba(15, 23, 42, 0.07), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.95);
         }
 
         /* عنصر التروس المتحركة كشكل هندسي رائع */
         .maintenance-visual {
-            margin-bottom: 1.8rem;
+            margin-bottom: 2rem;
             display: inline-flex;
             justify-content: center;
             align-items: center;
@@ -200,8 +233,8 @@
         }
 
         .visual-gear {
-            width: 64px;
-            height: 64px;
+            width: 68px;
+            height: 68px;
             fill: none;
             stroke: var(--accent-color);
             stroke-width: 1.5;
@@ -209,12 +242,13 @@
             filter: drop-shadow(0 0 6px var(--accent-glow));
         }
 
-        /* العناوين والرسائل */
+        /* عنوان الصيانة بلمعان وتدرج لوني فائق الجمال والوضوح */
         .message-title {
-            font-size: 2.2rem;
+            font-size: 2.3rem;
             font-weight: 900;
-            margin-bottom: 0.75rem;
-            background: linear-gradient(135deg, #0f172a 30%, #475569 100%);
+            margin-bottom: 0.85rem;
+            /* تدرج لوني ناري دافئ يعبر عن العمل الفعال والتحديث المستمر */
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 45%, #ef4444 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
@@ -231,7 +265,7 @@
         .main-message span.highlight {
             color: var(--accent-color);
             background: rgba(249, 115, 22, 0.08);
-            padding: 0.1rem 0.6rem;
+            padding: 0.15rem 0.6rem;
             border-radius: 8px;
             border: 1px dashed rgba(249, 115, 22, 0.2);
             display: inline-block;
@@ -277,8 +311,8 @@
         }
 
         .time-box {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(15, 23, 42, 0.06);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(15, 23, 42, 0.05);
             border-radius: 14px;
             min-width: 70px;
             padding: 0.75rem 0.5rem;
@@ -394,7 +428,7 @@
 
         /* مطور النظام بصورة عصرية متوافقة مع النهار */
         .developer-badge {
-            margin-top: 2rem;
+            margin-top: 2.2rem;
             text-align: center;
             display: flex;
             align-items: center;
@@ -451,6 +485,17 @@
             }
         }
 
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @keyframes pulseBanner {
             0% { box-shadow: 0 0 15px rgba(249, 115, 22, 0.02); }
             100% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.08); }
@@ -471,12 +516,18 @@
             body {
                 padding: 1.5rem 1rem;
             }
+            .fund-title {
+                font-size: 1.7rem;
+            }
+            .fund-location {
+                font-size: 0.85rem;
+            }
             .maintenance-card {
-                padding: 2rem 1.5rem;
+                padding: 2.2rem 1.5rem;
                 border-radius: 28px;
             }
             .message-title {
-                font-size: 1.8rem;
+                font-size: 1.9rem;
             }
             .main-message {
                 font-size: 1.1rem;
@@ -516,6 +567,13 @@
     <div class="grid-overlay"></div>
 
     <div class="container">
+        
+        <!-- عنوان صندوق دعم الحالات الطارئة - قرية محبران في الأعلى مع ألوان استثنائية متدرجة -->
+        <div class="fund-header">
+            <span class="fund-title">صندوق دعم الحالات الطارئة</span>
+            <span class="fund-location">قرية محبران</span>
+        </div>
+
         <!-- بنر الإعتذار المضيء -->
         <div class="apology-banner">
             <span class="apology-dot"></span>
@@ -536,7 +594,7 @@
             <h1 class="message-title">صيانة وترقية النظام</h1>
             
             <div class="main-message">
-                الموقع متوقف مؤقتاً لتطبيق <span class="highlight">تحديثات أمنية جديدة</span>
+                الموقع متوقف مؤقتاً لتطبيق <span class="highlight">تحديثات أمنية جديدة</span>.
             </div>
 
             <p class="sub-message">
