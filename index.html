@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>صندوق مساعدة الحالات الطارئة</title>
+    <title>صندوق مساعدة الحالات الطارئة | قرية محبران</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -17,7 +16,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
         
         body {
-            background-color: #f8fafc;
+            background-color: #f0f4f8;
             font-family: 'Cairo', sans-serif;
             -webkit-font-smoothing: antialiased;
         }
@@ -25,26 +24,35 @@
             width: 100%;
             max-width: 480px;
             margin: 0 auto;
-            background: #fff;
+            background: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            position: relative;
         }
         .header-gradient {
             background: linear-gradient(135deg, #001f54 0%, #003b8e 100%);
-            padding: 50px 20px 40px;
+            padding: 20px 20px 35px;
             text-align: center;
             color: white;
             border-bottom-left-radius: 40px;
             border-bottom-right-radius: 40px;
         }
+        .greeting-banner {
+            background: rgba(255,255,240,0.15);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            display: inline-block;
+            padding: 6px 20px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,210,0.4);
+        }
         .search-container {
             margin-top: -35px;
             padding: 0 20px;
-            position: relative;
-            z-index: 40;
         }
         .search-input {
             width: 100%;
@@ -55,11 +63,6 @@
             outline: none;
             font-size: 16px;
             text-align: right;
-            transition: all 0.3s ease;
-        }
-        .search-input:focus {
-            border-color: #003b8e;
-            box-shadow: 0 10px 20px -3px rgba(0, 31, 84, 0.15);
         }
         
         .spinner {
@@ -78,6 +81,63 @@
             padding-right: 100%; color: #ef4444; font-size: 12px; font-weight: 700;
         }
         @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
+        
+        /* البطاقة الشفافة مع ظل خفيف */
+        .fully-paid-card {
+            background: transparent;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+            margin: 12px 20px 0 20px;
+            padding: 8px 12px;
+            backdrop-filter: blur(0px);
+            transition: all 0.2s ease;
+        }
+        
+        .floating-names-box {
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 28px;
+            padding: 8px 12px;
+            text-align: center;
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.02);
+            border: 1px solid rgba(255,255,240,0.6);
+        }
+        
+        /* حجم أصغر للأسماء المعروضة + وميض خفيف */
+        .blink-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #1f3a5f;
+            background: linear-gradient(135deg, #f9fafc, #ffffff);
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 30px;
+            letter-spacing: -0.2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            animation: gentlePulse 0.6s ease-in-out 2;
+            transition: all 0.2s;
+        }
+        
+        @keyframes gentlePulse {
+            0% { opacity: 0.7; transform: scale(0.97); background-color: #fef9e3; box-shadow: 0 0 0 rgba(0,100,80,0.1);}
+            50% { opacity: 1; transform: scale(1.01); background-color: #fff6df; box-shadow: 0 2px 8px rgba(0,80,60,0.1);}
+            100% { opacity: 0.9; transform: scale(1); background-color: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+        }
+        
+        .title-highlight {
+            font-size: 10px;
+            font-weight: 700;
+            color: #2c5a2e;
+            background: #eef2e6;
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 30px;
+            margin-bottom: 6px;
+        }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -137,211 +197,18 @@
             font-size: 10px;
             font-weight: 800;
         }
-        
-        /* رسالة العيد الجديدة */
-        .eid-message {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 20px;
-            text-align: center;
-            border-right: 6px solid #d97706;
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
-            animation: slideDown 0.5s ease-out;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .eid-message-text {
-            font-size: 18px;
-            font-weight: 800;
-            color: #92400e;
-            line-height: 1.6;
-        }
-        
-        .eid-message-name {
-            font-size: 20px;
-            font-weight: 900;
-            color: #b45309;
-            background: white;
-            display: inline-block;
-            padding: 4px 16px;
-            border-radius: 40px;
-            margin: 8px 0 4px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-        
-        .eid-decoration {
-            font-size: 24px;
-            margin-bottom: 8px;
-            letter-spacing: 4px;
-        }
-
-        /* تنسيقات إضافية ذكية ومتوافقة */
-        .suggestion-box {
-            position: absolute;
-            top: 100%;
-            left: 20px;
-            right: 20px;
-            background: white;
-            border-radius: 16px;
-            margin-top: 8px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            max-height: 240px;
-            overflow-y: auto;
-            z-index: 50;
-            border: 1px solid #f1f5f9;
-        }
-        .suggestion-item {
-            padding: 12px 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            text-align: right;
-            border-bottom: 1px solid #f8fafc;
-        }
-        .suggestion-item:last-child {
-            border-bottom: none;
-        }
-        .suggestion-item:hover, .suggestion-item.active {
-            background-color: #f1f5f9;
-            color: #001f54;
-            font-weight: 600;
-        }
-        
-        .feedback-toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #1e293b;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 100;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .feedback-toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* تنسيقات المودال الخاص بالإحصائيات التفصيلية */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        .modal-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .modal-container {
-            background: white;
-            width: 100%;
-            max-width: 420px;
-            border-radius: 32px;
-            padding: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .modal-overlay.open .modal-container {
-            transform: scale(1);
-        }
-
-        /* لوحة الشرف الزرقاء التفاعلية المتناسقة مع الهيدر */
-        .honor-section {
-            background: linear-gradient(135deg, #001f54 0%, #003b8e 100%);
-            border: 1.5px solid #fbbf24;
-            border-radius: 28px;
-            box-shadow: 0 10px 25px -5px rgba(0, 31, 84, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        .honor-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg);
-            animation: shine-light 8s infinite ease-in-out;
-            pointer-events: none;
-        }
-        @keyframes shine-light {
-            0% { left: -100%; }
-            20% { left: 150%; }
-            100% { left: 150%; }
-        }
-
-        /* تنسيقات شريط التمرير الأنيق للوحة الشرف */
-        .honor-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .honor-scrollbar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-        .honor-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-        }
-        .honor-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.35);
-        }
-
-        /* كارت الاسم التكريمي المطور مع مظهر زجاجي وتصغير مثالي */
-        .honor-member-tag {
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2);
-            color: #ffffff;
-        }
-        .honor-member-tag:hover {
-            transform: translateY(-2px);
-            border-color: #fbbf24;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-            background: rgba(255, 255, 255, 0.15);
-        }
     </style>
 </head>
 <body class="flex justify-center">
 
     <div class="app-card">
-        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold relative overflow-hidden">
+        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold">
              ⚠️ يرجى تسديد المبالغ المتبقية قبل تاريخ 2026/06/01
         </div>
 
         <div class="header-gradient">
-            <!-- رسالة ترحيبية ذكية حسب الوقت (صباح الخير / مساء الخير) -->
-            <div id="timeGreeting" class="text-sm text-amber-300 font-bold mb-1.5 tracking-wider">أهلاً بك في نظام الصندوق</div>
+            <!-- تحية الصباح / المساء حسب التوقيت (12 صباحاً = صباح الخير، 12 ظهراً = مساء الخير) -->
+            <div id="dynamicGreeting" class="greeting-banner">🌤️ جاري التحميل...</div>
             <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
             <p class="text-blue-200 text-[11px] font-semibold tracking-widest">قرية محبران</p>
         </div>
@@ -353,8 +220,6 @@
                     بـحـث
                 </button>
             </div>
-            <!-- صندوق المقترحات التلقائية (مخفي افتراضياً) -->
-            <div id="suggestionBox" class="suggestion-box hidden"></div>
         </div>
 
         <div class="news-ticker">
@@ -364,43 +229,29 @@
             </div>
         </div>
 
-        <!-- كروت الإحصائيات التفاعلية (قابلة للنقر الآن لفتح إحصائيات المبالغ المفصلة) -->
-        <div class="grid grid-cols-3 gap-3 p-5 mt-2">
-            <div onclick="openStatsModal('total')" class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100 cursor-pointer active:scale-95 transition-all hover:bg-slate-100/70" title="انقر لعرض تفاصيل المبالغ">
-                <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase flex items-center justify-center gap-1">
-                    المشتركين <span class="text-[8px]">ℹ️</span>
-                </p>
-                <p id="statTotal" class="text-xl font-black text-[#001f54]">0</p>
-            </div>
-            <div onclick="openStatsModal('paid')" class="bg-emerald-50 p-4 rounded-3xl text-center border border-emerald-100 cursor-pointer active:scale-95 transition-all hover:bg-emerald-100/70" title="انقر لعرض تفاصيل السداد">
-                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase flex items-center justify-center gap-1">
-                    المسددين <span class="text-[8px]">ℹ️</span>
-                </p>
-                <p id="statPaid" class="text-xl font-black text-emerald-600">0</p>
-            </div>
-            <div onclick="openStatsModal('pending')" class="bg-rose-50 p-4 rounded-3xl text-center border border-rose-100 cursor-pointer active:scale-95 transition-all hover:bg-rose-100/70" title="انقر لعرض تفاصيل الانتظار">
-                <p class="text-[9px] text-rose-400 font-bold mb-1 uppercase flex items-center justify-center gap-1">
-                    الانتظار <span class="text-[8px]">ℹ️</span>
-                </p>
-                <p id="statPending" class="text-xl font-black text-rose-600">0</p>
+        <!-- البطاقة: عرض أسماء المسددين بالكامل (حجم أصغر + وميض 3 ثوانٍ) -->
+        <div class="fully-paid-card">
+            <div class="floating-names-box">
+                <div class="title-highlight">اسماء المشتركين المسددين بالكامل</div>
+                <div id="rotatingNamesContainer" class="text-center w-full" style="font-weight: 600; font-size: 0.8rem; min-height: 60px; display: flex; align-items: center; justify-content: center;">
+                    <div class="spinner" style="width:16px; height:16px;"></div>
+                    <span class="mr-2 text-slate-500 text-[10px]">جاري التحميل...</span>
+                </div>
             </div>
         </div>
 
-        <!-- لوحة الشرف التكريمية للمسددين بالكامل (Collapsible Honor Roll) - متناسقة مع لون الهيدر -->
-        <div class="px-5 mb-2">
-            <div class="honor-section p-4.5 shadow-md">
-                <button onclick="toggleHonorList()" class="w-full flex justify-between items-center text-white font-black text-xs">
-                    <span class="flex items-center gap-2">
-                        <span class="inline-flex p-1 bg-amber-400 rounded-lg text-slate-900 text-[11px] shadow-sm animate-pulse">🌟</span> 
-                        <span class="text-[13px] font-black text-white">لوحة الاسماءالمسددين بالكامل</span>
-                    </span>
-                    <span id="honorToggleArrow" class="text-blue-200 text-[10px] transform transition-transform duration-300">▼</span>
-                </button>
-                <div id="honorListContainer" class="hidden mt-3.5 pt-3.5 border-t border-white/10">
-                    <div id="honorListContent" class="honor-scrollbar grid grid-cols-2 gap-2.5 justify-start max-h-[160px] overflow-y-auto pr-1">
-                        <!-- يتم ملء القائمة برمجياً -->
-                    </div>
-                </div>
+        <div class="grid grid-cols-3 gap-3 p-5 mt-2">
+            <div class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100">
+                <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">المشتركين</p>
+                <p id="statTotal" class="text-xl font-black text-[#001f54]">0</p>
+            </div>
+            <div class="bg-emerald-50 p-4 rounded-3xl text-center border border-emerald-100">
+                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">المسددين</p>
+                <p id="statPaid" class="text-xl font-black text-emerald-600">0</p>
+            </div>
+            <div class="bg-rose-50 p-4 rounded-3xl text-center border border-rose-100">
+                <p class="text-[9px] text-rose-400 font-bold mb-1 uppercase">الانتظار</p>
+                <p id="statPending" class="text-xl font-black text-rose-600">0</p>
             </div>
         </div>
 
@@ -431,81 +282,6 @@
         </footer>
     </div>
 
-    <!-- رسائل التأكيد المؤقتة (Toast) -->
-    <div id="toast" class="feedback-toast">
-        <span>✓ تم نسخ التفاصيل المالية بنجاح</span>
-    </div>
-
-    <!-- نافذة منبثقة (Modal) لعرض تفاصيل إحصائيات المبالغ المالية بكل عملة -->
-    <div id="statsModal" class="modal-overlay" onclick="closeStatsModal()">
-        <div class="modal-container text-right" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                <button onclick="closeStatsModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">&times;</button>
-                <h3 id="modalTitle" class="font-black text-slate-800 text-[16px]">تفاصيل الإحصائيات المالية</h3>
-            </div>
-            
-            <div class="space-y-4">
-                <!-- قسم الريال السعودي -->
-                <div class="bg-[#f0f9ff] p-4 rounded-2xl border border-blue-100">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="bg-blue-200 text-blue-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">SAR</span>
-                        <span class="font-bold text-slate-700 text-xs">ريال سعودي</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 text-center text-xs mt-1">
-                        <div class="bg-white p-2 rounded-xl">
-                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المدفوع</div>
-                            <div id="modalPaidSar" class="font-black text-emerald-600">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-xl">
-                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المتبقي</div>
-                            <div id="modalRemSar" class="font-black text-rose-600">0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- قسم الدولار الأمريكي -->
-                <div class="bg-[#f0fdf4] p-4 rounded-2xl border border-emerald-100">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="bg-emerald-200 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">USD</span>
-                        <span class="font-bold text-slate-700 text-xs">دولار أمريكي</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 text-center text-xs mt-1">
-                        <div class="bg-white p-2 rounded-xl">
-                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المدفوع</div>
-                            <div id="modalPaidUsd" class="font-black text-emerald-600">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-xl">
-                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المتبقي</div>
-                            <div id="modalRemUsd" class="font-black text-rose-600">0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- قسم الريال اليمني -->
-                <div class="bg-[#fffbeb] p-4 rounded-2xl border border-amber-100">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="bg-amber-200 text-amber-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">YER</span>
-                        <span class="font-bold text-slate-700 text-xs">ريال يمني</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 text-center text-xs mt-1">
-                        <div class="bg-white p-2 rounded-xl">
-                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المدفوع</div>
-                            <div id="modalPaidYer" class="font-black text-emerald-600">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-xl">
-                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المتبقي</div>
-                            <div id="modalRemYer" class="font-black text-rose-600">0</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="closeStatsModal()" class="w-full mt-5 bg-[#001f54] text-white text-xs py-3 rounded-2xl font-bold active:scale-95 transition-all shadow-md">
-                موافق
-            </button>
-        </div>
-    </div>
-
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
@@ -522,13 +298,16 @@
 
         let donors = [];
         let currentSearchTerm = '';
+        let rotationInterval = null;
+        let fullyPaidNamesList = [];
         
         const DONORS_PATH = db.collection('artifacts').doc(APP_PATH).collection('public').doc('data').collection('donors');
 
+        // دالة حساب المعلومات المالية
         function getInfo(d) {
             if (d.type === 'zakat') return null;
             
-            let total = 0, paid = 0, currency = 'SAR', duration = 'غير مححدد', startDate = '', expiryDate = '';
+            let total = 0, paid = 0, currency = 'SAR', duration = 'غير محدد', startDate = '', expiryDate = '';
             let recordedBy = d.recordedBy || d.dataEntryName || 'غير محدد';
             let updateTime = 0;
             
@@ -588,55 +367,77 @@
             return { total, paid, isFull, hasPaidSomething, updateTime, currency, rem, progress, progressColor, duration, startDate, expiryDate, recordedBy };
         }
 
+        // تحديث الإحصائيات
         function updateStatistics() {
             const validDonors = donors.filter(d => d.type !== 'zakat');
             let paidCnt = validDonors.filter(d => { const info = getInfo(d); return info && info.hasPaidSomething; }).length;
             document.getElementById('statTotal').innerText = validDonors.length;
             document.getElementById('statPaid').innerText = paidCnt;
             document.getElementById('statPending').innerText = validDonors.length - paidCnt;
-
-            // تحديث لوحة الشرف بالمسددين بالكامل
-            updateHonorList(validDonors);
         }
-
-        // دالة عرض رسالة العيد
-        function renderEidMessage(donorName) {
-            return `
-                <div class="eid-message">
-                    <div class="eid-decoration">🌙✨🎉</div>
-                    <div class="eid-message-text">
-                        من العايدين<br>
-                        <span class="eid-message-name">كل عام وأنت بخير يا ${donorName}</span><br>
-                        أعاده الله علينا وعليكم باليمن والبركات
-                    </div>
-                    <div class="eid-decoration mt-2">🎊🌙✨</div>
-                </div>
-            `;
+        
+        // استخراج أسماء المسددين بالكامل (isFull = true)
+        function extractFullyPaidNames() {
+            const valid = donors.filter(d => d.type !== 'zakat');
+            const fullNames = [];
+            for (let d of valid) {
+                const info = getInfo(d);
+                if (info && info.isFull === true) {
+                    let donorName = d.name || d.donorName || null;
+                    if (donorName && donorName !== 'غير محدد') fullNames.push(donorName);
+                }
+            }
+            return fullNames;
         }
-
+        
+        // تشغيل العرض الدوري للأسماء مع وميض (كل 3 ثوانٍ)
+        function startRotatingNames(namesArray) {
+            if (rotationInterval) clearInterval(rotationInterval);
+            if (!namesArray.length) {
+                const container = document.getElementById('rotatingNamesContainer');
+                if (container) container.innerHTML = `<span class="text-slate-400 text-[11px] font-normal">✨ لا يوجد مسددون بالكامل بعد ✨</span>`;
+                return;
+            }
+            
+            let currentIndex = 0;
+            const containerDiv = document.getElementById('rotatingNamesContainer');
+            
+            const updateNameWithBlink = (name) => {
+                const nameHtml = `<div class="blink-name" style="animation: gentlePulse 0.6s ease-in-out 2; display: inline-block;">${name}</div>`;
+                containerDiv.innerHTML = nameHtml;
+                const blinkDiv = containerDiv.querySelector('.blink-name');
+                if (blinkDiv) {
+                    blinkDiv.style.animation = 'none';
+                    setTimeout(() => { if(blinkDiv) blinkDiv.style.animation = 'gentlePulse 0.6s ease-in-out 2'; }, 10);
+                }
+            };
+            
+            updateNameWithBlink(namesArray[currentIndex]);
+            
+            rotationInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % namesArray.length;
+                updateNameWithBlink(namesArray[currentIndex]);
+            }, 3000); // 3 ثواني لكل اسم
+        }
+        
+        // تحديث البطاقة السفلية للمسددين
+        function refreshFullyPaidWidget() {
+            fullyPaidNamesList = extractFullyPaidNames();
+            startRotatingNames(fullyPaidNamesList);
+        }
+        
+        // دالة عرض نتائج البحث - تم إزالة بطاقة العيد بشكل كامل
         function renderResults(filteredDonors, searchName) {
             const wrapper = document.getElementById("resultsWrapper");
-            
             if (filteredDonors.length === 0) {
                 wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs font-bold">عذراً، هذا الاسم غير مسجل لدينا</div>`;
                 return;
             }
-            
-            let html = '';
-            
-            // إضافة رسالة العيد لكل اسم تم البحث عنه (تظهر مرة واحدة في الأعلى)
-            if (searchName && filteredDonors.length > 0) {
-                html += renderEidMessage(searchName);
-            }
-            
-            html += '<div class="space-y-4">';
-            
+            let html = '<div class="space-y-4">';
             filteredDonors.forEach(m => {
                 const info = getInfo(m);
                 if (!info) return;
-                
                 let message = "", msgClass = "", statusText = "", statusClass = "";
-                
                 if (info.isFull) {
                     message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
                     msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
@@ -648,15 +449,13 @@
                     statusText = "غير مكتمل";
                     statusClass = "bg-rose-100 text-rose-600";
                 } else {
-                    message = "ndعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
+                    message = "ندعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
                     msgClass = "bg-amber-50 border-amber-100 text-amber-700";
                     statusText = "غير مكتمل";
                     statusClass = "bg-rose-100 text-rose-600";
                 }
-                
                 const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG') : 'غير محدد';
                 const donorDisplayName = m.name || m.donorName || 'غير محدد';
-                
                 html += `
                     <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
                         <div class="flex justify-between items-center mb-4">
@@ -683,292 +482,76 @@
                         <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}"><p class="text-[11px] leading-relaxed font-bold text-center">${message}</p></div>
                     </div>`;
             });
-            
             wrapper.innerHTML = html + '</div>';
         }
-
+        
+        // دالة البحث الدقيق
         window.searchDonor = function() {
             const term = document.getElementById("searchInput").value.trim();
             currentSearchTerm = term;
-            
-            // إخفاء صندوق المقترحات بمجرد النقر على بحث
-            document.getElementById("suggestionBox").classList.add("hidden");
-            
             if (!term) {
                 document.getElementById("resultsWrapper").innerHTML = `<div class="text-center py-10 text-rose-500 text-xs font-bold">يرجى إدخال اسم للبحث</div>`;
                 return;
             }
-            
-            const termLower = term.toLowerCase();
-            const normalizedSearchTerm = termLower.trim();
+            const normalizedSearchTerm = term.toLowerCase().trim();
             const validDonors = donors.filter(d => d.type !== 'zakat');
-            
             const filtered = validDonors.filter(d => {
                 const donorName = (d.name || "").toLowerCase().trim();
                 return donorName === normalizedSearchTerm;
             });
-            
             renderResults(filtered, term);
         };
-
+        
+        // تحية الصباح/المساء حسب نظام 12 ساعة:
+        // من 12:00 صباحاً (منتصف الليل) حتى 11:59 صباحاً -> صباح الخير
+        // من 12:00 ظهراً حتى 11:59 مساءً -> مساء الخير
+        function updateGreeting() {
+            const now = new Date();
+            const hours = now.getHours();
+            let greetingText = '';
+            let emoji = '';
+            
+            // 0 إلى 11 = صباح الخير (بما فيها 12 صباحاً = الساعة 0)
+            if (hours >= 0 && hours < 12) {
+                greetingText = 'صباح الخير';
+                emoji = '🌤️';
+            } 
+            // 12 إلى 23 = مساء الخير (بما فيها 12 ظهراً = الساعة 12)
+            else {
+                greetingText = 'مساء الخير';
+                emoji = '🌙';
+            }
+            
+            const greetingElement = document.getElementById('dynamicGreeting');
+            if (greetingElement) {
+                greetingElement.innerHTML = `${emoji} ${greetingText} ${emoji}`;
+            }
+        }
+        
+        // تحميل البيانات من Firebase
         DONORS_PATH.get().then((snapshot) => {
             donors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             updateStatistics();
+            refreshFullyPaidWidget();
             document.getElementById('loadingStatus').style.display = 'none';
             console.log(`✅ تم تحميل ${donors.filter(d => d.type !== 'zakat').length} سجل`);
-            
-            // تفعيل نظام الإكمال التلقائي الذكي فور انتهاء تحميل البيانات
-            initAutocomplete();
-            // تفعيل رسالة الترحيب المتغيرة زمنياً
-            initTimeGreeting();
         }).catch((error) => {
-            console.error("❌ خطأ:", error);
+            console.error("❌ خطأ Firebase:", error);
             document.getElementById('loadingStatus').innerHTML = `
                 <div class="text-center py-10 text-red-500">
                     <p class="text-sm font-bold">⚠️ خطأ في الاتصال</p>
                     <p class="text-xs mt-2">${error.message}</p>
                 </div>`;
+            const container = document.getElementById('rotatingNamesContainer');
+            if (container) container.innerHTML = `<span class="text-red-400 text-[11px]">فشل التحميل</span>`;
         });
-
+        
+        // تفعيل التحية فور تحميل الصفحة
+        updateGreeting();
+        
         document.getElementById('searchInput').addEventListener('keypress', (e) => { 
             if (e.key === 'Enter') searchDonor(); 
         });
-
-        // -------------------------------------------------------------
-        // الميزات البرمجية الإضافية والذكية (مُضافة بأمان تام وبدون أي مساس بالكود السابق)
-        // -------------------------------------------------------------
-
-        // دالة تنظيف وتوحيد الحروف العربية لتسهيل البحث الذكي والتجاهل المرن للفروق الإملائية
-        function cleanArabicString(text) {
-            if (!text) return '';
-            return text
-                .replace(/[أإآا]/g, 'ا')
-                .replace(/[ىي]/g, 'ي')
-                .replace(/[ةه]/g, 'ه')
-                .replace(/[\u064B-\u065F]/g, '') // إزالة التشكيل
-                .trim()
-                .toLowerCase();
-        }
-
-        // إعداد نظام الإكمال التلقائي التفاعلي مع دعم كامل لأسهم لوحة المفاتيح
-        let activeSuggestionIndex = -1;
-
-        function initAutocomplete() {
-            const searchInput = document.getElementById('searchInput');
-            const suggestionBox = document.getElementById('suggestionBox');
-
-            searchInput.addEventListener('input', function() {
-                const query = this.value;
-                activeSuggestionIndex = -1; // إعادة تهيئة المؤشر المفعّل
-
-                if (!query || query.trim().length < 2) {
-                    suggestionBox.classList.add('hidden');
-                    return;
-                }
-
-                const cleanedQuery = cleanArabicString(query);
-                const validDonors = donors.filter(d => d.type !== 'zakat');
-
-                // فرز المقترحات التي تحتوي على الكلمة المدخلة بطريقة ذكية
-                const matches = validDonors.filter(d => {
-                    const name = d.name || d.donorName || '';
-                    return cleanArabicString(name).includes(cleanedQuery);
-                }).slice(0, 5); // عرض أول 5 نتائج مطابقة فقط لجمالية التصميم
-
-                if (matches.length > 0) {
-                    suggestionBox.innerHTML = '';
-                    matches.forEach((item, index) => {
-                        const displayName = item.name || item.donorName;
-                        const div = document.createElement('div');
-                        div.className = 'suggestion-item';
-                        div.id = `suggestion-item-${index}`;
-                        div.textContent = displayName;
-                        div.onclick = function() {
-                            searchInput.value = displayName;
-                            suggestionBox.classList.add('hidden');
-                            searchDonor(); // تشغيل دالة البحث الأصلية مباشرة عند النقر
-                        };
-                        suggestionBox.appendChild(div);
-                    });
-                    suggestionBox.classList.remove('hidden');
-                } else {
-                    suggestionBox.classList.add('hidden');
-                }
-            });
-
-            // إضافة التنقل والتحديد عبر أسهم لوحة المفاتيح
-            searchInput.addEventListener('keydown', function(e) {
-                const items = suggestionBox.querySelectorAll('.suggestion-item');
-                if (suggestionBox.classList.contains('hidden') || items.length === 0) return;
-
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
-                    highlightSuggestion(items);
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
-                    highlightSuggestion(items);
-                } else if (e.key === 'Enter' && activeSuggestionIndex > -1) {
-                    e.preventDefault();
-                    items[activeSuggestionIndex].click();
-                }
-            });
-
-            // إخفاء صندوق الاقتراحات في حال النقر في أي مكان آخر بالصفحة
-            document.addEventListener('click', function(e) {
-                if (e.target !== searchInput && e.target !== suggestionBox) {
-                    suggestionBox.classList.add('hidden');
-                }
-            });
-        }
-
-        // تمييز المقترح المحدد باللوحة الإرشادية للوحة المفاتيح
-        function highlightSuggestion(items) {
-            items.forEach((item, index) => {
-                if (index === activeSuggestionIndex) {
-                    item.classList.add('active');
-                    item.scrollIntoView({ block: 'nearest' });
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-        }
-
-        // دالة التحية الزمنية الذكية في الهيدر تظهر "صباح الخير" إذا كان صباحًا و"مساء الخير" إذا كان مساءً أو ليلًا
-        function initTimeGreeting() {
-            const timeGreeting = document.getElementById('timeGreeting');
-            const hour = new Date().getHours();
-            let greeting = '';
-
-            // الفترات الصباحية والمسائية التقليدية
-            if (hour >= 5 && hour < 12) {
-                greeting = '☀️ صباح الخير .. نسعد بزيارتك للصندوق';
-            } else {
-                greeting = '🌙 مساء الخير .. نسعد بزيارتك للصندوق';
-            }
-            timeGreeting.textContent = greeting;
-        }
-
-        // دالة إنشاء وإدارة لوحة الشرف للمسددين (تصميم فخم متطابق ومنسق كشبكة منسجمة مع تصغير ذكي لعرض الأسماء كاملة)
-        function updateHonorList(validDonors) {
-            const honorListContent = document.getElementById('honorListContent');
-            if (!honorListContent) return;
-
-            // استخلاص الأعضاء الذين أكملوا الدفع بنسبة 100%
-            const fullyPaidDonors = validDonors.filter(d => {
-                const info = getInfo(d);
-                return info && info.isFull;
-            });
-
-            if (fullyPaidDonors.length === 0) {
-                honorListContent.innerHTML = `<div class="text-[10px] text-blue-200/70 font-semibold py-4 col-span-2 w-full text-center">بانتظار انضمام أول المسددين لتزيين لوحة الشرف الكريمة ✨</div>`;
-                return;
-            }
-
-            // فرز الأسماء أبجدياً
-            fullyPaidDonors.sort((a, b) => {
-                const nameA = a.name || a.donorName || '';
-                const nameB = b.name || b.donorName || '';
-                return nameA.localeCompare(nameB, 'ar');
-            });
-
-            let html = '';
-            fullyPaidDonors.forEach(d => {
-                const name = d.name || d.donorName;
-                html += `
-                    <div onclick="fillSearchAndSearch('${name}')" class="honor-member-tag text-white text-[10px] px-2.5 py-2 rounded-2xl font-bold cursor-pointer active:scale-95 transition-all flex items-center justify-between gap-1">
-                        <span class="break-words pr-1 leading-tight text-right">${name}</span>
-                        <div class="flex-shrink-0 w-4.5 h-4.5 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-lg flex items-center justify-center shadow-sm">
-                            <svg class="w-2.5 h-2.5 text-slate-950" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                `;
-            });
-
-            honorListContent.innerHTML = html;
-        }
-
-        // البحث السريع عند الضغط على اسم من قائمة لوحة الشرف
-        window.fillSearchAndSearch = function(name) {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.value = name;
-            searchDonor();
-        };
-
-        // إظهار/إخفاء قائمة الشرف
-        window.toggleHonorList = function() {
-            const container = document.getElementById('honorListContainer');
-            const arrow = document.getElementById('honorToggleArrow');
-            if (container.classList.contains('hidden')) {
-                container.classList.remove('hidden');
-                arrow.style.transform = 'rotate(180deg)';
-            } else {
-                container.classList.add('hidden');
-                arrow.style.transform = 'rotate(0deg)';
-            }
-        };
-
-        // -------------------------------------------------------------
-        // حسابات وإدارة المودال المالي التفاعلي للعملات (تتم في الذاكرة)
-        // -------------------------------------------------------------
-        window.openStatsModal = function(type) {
-            const modal = document.getElementById('statsModal');
-            const title = document.getElementById('modalTitle');
-            
-            // تهيئة متغيرات مجاميع العملات
-            let paidSar = 0, remSar = 0;
-            let paidUsd = 0, remUsd = 0;
-            let paidYer = 0, remYer = 0;
-
-            const validDonors = donors.filter(d => d.type !== 'zakat');
-
-            // حساب المجاميع من مصفوفة البيانات الحالية بالكامل
-            validDonors.forEach(d => {
-                const info = getInfo(d);
-                if (!info) return;
-
-                if (info.currency === 'SAR') {
-                    paidSar += info.paid;
-                    remSar += info.rem;
-                } else if (info.currency === 'USD') {
-                    paidUsd += info.paid;
-                    remUsd += info.rem;
-                } else if (info.currency === 'YER') {
-                    paidYer += info.paid;
-                    remYer += info.rem;
-                }
-            });
-
-            // ضبط عنوان المودال بناء على الكارت المنقور
-            if (type === 'total') {
-                title.textContent = 'الإحصائيات الإجمالية للصندوق (كل العملات)';
-            } else if (type === 'paid') {
-                title.textContent = 'تفاصيل المبالغ المسددة لجميع المشتركين';
-            } else if (type === 'pending') {
-                title.textContent = 'تفاصيل المبالغ المتبقية قيد الانتظار';
-            }
-
-            // تعبئة البيانات في المودال مع مراعاة التنسيق الرقمي المناسب
-            document.getElementById('modalPaidSar').textContent = paidSar.toLocaleString() + ' ر.س';
-            document.getElementById('modalRemSar').textContent = remSar.toLocaleString() + ' ر.س';
-
-            document.getElementById('modalPaidUsd').textContent = '$' + paidUsd.toLocaleString();
-            document.getElementById('modalRemUsd').textContent = '$' + remUsd.toLocaleString();
-
-            document.getElementById('modalPaidYer').textContent = paidYer.toLocaleString() + ' ر.ي';
-            document.getElementById('modalRemYer').textContent = remYer.toLocaleString() + ' ر.ي';
-
-            // فتح المودال برمجياً مع تأثير انتقال سلس
-            modal.classList.add('open');
-        };
-
-        window.closeStatsModal = function() {
-            document.getElementById('statsModal').classList.remove('open');
-        };
     </script>
 </body>
 </html>
-
