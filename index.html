@@ -2,490 +2,155 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحسينات النظام | صيانة دورية</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>صندوق مساعدة الحالات الطارئة</title>
     
-    <!-- استيراد خطوط النظام الحديثة وتجهيز عائلة خطوط Apple بشكل احترافي -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Firebase Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
-        /* تعريف وتجهيز عائلة خط Apple Pro افتراضياً للاستخدام الآمن والسريع */
-        @font-face {
-            font-family: 'SF Pro';
-            src: local('SF Pro Text'), local('SF Pro Display'), local('SF Pro Arabic'), local('-apple-system'), local('BlinkMacSystemFont');
-            font-weight: 400;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'SF Pro';
-            src: local('SF Pro Text Medium'), local('SF Pro Display Medium'), local('SF Pro Arabic Medium');
-            font-weight: 500;
-        }
-        @font-face {
-            font-family: 'SF Pro';
-            src: local('SF Pro Text Bold'), local('SF Pro Display Bold'), local('SF Pro Arabic Bold');
-            font-weight: 700;
-        }
-        @font-face {
-            font-family: 'SF Pro';
-            src: local('SF Pro Text Heavy'), local('SF Pro Display Heavy'), local('SF Pro Arabic Black');
-            font-weight: 900;
-        }
-
-        :root {
-            --bg-color: #f4f7fa; /* خلفية نهارية مريحة للعين */
-            --card-bg: rgba(255, 255, 255, 0.8); /* تأثير زجاجي مضيء */
-            --card-border: rgba(15, 23, 42, 0.05);
-            --text-primary: #0f172a; /* نصوص داكنة وواضحة جداً */
-            --text-secondary: #475569;
-            --accent-color: #f97316; /* برتقالي حيوي لافت للانتباه */
-            --accent-glow: rgba(249, 115, 22, 0.2);
-            /* تطبيق خط ابل برو (SF Pro / SF Arabic) كخط رئيسي لجميع العناصر والبدائل الحديثة */
-            --font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, 'SF Pro Arabic', 'Helvetica Neue', 'Segoe UI', Tahoma, Geneva, sans-serif;
-            --font-mono: 'SF Pro Text', 'Plus Jakarta Sans', monospace;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            font-family: var(--font-family); /* تطبيق الخط على جميع التفاصيل بدون استثناء */
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        
         body {
-            font-family: var(--font-family);
-            background-color: var(--bg-color);
-            color: var(--text-primary);
+            background-color: #f8fafc;
+            font-family: 'Cairo', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .app-card {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            background: #fff;
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2.5rem 1.5rem;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* خلفية تفاعلية مذهلة - الهالات المضيئة النهارية الناعمة بألوان متناسقة مع التحديثات الجديدة */
-        .glowing-orbs {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(140px);
-            opacity: 0.14;
-            animation: float 22s infinite alternate ease-in-out;
-        }
-
-        .orb-1 {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, #ff9f43 0%, rgba(255,159,67,0) 70%);
-            top: -15%;
-            right: -10%;
-            animation-duration: 25s;
-        }
-
-        .orb-2 {
-            width: 700px;
-            height: 700px;
-            background: radial-gradient(circle, #6366f1 0%, rgba(99,102,241,0) 70%);
-            bottom: -25%;
-            left: -15%;
-            animation-duration: 30s;
-        }
-
-        .orb-3 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,0) 70%);
-            top: 35%;
-            right: 25%;
-            opacity: 0.08;
-            animation-duration: 20s;
-        }
-
-        /* شبكة رقيقة فوق الخلفية للتفاصيل الهندسيّة */
-        .grid-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: linear-gradient(rgba(15, 23, 42, 0.012) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(15, 23, 42, 0.012) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .container {
-            max-width: 680px;
-            width: 100%;
-            z-index: 2;
-            position: relative;
-            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* تصميم ترويسة الصندوق الفاخرة بألوان متدرجة فريدة في الأعلى */
-        .fund-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .fund-title {
-            font-size: 2.1rem;
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            /* تدرج لوني ملكي مذهل يجمع بين الأزرق الداكن والبنفسجي العميق */
-            background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #6366f1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: block;
-            margin-bottom: 0.6rem;
-            text-shadow: 0 2px 10px rgba(99, 102, 241, 0.05);
-        }
-
-        .fund-location {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #ffffff;
-            /* تدرج لوني دافئ مميز لقرية محبران */
-            background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
-            padding: 0.4rem 1.5rem;
-            border-radius: 50px;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.25);
-            letter-spacing: 0.5px;
-        }
-
-        /* بنر الاعتذار العلوي الأنيق للوضع النهاري */
-        .apology-banner {
-            text-align: center;
-            margin-bottom: 2.2rem;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(15, 23, 42, 0.06);
-            border-radius: 100px;
-            padding: 0.5rem 1.6rem;
-            width: fit-content;
-            margin-right: auto;
-            margin-left: auto;
-            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            animation: pulseBanner 3s infinite alternate;
-        }
-
-        .apology-dot {
-            width: 8px;
-            height: 8px;
-            background: linear-gradient(135deg, #f97316, #ef4444);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-color);
-        }
-
-        .apology-text {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            letter-spacing: 0.5px;
-        }
-
-        /* بطاقة الصيانة الرئيسية الزجاجية المضيئة الفخمة */
-        .maintenance-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: 36px;
-            border: 1px solid var(--card-border);
-            padding: 3.5rem 2.5rem;
-            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.04), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-        }
-
-        .maintenance-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 40px 80px rgba(15, 23, 42, 0.07), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.95);
-        }
-
-        /* عنصر التروس المتحركة كشكل هندسي رائع */
-        .maintenance-visual {
-            margin-bottom: 2rem;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .visual-gear {
-            width: 68px;
-            height: 68px;
-            fill: none;
-            stroke: var(--accent-color);
-            stroke-width: 1.5;
-            animation: spin 12s linear infinite;
-            filter: drop-shadow(0 0 6px var(--accent-glow));
-        }
-
-        /* عنوان الصيانة بلمعان وتدرج لوني فائق الجمال والوضوح */
-        .message-title {
-            font-size: 2.3rem;
-            font-weight: 900;
-            margin-bottom: 0.85rem;
-            /* تدرج لوني ناري دافئ يعبر عن العمل الفعال والتحديث المستمر */
-            background: linear-gradient(135deg, #ea580c 0%, #f97316 45%, #ef4444 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .main-message {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1e293b;
-            line-height: 1.6;
-            margin-bottom: 1.2rem;
-        }
-
-        .main-message span.highlight {
-            color: var(--accent-color);
-            background: rgba(249, 115, 22, 0.08);
-            padding: 0.15rem 0.6rem;
-            border-radius: 8px;
-            border: 1px dashed rgba(249, 115, 22, 0.2);
-            display: inline-block;
-        }
-
-        .sub-message {
-            font-size: 1.05rem;
-            font-weight: 400;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            padding: 1.2rem 1.5rem;
-            background: rgba(15, 23, 42, 0.02);
-            border-radius: 20px;
-            border: 1px solid rgba(15, 23, 42, 0.03);
-            margin: 1.5rem 0 2rem;
-        }
-
-        /* قسم العداد التنازلي الإبداعي بالوضع المضيء */
-        .timer-section {
-            display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 2rem;
-            background: rgba(15, 23, 42, 0.02);
-            padding: 1.2rem;
-            border-radius: 24px;
-            border: 1px solid rgba(15, 23, 42, 0.03);
-        }
-
-        .timer-label {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .countdown-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            direction: ltr;
-        }
-
-        .time-box {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(15, 23, 42, 0.05);
-            border-radius: 14px;
-            min-width: 70px;
-            padding: 0.75rem 0.5rem;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
             position: relative;
         }
-
-        .time-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .header-gradient {
+            background: linear-gradient(135deg, #001f54 0%, #003b8e 100%);
+            padding: 50px 20px 40px;
+            text-align: center;
+            color: white;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+        .search-container {
+            margin-top: -35px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 40;
+        }
+        .search-input {
             width: 100%;
-            height: 50%;
-            background: rgba(15, 23, 42, 0.01);
-            border-radius: 14px 14px 0 0;
-            border-bottom: 1px solid rgba(15, 23, 42, 0.02);
-            pointer-events: none;
-        }
-
-        .time-value {
-            font-family: var(--font-mono);
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            display: block;
-            line-height: 1;
-        }
-
-        .time-value.highlighted {
-            color: var(--accent-color);
-            text-shadow: 0 0 8px rgba(249, 115, 22, 0.15);
-        }
-
-        .time-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            margin-top: 4px;
-            display: block;
-        }
-
-        .time-colon {
-            font-size: 1.8rem;
-            font-family: var(--font-mono);
-            color: rgba(15, 23, 42, 0.15);
-            display: flex;
-            align-items: center;
-            animation: blink 1s infinite;
-        }
-
-        /* تفاصيل الدعم والبريد الإلكتروني */
-        .support-card {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.01) 0%, rgba(15, 23, 42, 0.005) 100%);
-            border: 1px solid rgba(15, 23, 42, 0.03);
+            padding: 16px 24px;
             border-radius: 20px;
-            padding: 1.2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .support-text {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-        }
-
-        .email-badge {
-            background: rgba(249, 115, 22, 0.08);
-            border: 1px solid rgba(249, 115, 22, 0.2);
-            padding: 0.5rem 1.2rem;
-            border-radius: 12px;
-            color: var(--accent-color);
-            font-family: var(--font-mono);
-            font-size: 0.95rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            outline: none;
+            font-size: 16px;
+            text-align: right;
             transition: all 0.3s ease;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
         }
-
-        .email-badge:hover {
-            background: rgba(249, 115, 22, 0.12);
-            border-color: rgba(249, 115, 22, 0.3);
-            transform: scale(1.02);
+        .search-input:focus {
+            border-color: #003b8e;
+            box-shadow: 0 10px 20px -3px rgba(0, 31, 84, 0.15);
         }
-
-        /* خطوط الزينة واللمسة الفنية */
-        .decoration-dots {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 2rem;
+        
+        .spinner {
+            width: 24px; height: 24px; border: 3px solid #e2e8f0;
+            border-top-color: #001f54; border-radius: 50%;
+            animation: spin 0.8s linear infinite; display: inline-block;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .dec-dot {
-            width: 6px;
+        .news-ticker {
+            background: #f1f5f9; height: 35px; display: flex; align-items: center;
+            overflow: hidden; margin: 15px 20px 0; border-radius: 10px;
+        }
+        .ticker-content {
+            white-space: nowrap; display: inline-block; animation: ticker 45s linear infinite;
+            padding-right: 100%; color: #ef4444; font-size: 12px; font-weight: 700;
+        }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-card {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .timeline-bar {
+            background: #e2e8f0;
+            border-radius: 10px;
             height: 6px;
-            background: rgba(15, 23, 42, 0.1);
-            border-radius: 50%;
+            overflow: hidden;
         }
-
-        .dec-dot.active {
-            background: var(--accent-color);
-            box-shadow: 0 0 6px var(--accent-color);
+        .timeline-progress {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
         }
-
-        /* مطور النظام بصورة عصرية متوافقة مع النهار */
-        .developer-badge {
-            margin-top: 2.2rem;
+        
+        .info-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #eef2ff;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .info-item {
+            background: white;
+            border-radius: 12px;
+            padding: 8px 10px;
             text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(15, 23, 42, 0.04);
-            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.02);
-            border-radius: 100px;
-            padding: 0.6rem 1.5rem;
-            width: fit-content;
-            margin-right: auto;
-            margin-left: auto;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
+            border: 1px solid #f0f2f5;
         }
-
-        .developer-badge:hover {
-            background: #ffffff;
-            border-color: rgba(15, 23, 42, 0.08);
-            transform: translateY(-2px);
+        .info-item-label {
+            font-size: 9px;
+            color: #94a3b8;
+            font-weight: 600;
+            margin-bottom: 4px;
         }
-
-        .dev-title {
-            font-size: 0.85rem;
-            color: #64748b;
-            font-weight: 500;
+        .info-item-value {
+            font-size: 11px;
+            color: #1e293b;
+            font-weight: 700;
         }
-
-        .dev-name {
-            font-size: 0.95rem;
+        
+        .status-badge {
+            display: inline-flex;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 10px;
             font-weight: 800;
-            background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
-
-        /* حركات الأنيميشن */
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-30px) scale(1.05); }
-            100% { transform: translateY(15px) scale(0.95); }
+        
+        /* رسالة العيد الجديدة */
+        .eid-message {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-right: 6px solid #d97706;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
+            animation: slideDown 0.5s ease-out;
         }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInDown {
+        
+        @keyframes slideDown {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
@@ -495,255 +160,814 @@
                 transform: translateY(0);
             }
         }
-
-        @keyframes pulseBanner {
-            0% { box-shadow: 0 0 15px rgba(249, 115, 22, 0.02); }
-            100% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.08); }
+        
+        .eid-message-text {
+            font-size: 18px;
+            font-weight: 800;
+            color: #92400e;
+            line-height: 1.6;
+        }
+        
+        .eid-message-name {
+            font-size: 20px;
+            font-weight: 900;
+            color: #b45309;
+            background: white;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 40px;
+            margin: 8px 0 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .eid-decoration {
+            font-size: 24px;
+            margin-bottom: 8px;
+            letter-spacing: 4px;
         }
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* تنسيقات إضافية ذكية ومتوافقة */
+        .suggestion-box {
+            position: absolute;
+            top: 100%;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 16px;
+            margin-top: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 50;
+            border: 1px solid #f1f5f9;
+        }
+        .suggestion-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            text-align: right;
+            border-bottom: 1px solid #f8fafc;
+        }
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .suggestion-item:hover, .suggestion-item.active {
+            background-color: #f1f5f9;
+            color: #001f54;
+            font-weight: 600;
+        }
+        
+        .feedback-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 100;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .feedback-toast.show {
+            transform: translateX(-50%) translateY(0);
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
+        /* تنسيقات المودال الخاص بالإحصائيات التفصيلية */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-container {
+            background: white;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.open .modal-container {
+            transform: scale(1);
         }
 
-        /* توافق الشاشات */
-        @media (max-width: 600px) {
-            body {
-                padding: 1.5rem 1rem;
-            }
-            .fund-title {
-                font-size: 1.7rem;
-            }
-            .fund-location {
-                font-size: 0.85rem;
-            }
-            .maintenance-card {
-                padding: 2.2rem 1.5rem;
-                border-radius: 28px;
-            }
-            .message-title {
-                font-size: 1.9rem;
-            }
-            .main-message {
-                font-size: 1.1rem;
-            }
-            .sub-message {
-                font-size: 0.95rem;
-                padding: 1rem;
-            }
-            .time-box {
-                min-width: 55px;
-                padding: 0.6rem 0.3rem;
-            }
-            .time-value {
-                font-size: 1.4rem;
-            }
-            .developer-badge {
-                padding: 0.5rem 1.2rem;
-            }
+        /* لوحة الشرف الزرقاء التفاعلية المتناسقة مع الهيدر */
+        .honor-section {
+            background: linear-gradient(135deg, #001f54 0%, #003b8e 100%);
+            border: 1.5px solid #fbbf24;
+            border-radius: 28px;
+            box-shadow: 0 10px 25px -5px rgba(0, 31, 84, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .honor-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            animation: shine-light 8s infinite ease-in-out;
+            pointer-events: none;
+        }
+        @keyframes shine-light {
+            0% { left: -100%; }
+            20% { left: 150%; }
+            100% { left: 150%; }
         }
 
-        /* حماية إضافية لإخفاء الأيقونات الكلاسيكية القديمة */
-        i, .fa, .fas, .far, .fab, [class*="fa-"], [class^="fa-"] {
-            display: none !important;
+        /* تنسيقات شريط التمرير الأنيق للوحة الشرف */
+        .honor-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .honor-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .honor-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        .honor-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* كارت الاسم التكريمي المطور مع مظهر زجاجي وتصغير مثالي */
+        .honor-member-tag {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+            color: #ffffff;
+        }
+        .honor-member-tag:hover {
+            transform: translateY(-2px);
+            border-color: #fbbf24;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.15);
         }
     </style>
 </head>
-<body>
+<body class="flex justify-center">
 
-    <!-- الهالات الضوئية النهارية في الخلفية -->
-    <div class="glowing-orbs">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
+    <div class="app-card">
+        <div class="bg-red-600 text-white text-[11px] py-2 text-center font-bold relative overflow-hidden">
+             ⚠️ يرجى تسديد المبالغ المتبقية قبل تاريخ 2026/06/01
+        </div>
+
+        <div class="header-gradient">
+            <!-- رسالة ترحيبية ذكية حسب الوقت (صباح الخير / مساء الخير) -->
+            <div id="timeGreeting" class="text-sm text-amber-300 font-bold mb-1.5 tracking-wider">أهلاً بك في نظام الصندوق</div>
+            <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
+            <p class="text-blue-200 text-[11px] font-semibold tracking-widest">قرية محبران</p>
+        </div>
+
+        <div class="search-container">
+            <div class="relative">
+                <input type="text" id="searchInput" class="search-input" placeholder="اكتب اسمك للبحث..." autocomplete="off">
+                <button onclick="searchDonor()" class="absolute left-2 top-2 bottom-2 bg-[#001f54] text-white px-6 rounded-2xl text-[11px] font-bold shadow-md active:scale-95 transition-all">
+                    بـحـث
+                </button>
+            </div>
+            <!-- صندوق المقترحات التلقائية (مخفي افتراضياً) -->
+            <div id="suggestionBox" class="suggestion-box hidden"></div>
+        </div>
+
+        <div class="news-ticker">
+            <div class="bg-[#001f54] text-white px-3 h-full flex items-center font-black text-[10px] z-10">هام</div>
+            <div class="ticker-content">
+                الرجاء المبادرة باستكمال المبالغ المتبقية لضمان استمرار تقديم المساعدات في وقتها . . . بارك الله في أموالكم وأهليكم . . .
+            </div>
+        </div>
+
+        <!-- كروت الإحصائيات التفاعلية (قابلة للنقر الآن لفتح إحصائيات المبالغ المفصلة) -->
+        <div class="grid grid-cols-3 gap-3 p-5 mt-2">
+            <div onclick="openStatsModal('total')" class="bg-slate-50 p-4 rounded-3xl text-center border border-slate-100 cursor-pointer active:scale-95 transition-all hover:bg-slate-100/70" title="انقر لعرض تفاصيل المبالغ">
+                <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase flex items-center justify-center gap-1">
+                    المشتركين <span class="text-[8px]">ℹ️</span>
+                </p>
+                <p id="statTotal" class="text-xl font-black text-[#001f54]">0</p>
+            </div>
+            <div onclick="openStatsModal('paid')" class="bg-emerald-50 p-4 rounded-3xl text-center border border-emerald-100 cursor-pointer active:scale-95 transition-all hover:bg-emerald-100/70" title="انقر لعرض تفاصيل السداد">
+                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase flex items-center justify-center gap-1">
+                    المسددين <span class="text-[8px]">ℹ️</span>
+                </p>
+                <p id="statPaid" class="text-xl font-black text-emerald-600">0</p>
+            </div>
+            <div onclick="openStatsModal('pending')" class="bg-rose-50 p-4 rounded-3xl text-center border border-rose-100 cursor-pointer active:scale-95 transition-all hover:bg-rose-100/70" title="انقر لعرض تفاصيل الانتظار">
+                <p class="text-[9px] text-rose-400 font-bold mb-1 uppercase flex items-center justify-center gap-1">
+                    الانتظار <span class="text-[8px]">ℹ️</span>
+                </p>
+                <p id="statPending" class="text-xl font-black text-rose-600">0</p>
+            </div>
+        </div>
+
+        <!-- لوحة الشرف التكريمية للمسددين بالكامل (Collapsible Honor Roll) - متناسقة مع لون الهيدر -->
+        <div class="px-5 mb-2">
+            <div class="honor-section p-4.5 shadow-md">
+                <button onclick="toggleHonorList()" class="w-full flex justify-between items-center text-white font-black text-xs">
+                    <span class="flex items-center gap-2">
+                        <span class="inline-flex p-1 bg-amber-400 rounded-lg text-slate-900 text-[11px] shadow-sm animate-pulse">🌟</span> 
+                        <span class="text-[13px] font-black text-white">لوحة شرف المسددين بالكامل</span>
+                    </span>
+                    <span id="honorToggleArrow" class="text-blue-200 text-[10px] transform transition-transform duration-300">▼</span>
+                </button>
+                <div id="honorListContainer" class="hidden mt-3.5 pt-3.5 border-t border-white/10">
+                    <div id="honorListContent" class="honor-scrollbar grid grid-cols-2 gap-2.5 justify-start max-h-[160px] overflow-y-auto pr-1">
+                        <!-- يتم ملء القائمة برمجياً -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-5 flex-grow pb-10">
+            <div id="loadingStatus" class="text-center py-10">
+                <div class="spinner"></div>
+                <p class="text-[10px] text-slate-400 mt-3 font-semibold">جاري المزامنة مع السيرفر...</p>
+            </div>
+            <div id="resultsWrapper" class="mt-4">
+                <div class="text-center py-16 opacity-30">
+                    <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <p class="text-xs font-bold">ابحث بالاسم لتظهر حالتك المالية</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-slate-50 border-t border-slate-100 px-4 py-5 text-center">
+            <div class="text-[11px] font-bold text-[#001f54] mb-2">
+                المشرف العام : مصطفى الشجاع
+            </div>
+            <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[9.5px] font-semibold text-slate-500">
+                <div class="whitespace-nowrap">المدير المالي : مجدي عبدة علي</div>
+                <span class="text-slate-300 hidden min-[360px]:inline">•</span>
+                <div class="whitespace-nowrap">المدقق المالي : ياسر الشجاع</div>
+                <span class="text-slate-300 hidden min-[360px]:inline">•</span>
+                <div class="whitespace-nowrap"><span class="font-bold text-slate-800">مطور النظام: </span> عمرو مسعد الشجاع</div>
+            </div>
+        </footer>
     </div>
-    
-    <!-- شبكة الزينة الخلفية -->
-    <div class="grid-overlay"></div>
 
-    <div class="container">
-        
-        <!-- عنوان صندوق دعم الحالات الطارئة - قرية محبران في الأعلى مع ألوان استثنائية متدرجة -->
-        <div class="fund-header">
-            <span class="fund-title">صندوق دعم الحالات الطارئة</span>
-            <span class="fund-location">قرية محبران</span>
-        </div>
+    <!-- رسائل التأكيد المؤقتة (Toast) -->
+    <div id="toast" class="feedback-toast">
+        <span>✓ تم نسخ التفاصيل المالية بنجاح</span>
+    </div>
 
-        <!-- بنر الإعتذار المضيء -->
-        <div class="apology-banner">
-            <span class="apology-dot"></span>
-            <span class="apology-text">نأسف جداً على الإزعاج المؤقت</span>
-        </div>
-
-        <!-- بطاقة الصيانة الرئيسية الزجاجية النهارية -->
-        <div class="maintenance-card">
-            
-            <!-- تروس هندسية متحركة بصيغة SVG بدقة متناهية ودون أيقونات خارجية -->
-            <div class="maintenance-visual">
-                <svg class="visual-gear" viewBox="0 0 24 24">
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </svg>
+    <!-- نافذة منبثقة (Modal) لعرض تفاصيل إحصائيات المبالغ المالية بكل عملة -->
+    <div id="statsModal" class="modal-overlay" onclick="closeStatsModal()">
+        <div class="modal-container text-right" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
+                <button onclick="closeStatsModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">&times;</button>
+                <h3 id="modalTitle" class="font-black text-slate-800 text-[16px]">تفاصيل الإحصائيات المالية</h3>
             </div>
-
-            <h1 class="message-title">صيانة وترقية النظام</h1>
             
-            <div class="main-message">
-                الموقع متوقف مؤقتاً لتطبيق <span class="highlight">تحديثات أمنية جديدة</span>
-            </div>
-
-            <p class="sub-message">
-                  نعمل حالياً على تحسين أداء خوادم النظام لضمان تجربة مستخدم أكثر سرعة وأماناً. سنعود للعمل قريباً جداً فور الانتهاء
-            </p>
-
-            <!-- قسم العداد التنازلي الاحترافي المقسم لبطاقات رقمية مبهجة -->
-            <div class="timer-section">
-                <span class="timer-label">المدة الزمنية المقدرة المتبقية</span>
-                <div class="countdown-container" id="countdown">
-                    <!-- صندوق الساعات -->
-                    <div class="time-box">
-                        <span class="time-value highlighted" id="hours">00</span>
-                        <span class="time-label">ساعة</span>
+            <div class="space-y-4">
+                <!-- قسم الريال السعودي -->
+                <div class="bg-[#f0f9ff] p-4 rounded-2xl border border-blue-100">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-blue-200 text-blue-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">SAR</span>
+                        <span class="font-bold text-slate-700 text-xs">ريال سعودي</span>
                     </div>
-                    <span class="time-colon">:</span>
-                    <!-- صندوق الدقائق -->
-                    <div class="time-box">
-                        <span class="time-value" id="minutes">00</span>
-                        <span class="time-label">دقيقة</span>
+                    <div class="grid grid-cols-2 gap-2 text-center text-xs mt-1">
+                        <div class="bg-white p-2 rounded-xl">
+                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المدفوع</div>
+                            <div id="modalPaidSar" class="font-black text-emerald-600">0</div>
+                        </div>
+                        <div class="bg-white p-2 rounded-xl">
+                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المتبقي</div>
+                            <div id="modalRemSar" class="font-black text-rose-600">0</div>
+                        </div>
                     </div>
-                    <span class="time-colon">:</span>
-                    <!-- صندوق الثواني -->
-                    <div class="time-box">
-                        <span class="time-value" id="seconds">00</span>
-                        <span class="time-label">ثانية</span>
+                </div>
+
+                <!-- قسم الدولار الأمريكي -->
+                <div class="bg-[#f0fdf4] p-4 rounded-2xl border border-emerald-100">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-emerald-200 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">USD</span>
+                        <span class="font-bold text-slate-700 text-xs">دولار أمريكي</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-center text-xs mt-1">
+                        <div class="bg-white p-2 rounded-xl">
+                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المدفوع</div>
+                            <div id="modalPaidUsd" class="font-black text-emerald-600">0</div>
+                        </div>
+                        <div class="bg-white p-2 rounded-xl">
+                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المتبقي</div>
+                            <div id="modalRemUsd" class="font-black text-rose-600">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قسم الريال اليمني -->
+                <div class="bg-[#fffbeb] p-4 rounded-2xl border border-amber-100">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-amber-200 text-amber-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">YER</span>
+                        <span class="font-bold text-slate-700 text-xs">ريال يمني</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-center text-xs mt-1">
+                        <div class="bg-white p-2 rounded-xl">
+                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المدفوع</div>
+                            <div id="modalPaidYer" class="font-black text-emerald-600">0</div>
+                        </div>
+                        <div class="bg-white p-2 rounded-xl">
+                            <div class="text-[9px] text-slate-400 font-semibold mb-0.5">المتبقي</div>
+                            <div id="modalRemYer" class="font-black text-rose-600">0</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- بطاقة الدعم والاتصال السريع النهارية -->
-            <div class="support-card">
-                <span class="support-text">هل لديك استفسار عاجل؟ فريقنا متاح للرد الفوري:</span>
-                <span class="email-badge" onclick="copyEmail()">amrprok99@gmail.com</span>
-            </div>
-
-            <div class="decoration-dots">
-                <span class="dec-dot"></span>
-                <span class="dec-dot active"></span>
-                <span class="dec-dot"></span>
-            </div>
-            
-            <p style="font-size: 0.85rem; color: #64748b; margin-top: 1.2rem;">
-                سيقوم المتصفح بإعادة تحميل الصفحة تلقائياً بمجرد تشغيل النظام.
-            </p>
+            <button onclick="closeStatsModal()" class="w-full mt-5 bg-[#001f54] text-white text-xs py-3 rounded-2xl font-bold active:scale-95 transition-all shadow-md">
+                موافق
+            </button>
         </div>
-
-        <!-- مطور النظام بصورة عصرية واضحة في الأسفل -->
-        <div class="developer-badge">
-            <span class="dev-title">مطور النظام :</span>
-            <span class="dev-name">عمرو مسعد الشجاع</span>
-        </div>
-    </div>
-
-    <!-- نافذة تنبيه أنيقة مخصصة عند نسخ البريد الإلكتروني ملائمة للوضع النهاري -->
-    <div id="toastMessage" style="position: fixed; bottom: 24px; right: 24px; background: rgba(16, 185, 129, 0.95); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 24px; border-radius: 14px; font-weight: bold; transform: translateY(150%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2); font-size: 0.95rem;">
-        تم نسخ البريد الإلكتروني بنجاح!
     </div>
 
     <script>
-        // دالة نسخ البريد الإلكتروني مع إشعار عصري بدون alert
-        function copyEmail() {
-            const email = 'amrprok99@gmail.com';
-            const tempInput = document.createElement('input');
-            tempInput.value = email;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
+        const firebaseConfig = {
+            apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
+            authDomain: "amr4admin.firebaseapp.com",
+            projectId: "amr4admin",
+            storageBucket: "amr4admin.firebasestorage.app",
+            messagingSenderId: "177280788092",
+            appId: "1:177280788092:web:44f16c8f585a5b3e484bf9"
+        };
 
-            // تفعيل توست الإشعار
-            const toast = document.getElementById('toastMessage');
-            toast.style.transform = 'translateY(0)';
-            setTimeout(() => {
-                toast.style.transform = 'translateY(150%)';
-            }, 2500);
-        }
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const APP_PATH = "amr4admin";
 
-        // --- نظام العداد التنازلي التفاعلي المتقدم ---
-        (function() {
-            let targetTime = new Date();
-            targetTime.setHours(targetTime.getHours() + 4);
-            targetTime.setMinutes(targetTime.getMinutes() + 35);
-            targetTime.setSeconds(0);
+        let donors = [];
+        let currentSearchTerm = '';
+        
+        const DONORS_PATH = db.collection('artifacts').doc(APP_PATH).collection('public').doc('data').collection('donors');
+
+        function getInfo(d) {
+            if (d.type === 'zakat') return null;
             
-            let storedTarget = localStorage.getItem('maintenance_target_premium');
-            if (storedTarget && !isNaN(new Date(storedTarget).getTime())) {
-                let parsedTarget = new Date(storedTarget);
-                let now = new Date();
-                if (parsedTarget > now) {
-                    targetTime = parsedTarget;
-                } else {
-                    let newTarget = new Date();
-                    newTarget.setHours(newTarget.getHours() + 2);
-                    newTarget.setMinutes(newTarget.getMinutes() + 15);
-                    targetTime = newTarget;
-                    localStorage.setItem('maintenance_target_premium', targetTime.toString());
+            let total = 0, paid = 0, currency = 'SAR', duration = 'غير مححدد', startDate = '', expiryDate = '';
+            let recordedBy = d.recordedBy || d.dataEntryName || 'غير محدد';
+            let updateTime = 0;
+            
+            if (d.updatedAt) {
+                if (d.updatedAt.toDate) updateTime = d.updatedAt.toDate().getTime();
+                else if (d.updatedAt.seconds) updateTime = d.updatedAt.seconds * 1000;
+                else updateTime = new Date(d.updatedAt).getTime();
+            } else if (d.createdAt) {
+                if (d.createdAt.toDate) updateTime = d.createdAt.toDate().getTime();
+                else if (d.createdAt.seconds) updateTime = d.createdAt.seconds * 1000;
+                else updateTime = new Date(d.createdAt).getTime();
+            }
+            
+            if (d.totalAmount !== undefined && d.totalAmount !== null) {
+                total = parseFloat(d.totalAmount) || 0;
+                paid = parseFloat(d.paidAmount) || 0;
+                let curr = d.currency || 'sar';
+                if (curr === 'sar') currency = 'SAR';
+                else if (curr === 'usd') currency = 'USD';
+                else if (curr === 'yer') currency = 'YER';
+                
+                if (d.duration) {
+                    if (d.duration === '3 months') duration = '3 أشهر';
+                    else if (d.duration === '6 months') duration = '6 أشهر';
+                    else if (d.duration === '1 year') duration = 'سنة';
+                    else duration = d.duration;
+                }
+                
+                if (d.startDate) {
+                    if (d.startDate.toDate) startDate = d.startDate.toDate().toLocaleDateString('ar-EG');
+                    else if (d.startDate.seconds) startDate = new Date(d.startDate.seconds * 1000).toLocaleDateString('ar-EG');
+                    else startDate = new Date(d.startDate).toLocaleDateString('ar-EG');
+                }
+                
+                if (d.expiryDate) {
+                    if (d.expiryDate.toDate) expiryDate = d.expiryDate.toDate().toLocaleDateString('ar-EG');
+                    else if (d.expiryDate.seconds) expiryDate = new Date(d.expiryDate.seconds * 1000).toLocaleDateString('ar-EG');
+                    else expiryDate = new Date(d.expiryDate).toLocaleDateString('ar-EG');
                 }
             } else {
-                localStorage.setItem('maintenance_target_premium', targetTime.toString());
+                const note = d.note || "";
+                total = parseFloat((note.match(/T:(\d+(\.\d+)?)/) || [0, 0])[1]);
+                paid = parseFloat((note.match(/P:(\d+(\.\d+)?)/) || [0, 0])[1]);
+                if (note.toUpperCase().includes('C:USD')) currency = 'USD';
+                else if (note.toUpperCase().includes('C:YER')) currency = 'YER';
             }
             
-            const hoursEl = document.getElementById('hours');
-            const minutesEl = document.getElementById('minutes');
-            const secondsEl = document.getElementById('seconds');
+            const isFull = total > 0 && paid >= total;
+            const hasPaidSomething = paid > 0;
+            const rem = Math.max(0, total - paid);
+            const progress = total > 0 ? (paid / total) * 100 : 0;
+            let progressColor = '#ef4444';
+            if (progress >= 100) progressColor = '#10b981';
+            else if (progress >= 50) progressColor = '#f59e0b';
+            else if (progress > 0) progressColor = '#3b82f6';
             
-            function updateCountdown() {
-                const now = new Date();
-                const distance = targetTime - now;
+            return { total, paid, isFull, hasPaidSomething, updateTime, currency, rem, progress, progressColor, duration, startDate, expiryDate, recordedBy };
+        }
+
+        function updateStatistics() {
+            const validDonors = donors.filter(d => d.type !== 'zakat');
+            let paidCnt = validDonors.filter(d => { const info = getInfo(d); return info && info.hasPaidSomething; }).length;
+            document.getElementById('statTotal').innerText = validDonors.length;
+            document.getElementById('statPaid').innerText = paidCnt;
+            document.getElementById('statPending').innerText = validDonors.length - paidCnt;
+
+            // تحديث لوحة الشرف بالمسددين بالكامل
+            updateHonorList(validDonors);
+        }
+
+        // دالة عرض رسالة العيد
+        function renderEidMessage(donorName) {
+            return `
+                <div class="eid-message">
+                    <div class="eid-decoration">🌙✨🎉</div>
+                    <div class="eid-message-text">
+                        من العايدين<br>
+                        <span class="eid-message-name">كل عام وأنت بخير يا ${donorName}</span><br>
+                        أعاده الله علينا وعليكم باليمن والبركات
+                    </div>
+                    <div class="eid-decoration mt-2">🎊🌙✨</div>
+                </div>
+            `;
+        }
+
+        function renderResults(filteredDonors, searchName) {
+            const wrapper = document.getElementById("resultsWrapper");
+            
+            if (filteredDonors.length === 0) {
+                wrapper.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs font-bold">عذراً، هذا الاسم غير مسجل لدينا</div>`;
+                return;
+            }
+            
+            let html = '';
+            
+            // إضافة رسالة العيد لكل اسم تم البحث عنه (تظهر مرة واحدة في الأعلى)
+            if (searchName && filteredDonors.length > 0) {
+                html += renderEidMessage(searchName);
+            }
+            
+            html += '<div class="space-y-4">';
+            
+            filteredDonors.forEach(m => {
+                const info = getInfo(m);
+                if (!info) return;
                 
-                if (distance <= 0) {
-                    hoursEl.textContent = "00";
-                    minutesEl.textContent = "00";
-                    secondsEl.textContent = "00";
-                    return;
+                let message = "", msgClass = "", statusText = "", statusClass = "";
+                
+                if (info.isFull) {
+                    message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
+                    msgClass = "bg-emerald-50 border-emerald-100 text-emerald-700";
+                    statusText = "مكتمل ✓";
+                    statusClass = "bg-emerald-100 text-emerald-600";
+                } else if (info.paid > 0) {
+                    message = "شكرًا جزيلًا على ما قدمتموه من مساهمة، ونحن بانتظار استكمال باقي المبلغ لتعزيز مسيرة الصندوق.";
+                    msgClass = "bg-blue-50 border-blue-100 text-blue-700";
+                    statusText = "غير مكتمل";
+                    statusClass = "bg-rose-100 text-rose-600";
+                } else {
+                    message = "ndعوكم للمبادرة بالسداد والمساهمة في هذا العمل المبارك، فبعطائكم يكتمل الخير.";
+                    msgClass = "bg-amber-50 border-amber-100 text-amber-700";
+                    statusText = "غير مكتمل";
+                    statusClass = "bg-rose-100 text-rose-600";
                 }
                 
-                const hours = Math.floor(distance / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG') : 'غير محدد';
+                const donorDisplayName = m.name || m.donorName || 'غير محدد';
                 
-                hoursEl.textContent = hours.toString().padStart(2, '0');
-                minutesEl.textContent = minutes.toString().padStart(2, '0');
-                secondsEl.textContent = seconds.toString().padStart(2, '0');
+                html += `
+                    <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-gray-800 text-[16px]">${donorDisplayName}</h3>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-grid">
+                                <div class="info-item"><div class="info-item-label">مدة الاشتراك</div><div class="info-item-value">${info.duration}</div></div>
+                                <div class="info-item"><div class="info-item-label">مدخل البيانات</div><div class="info-item-value">${info.recordedBy}</div></div>
+                                <div class="info-item"><div class="info-item-label">آخر تحديث</div><div class="info-item-value">${updateDate}</div></div>
+                                ${info.startDate ? `<div class="info-item"><div class="info-item-label">تاريخ البدء</div><div class="info-item-value">${info.startDate}</div></div>` : ''}
+                                ${info.expiryDate ? `<div class="info-item"><div class="info-item-label">تاريخ الانتهاء</div><div class="info-item-value">${info.expiryDate}</div></div>` : ''}
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex justify-between text-[9px] text-slate-500 mb-1"><span>نسبة الإنجاز</span><span>${Math.round(info.progress)}%</span></div>
+                            <div class="timeline-bar"><div class="timeline-progress" style="width: ${info.progress}%; background-color: ${info.progressColor}"></div></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-emerald-50 p-3 rounded-2xl text-center"><p class="text-[9px] text-emerald-600 font-bold mb-1">المدفوع (${info.currency})</p><p class="text-lg font-black text-emerald-700">${info.paid.toLocaleString()}</p></div>
+                            <div class="bg-rose-50 p-3 rounded-2xl text-center"><p class="text-[9px] text-rose-500 font-bold mb-1">المتبقي</p><p class="text-lg font-black text-rose-600">${info.rem.toLocaleString()}</p></div>
+                        </div>
+                        <div class="p-4 rounded-2xl border-dashed border-2 ${msgClass}"><p class="text-[11px] leading-relaxed font-bold text-center">${message}</p></div>
+                    </div>`;
+            });
+            
+            wrapper.innerHTML = html + '</div>';
+        }
+
+        window.searchDonor = function() {
+            const term = document.getElementById("searchInput").value.trim();
+            currentSearchTerm = term;
+            
+            // إخفاء صندوق المقترحات بمجرد النقر على بحث
+            document.getElementById("suggestionBox").classList.add("hidden");
+            
+            if (!term) {
+                document.getElementById("resultsWrapper").innerHTML = `<div class="text-center py-10 text-rose-500 text-xs font-bold">يرجى إدخال اسم للبحث</div>`;
+                return;
             }
             
-            updateCountdown();
-            const interval = setInterval(updateCountdown, 1000);
+            const termLower = term.toLowerCase();
+            const normalizedSearchTerm = termLower.trim();
+            const validDonors = donors.filter(d => d.type !== 'zakat');
             
-            window.addEventListener('beforeunload', () => {
-                clearInterval(interval);
+            const filtered = validDonors.filter(d => {
+                const donorName = (d.name || "").toLowerCase().trim();
+                return donorName === normalizedSearchTerm;
             });
-        })();
+            
+            renderResults(filtered, term);
+        };
 
-        // إشعار شريط الحالة السفلي الصامت
-        let debugStatus = document.createElement('div');
-        debugStatus.style.position = 'fixed';
-        debugStatus.style.bottom = '16px';
-        debugStatus.style.left = '16px';
-        debugStatus.style.backgroundColor = 'rgba(15, 23, 42, 0.03)';
-        debugStatus.style.border = '1px solid rgba(15, 23, 42, 0.05)';
-        debugStatus.style.backdropFilter = 'blur(4px)';
-        debugStatus.style.padding = '6px 14px';
-        debugStatus.style.borderRadius = '50px';
-        debugStatus.style.fontSize = '0.75rem';
-        debugStatus.style.color = '#475569';
-        debugStatus.style.zIndex = '999';
-        debugStatus.innerHTML = '● خوادم النظام مستقرة (جار التحسين)';
-        document.body.appendChild(debugStatus);
+        DONORS_PATH.get().then((snapshot) => {
+            donors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            updateStatistics();
+            document.getElementById('loadingStatus').style.display = 'none';
+            console.log(`✅ تم تحميل ${donors.filter(d => d.type !== 'zakat').length} سجل`);
+            
+            // تفعيل نظام الإكمال التلقائي الذكي فور انتهاء تحميل البيانات
+            initAutocomplete();
+            // تفعيل رسالة الترحيب المتغيرة زمنياً
+            initTimeGreeting();
+        }).catch((error) => {
+            console.error("❌ خطأ:", error);
+            document.getElementById('loadingStatus').innerHTML = `
+                <div class="text-center py-10 text-red-500">
+                    <p class="text-sm font-bold">⚠️ خطأ في الاتصال</p>
+                    <p class="text-xs mt-2">${error.message}</p>
+                </div>`;
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => { 
+            if (e.key === 'Enter') searchDonor(); 
+        });
+
+        // -------------------------------------------------------------
+        // الميزات البرمجية الإضافية والذكية (مُضافة بأمان تام وبدون أي مساس بالكود السابق)
+        // -------------------------------------------------------------
+
+        // دالة تنظيف وتوحيد الحروف العربية لتسهيل البحث الذكي والتجاهل المرن للفروق الإملائية
+        function cleanArabicString(text) {
+            if (!text) return '';
+            return text
+                .replace(/[أإآا]/g, 'ا')
+                .replace(/[ىي]/g, 'ي')
+                .replace(/[ةه]/g, 'ه')
+                .replace(/[\u064B-\u065F]/g, '') // إزالة التشكيل
+                .trim()
+                .toLowerCase();
+        }
+
+        // إعداد نظام الإكمال التلقائي التفاعلي مع دعم كامل لأسهم لوحة المفاتيح
+        let activeSuggestionIndex = -1;
+
+        function initAutocomplete() {
+            const searchInput = document.getElementById('searchInput');
+            const suggestionBox = document.getElementById('suggestionBox');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value;
+                activeSuggestionIndex = -1; // إعادة تهيئة المؤشر المفعّل
+
+                if (!query || query.trim().length < 2) {
+                    suggestionBox.classList.add('hidden');
+                    return;
+                }
+
+                const cleanedQuery = cleanArabicString(query);
+                const validDonors = donors.filter(d => d.type !== 'zakat');
+
+                // فرز المقترحات التي تحتوي على الكلمة المدخلة بطريقة ذكية
+                const matches = validDonors.filter(d => {
+                    const name = d.name || d.donorName || '';
+                    return cleanArabicString(name).includes(cleanedQuery);
+                }).slice(0, 5); // عرض أول 5 نتائج مطابقة فقط لجمالية التصميم
+
+                if (matches.length > 0) {
+                    suggestionBox.innerHTML = '';
+                    matches.forEach((item, index) => {
+                        const displayName = item.name || item.donorName;
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.id = `suggestion-item-${index}`;
+                        div.textContent = displayName;
+                        div.onclick = function() {
+                            searchInput.value = displayName;
+                            suggestionBox.classList.add('hidden');
+                            searchDonor(); // تشغيل دالة البحث الأصلية مباشرة عند النقر
+                        };
+                        suggestionBox.appendChild(div);
+                    });
+                    suggestionBox.classList.remove('hidden');
+                } else {
+                    suggestionBox.classList.add('hidden');
+                }
+            });
+
+            // إضافة التنقل والتحديد عبر أسهم لوحة المفاتيح
+            searchInput.addEventListener('keydown', function(e) {
+                const items = suggestionBox.querySelectorAll('.suggestion-item');
+                if (suggestionBox.classList.contains('hidden') || items.length === 0) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+                    highlightSuggestion(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
+                    highlightSuggestion(items);
+                } else if (e.key === 'Enter' && activeSuggestionIndex > -1) {
+                    e.preventDefault();
+                    items[activeSuggestionIndex].click();
+                }
+            });
+
+            // إخفاء صندوق الاقتراحات في حال النقر في أي مكان آخر بالصفحة
+            document.addEventListener('click', function(e) {
+                if (e.target !== searchInput && e.target !== suggestionBox) {
+                    suggestionBox.classList.add('hidden');
+                }
+            });
+        }
+
+        // تمييز المقترح المحدد باللوحة الإرشادية للوحة المفاتيح
+        function highlightSuggestion(items) {
+            items.forEach((item, index) => {
+                if (index === activeSuggestionIndex) {
+                    item.classList.add('active');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // دالة التحية الزمنية الذكية في الهيدر تظهر "صباح الخير" إذا كان صباحًا و"مساء الخير" إذا كان مساءً أو ليلًا
+        function initTimeGreeting() {
+            const timeGreeting = document.getElementById('timeGreeting');
+            const hour = new Date().getHours();
+            let greeting = '';
+
+            // الفترات الصباحية والمسائية التقليدية
+            if (hour >= 5 && hour < 12) {
+                greeting = '☀️ صباح الخير .. نسعد بزيارتك للصندوق';
+            } else {
+                greeting = '🌙 مساء الخير .. نسعد بزيارتك للصندوق';
+            }
+            timeGreeting.textContent = greeting;
+        }
+
+        // دالة إنشاء وإدارة لوحة الشرف للمسددين (تصميم فخم متطابق ومنسق كشبكة منسجمة مع تصغير ذكي لعرض الأسماء كاملة)
+        function updateHonorList(validDonors) {
+            const honorListContent = document.getElementById('honorListContent');
+            if (!honorListContent) return;
+
+            // استخلاص الأعضاء الذين أكملوا الدفع بنسبة 100%
+            const fullyPaidDonors = validDonors.filter(d => {
+                const info = getInfo(d);
+                return info && info.isFull;
+            });
+
+            if (fullyPaidDonors.length === 0) {
+                honorListContent.innerHTML = `<div class="text-[10px] text-blue-200/70 font-semibold py-4 col-span-2 w-full text-center">بانتظار انضمام أول المسددين لتزيين لوحة الشرف الكريمة ✨</div>`;
+                return;
+            }
+
+            // فرز الأسماء أبجدياً
+            fullyPaidDonors.sort((a, b) => {
+                const nameA = a.name || a.donorName || '';
+                const nameB = b.name || b.donorName || '';
+                return nameA.localeCompare(nameB, 'ar');
+            });
+
+            let html = '';
+            fullyPaidDonors.forEach(d => {
+                const name = d.name || d.donorName;
+                html += `
+                    <div onclick="fillSearchAndSearch('${name}')" class="honor-member-tag text-white text-[10px] px-2.5 py-2 rounded-2xl font-bold cursor-pointer active:scale-95 transition-all flex items-center justify-between gap-1">
+                        <span class="break-words pr-1 leading-tight text-right">${name}</span>
+                        <div class="flex-shrink-0 w-4.5 h-4.5 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-lg flex items-center justify-center shadow-sm">
+                            <svg class="w-2.5 h-2.5 text-slate-950" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+            });
+
+            honorListContent.innerHTML = html;
+        }
+
+        // البحث السريع عند الضغط على اسم من قائمة لوحة الشرف
+        window.fillSearchAndSearch = function(name) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = name;
+            searchDonor();
+        };
+
+        // إظهار/إخفاء قائمة الشرف
+        window.toggleHonorList = function() {
+            const container = document.getElementById('honorListContainer');
+            const arrow = document.getElementById('honorToggleArrow');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                container.classList.add('hidden');
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        };
+
+        // -------------------------------------------------------------
+        // حسابات وإدارة المودال المالي التفاعلي للعملات (تتم في الذاكرة)
+        // -------------------------------------------------------------
+        window.openStatsModal = function(type) {
+            const modal = document.getElementById('statsModal');
+            const title = document.getElementById('modalTitle');
+            
+            // تهيئة متغيرات مجاميع العملات
+            let paidSar = 0, remSar = 0;
+            let paidUsd = 0, remUsd = 0;
+            let paidYer = 0, remYer = 0;
+
+            const validDonors = donors.filter(d => d.type !== 'zakat');
+
+            // حساب المجاميع من مصفوفة البيانات الحالية بالكامل
+            validDonors.forEach(d => {
+                const info = getInfo(d);
+                if (!info) return;
+
+                if (info.currency === 'SAR') {
+                    paidSar += info.paid;
+                    remSar += info.rem;
+                } else if (info.currency === 'USD') {
+                    paidUsd += info.paid;
+                    remUsd += info.rem;
+                } else if (info.currency === 'YER') {
+                    paidYer += info.paid;
+                    remYer += info.rem;
+                }
+            });
+
+            // ضبط عنوان المودال بناء على الكارت المنقور
+            if (type === 'total') {
+                title.textContent = 'الإحصائيات الإجمالية للصندوق (كل العملات)';
+            } else if (type === 'paid') {
+                title.textContent = 'تفاصيل المبالغ المسددة لجميع المشتركين';
+            } else if (type === 'pending') {
+                title.textContent = 'تفاصيل المبالغ المتبقية قيد الانتظار';
+            }
+
+            // تعبئة البيانات في المودال مع مراعاة التنسيق الرقمي المناسب
+            document.getElementById('modalPaidSar').textContent = paidSar.toLocaleString() + ' ر.س';
+            document.getElementById('modalRemSar').textContent = remSar.toLocaleString() + ' ر.س';
+
+            document.getElementById('modalPaidUsd').textContent = '$' + paidUsd.toLocaleString();
+            document.getElementById('modalRemUsd').textContent = '$' + remUsd.toLocaleString();
+
+            document.getElementById('modalPaidYer').textContent = paidYer.toLocaleString() + ' ر.ي';
+            document.getElementById('modalRemYer').textContent = remYer.toLocaleString() + ' ر.ي';
+
+            // فتح المودال برمجياً مع تأثير انتقال سلس
+            modal.classList.add('open');
+        };
+
+        window.closeStatsModal = function() {
+            document.getElementById('statsModal').classList.remove('open');
+        };
     </script>
 </body>
 </html>
