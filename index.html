@@ -1,519 +1,692 @@
+```html
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>صيانة الموقع | عودة قريباً</title>
-    <!-- استخدام خط Apple Pro / SF Pro بشكل آمن مع أنظمة Apple وأيضاً خطوط بديلة حديثة -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحسينات النظام | صيانة دورية</title>
+    
+    <!-- استيراد خطوط النظام الحديثة وتجهيز عائلة خطوط Apple بشكل احترافي -->
     <style>
-        /* تعريف عائلة خط Apple Pro مع احتياطي قوي */
+        /* تعريف وتجهيز عائلة خط Apple Pro افتراضياً للاستخدام الآمن والسريع */
         @font-face {
             font-family: 'SF Pro';
-            src: local('SF Pro Text'), local('SF Pro Display'), local('Apple SD Gothic Neo'), local('BlinkMacSystemFont');
+            src: local('SF Pro Text'), local('SF Pro Display'), local('SF Pro Arabic'), local('-apple-system'), local('BlinkMacSystemFont');
             font-weight: 400;
             font-style: normal;
         }
         @font-face {
             font-family: 'SF Pro';
-            src: local('SF Pro Text Medium'), local('SF Pro Display Medium');
+            src: local('SF Pro Text Medium'), local('SF Pro Display Medium'), local('SF Pro Arabic Medium');
             font-weight: 500;
         }
         @font-face {
             font-family: 'SF Pro';
-            src: local('SF Pro Text Bold'), local('SF Pro Display Bold');
+            src: local('SF Pro Text Bold'), local('SF Pro Display Bold'), local('SF Pro Arabic Bold');
             font-weight: 700;
         }
         @font-face {
             font-family: 'SF Pro';
-            src: local('SF Pro Text Heavy'), local('SF Pro Display Heavy');
-            font-weight: 800;
+            src: local('SF Pro Text Heavy'), local('SF Pro Display Heavy'), local('SF Pro Arabic Black');
+            font-weight: 900;
+        }
+
+        :root {
+            --bg-color: #f4f7fa; /* خلفية نهارية مريحة للعين */
+            --card-bg: rgba(255, 255, 255, 0.75); /* تأثير زجاجي مضيء */
+            --card-border: rgba(15, 23, 42, 0.06);
+            --text-primary: #0f172a; /* نصوص داكنة وواضحة جداً */
+            --text-secondary: #475569;
+            --accent-color: #f97316; /* برتقالي حيوي لافت للانتباه */
+            --accent-glow: rgba(249, 115, 22, 0.2);
+            /* تطبيق خط ابل برو (SF Pro / SF Arabic) كخط رئيسي لجميع العناصر والبدائل الحديثة */
+            --font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, 'SF Pro Arabic', 'Helvetica Neue', 'Segoe UI', Tahoma, Geneva, sans-serif;
+            --font-mono: 'SF Pro Text', 'Plus Jakarta Sans', monospace;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
+            font-family: var(--font-family); /* تطبيق الخط على جميع التفاصيل بدون استثناء */
         }
 
         body {
-            /* استخدام خط Apple Pro بشكل رئيسي مع خيارات بديلة لأنظمة ويندوز/لينكس */
-            font-family: 'SF Pro', 'BlinkMacSystemFont', 'Helvetica Neue', 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            direction: rtl;
-            padding: 1.5rem;
+            padding: 2rem 1.5rem;
+            overflow-x: hidden;
             position: relative;
         }
 
-        /* خلفية نقاط ناعمة بدون أيقونات */
-        body::before {
-            content: "";
+        /* خلفية تفاعلية مذهلة - الهالات المضيئة النهارية الناعمة */
+        .glowing-orbs {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 28px 28px;
-            opacity: 0.25;
-            pointer-events: none;
             z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            opacity: 0.12;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #ff9f43 0%, rgba(255,159,67,0) 70%);
+            top: -10%;
+            right: -10%;
+            animation-duration: 25s;
+        }
+
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, #3b82f6 0%, rgba(59,130,246,0) 70%);
+            bottom: -20%;
+            left: -10%;
+            animation-duration: 30s;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,0) 70%);
+            top: 40%;
+            right: 30%;
+            opacity: 0.06;
+            animation-duration: 18s;
+        }
+
+        /* شبكة رقيقة فوق الخلفية للتفاصيل الهندسيّة */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(15, 23, 42, 0.012) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(15, 23, 42, 0.012) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 1;
+            pointer-events: none;
         }
 
         .container {
-            max-width: 760px;
+            max-width: 680px;
             width: 100%;
             z-index: 2;
             position: relative;
-            animation: fadeSlideUp 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* بطاقة الاعتذار الأولى بدون أيقونات */
+        /* بنر الاعتذار العلوي الأنيق للوضع النهاري */
         .apology-banner {
             text-align: center;
-            margin-bottom: 2.5rem;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
-            border-radius: 60px;
-            padding: 0.9rem 2rem;
+            margin-bottom: 2rem;
+            background: rgba(249, 115, 22, 0.06);
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            border-radius: 100px;
+            padding: 0.6rem 1.8rem;
             width: fit-content;
             margin-right: auto;
             margin-left: auto;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulseBanner 3s infinite alternate;
+        }
+
+        .apology-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-color);
         }
 
         .apology-text {
-            font-size: 1.7rem;
-            font-weight: 700;
-            color: #1e293b;
-            letter-spacing: -0.3px;
-        }
-
-        /* البطاقة الرئيسية المميزة */
-        .maintenance-card {
-            background: #ffffff;
-            border-radius: 56px;
-            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.02);
-            overflow: hidden;
-            padding: 2.2rem 2rem 2.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
-        }
-
-        .maintenance-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 40px 60px -22px rgba(0, 0, 0, 0.3);
-        }
-
-        /* منطقة العنوان الرئيسي بدون أيقونات */
-        .message-title {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(120deg, #1e293b, #334155);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: -0.2px;
-        }
-
-        .main-message {
-            font-size: 1.4rem;
-            font-weight: 500;
-            color: #334155;
-            line-height: 1.5;
-            margin-bottom: 0.75rem;
-        }
-
-        .sub-message {
-            font-size: 1.1rem;
-            font-weight: 450;
-            color: #475569;
-            border-top: 2px dashed #e2e8f0;
-            border-bottom: 2px dashed #e2e8f0;
-            padding: 1.1rem 1rem;
-            margin: 1.5rem 0;
-            background: #fafcff;
-            border-radius: 32px;
-        }
-
-        .timer-section {
-            background: #f1f5f9;
-            border-radius: 50px;
-            padding: 1rem 1rem;
-            margin: 1.8rem 0 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .timer-label {
-            font-weight: 600;
-            color: #0f172a;
-            background: #e2e8f0;
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
             font-size: 0.95rem;
-        }
-
-        .countdown {
-            font-family: 'SF Pro', 'Courier New', monospace;
             font-weight: 700;
-            font-size: 1.7rem;
-            letter-spacing: 3px;
-            background: #0f172a;
-            color: #facc15;
-            padding: 0.3rem 1.2rem;
-            border-radius: 48px;
-            direction: ltr;
-            display: inline-block;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .support-note {
-            background: #fef9e6;
-            padding: 0.8rem;
-            border-radius: 60px;
-            margin: 1.5rem 0 0;
-            color: #b45309;
-            font-weight: 500;
-            font-size: 0.95rem;
-            word-break: break-word;
-        }
-
-        .email-highlight {
-            font-weight: 700;
-            background: #fff0db;
-            padding: 0.2rem 0.5rem;
-            border-radius: 32px;
-            display: inline-block;
-            margin-top: 0.2rem;
-            direction: ltr;
-            font-family: monospace;
-            font-size: 0.95rem;
-        }
-
-        /* المطور بدون أيقونات */
-        .developer {
-            margin-top: 2rem;
-            text-align: center;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            font-size: 1rem;
-            color: #475569;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            background: rgba(255,255,245,0.6);
-            backdrop-filter: blur(2px);
-            border-radius: 60px;
-            padding: 0.6rem 1rem;
-        }
-
-        .developer-name {
-            font-weight: 800;
-            background: linear-gradient(125deg, #2c3e50, #e67e22);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            font-size: 1.15rem;
+            color: var(--accent-color);
             letter-spacing: 0.5px;
         }
 
-        /* حركات أنيقة */
-        @keyframes fadeSlideUp {
-            0% {
+        /* بطاقة الصيانة الرئيسية الزجاجية المضيئة الفخمة */
+        .maintenance-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 36px;
+            border: 1px solid var(--card-border);
+            padding: 3rem 2.5rem;
+            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.05), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        }
+
+        .maintenance-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 40px 80px rgba(15, 23, 42, 0.08), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        /* عنصر التروس المتحركة كشكل هندسي رائع */
+        .maintenance-visual {
+            margin-bottom: 1.8rem;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .visual-gear {
+            width: 64px;
+            height: 64px;
+            fill: none;
+            stroke: var(--accent-color);
+            stroke-width: 1.5;
+            animation: spin 12s linear infinite;
+            filter: drop-shadow(0 0 6px var(--accent-glow));
+        }
+
+        /* العناوين والرسائل */
+        .message-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #0f172a 30%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .main-message {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+        }
+
+        .main-message span.highlight {
+            color: var(--accent-color);
+            background: rgba(249, 115, 22, 0.08);
+            padding: 0.1rem 0.6rem;
+            border-radius: 8px;
+            border: 1px dashed rgba(249, 115, 22, 0.2);
+            display: inline-block;
+        }
+
+        .sub-message {
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            padding: 1.2rem 1.5rem;
+            background: rgba(15, 23, 42, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(15, 23, 42, 0.03);
+            margin: 1.5rem 0 2rem;
+        }
+
+        /* قسم العداد التنازلي الإبداعي بالوضع المضيء */
+        .timer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 2rem;
+            background: rgba(15, 23, 42, 0.02);
+            padding: 1.2rem;
+            border-radius: 24px;
+            border: 1px solid rgba(15, 23, 42, 0.03);
+        }
+
+        .timer-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            direction: ltr;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            border-radius: 14px;
+            min-width: 70px;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+            position: relative;
+        }
+
+        .time-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: rgba(15, 23, 42, 0.01);
+            border-radius: 14px 14px 0 0;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.02);
+            pointer-events: none;
+        }
+
+        .time-value {
+            font-family: var(--font-mono);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: block;
+            line-height: 1;
+        }
+
+        .time-value.highlighted {
+            color: var(--accent-color);
+            text-shadow: 0 0 8px rgba(249, 115, 22, 0.15);
+        }
+
+        .time-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .time-colon {
+            font-size: 1.8rem;
+            font-family: var(--font-mono);
+            color: rgba(15, 23, 42, 0.15);
+            display: flex;
+            align-items: center;
+            animation: blink 1s infinite;
+        }
+
+        /* تفاصيل الدعم والبريد الإلكتروني */
+        .support-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.01) 0%, rgba(15, 23, 42, 0.005) 100%);
+            border: 1px solid rgba(15, 23, 42, 0.03);
+            border-radius: 20px;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .support-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .email-badge {
+            background: rgba(249, 115, 22, 0.08);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            padding: 0.5rem 1.2rem;
+            border-radius: 12px;
+            color: var(--accent-color);
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .email-badge:hover {
+            background: rgba(249, 115, 22, 0.12);
+            border-color: rgba(249, 115, 22, 0.3);
+            transform: scale(1.02);
+        }
+
+        /* خطوط الزينة واللمسة الفنية */
+        .decoration-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 2rem;
+        }
+
+        .dec-dot {
+            width: 6px;
+            height: 6px;
+            background: rgba(15, 23, 42, 0.1);
+            border-radius: 50%;
+        }
+
+        .dec-dot.active {
+            background: var(--accent-color);
+            box-shadow: 0 0 6px var(--accent-color);
+        }
+
+        /* مطور النظام بصورة عصرية متوافقة مع النهار */
+        .developer-badge {
+            margin-top: 2rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(15, 23, 42, 0.04);
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.02);
+            border-radius: 100px;
+            padding: 0.6rem 1.5rem;
+            width: fit-content;
+            margin-right: auto;
+            margin-left: auto;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .developer-badge:hover {
+            background: #ffffff;
+            border-color: rgba(15, 23, 42, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .dev-title {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .dev-name {
+            font-size: 0.95rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* حركات الأنيميشن */
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+            100% { transform: translateY(15px) scale(0.95); }
+        }
+
+        @keyframes fadeInUp {
+            from {
                 opacity: 0;
                 transform: translateY(30px);
             }
-            100% {
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        /* توافق الشاشات الصغيرة */
-        @media (max-width: 550px) {
+        @keyframes pulseBanner {
+            0% { box-shadow: 0 0 15px rgba(249, 115, 22, 0.02); }
+            100% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.08); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        /* توافق الشاشات */
+        @media (max-width: 600px) {
+            body {
+                padding: 1.5rem 1rem;
+            }
             .maintenance-card {
-                padding: 1.8rem 1.2rem;
+                padding: 2rem 1.5rem;
+                border-radius: 28px;
             }
             .message-title {
-                font-size: 1.6rem;
+                font-size: 1.8rem;
             }
             .main-message {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
-            .apology-text {
-                font-size: 1.3rem;
+            .sub-message {
+                font-size: 0.95rem;
+                padding: 1rem;
             }
-            .countdown {
-                font-size: 1.3rem;
-                letter-spacing: 1px;
+            .time-box {
+                min-width: 55px;
+                padding: 0.6rem 0.3rem;
             }
-            .timer-label {
-                font-size: 0.85rem;
+            .time-value {
+                font-size: 1.4rem;
             }
-            .developer-name {
-                font-size: 1rem;
+            .developer-badge {
+                padding: 0.5rem 1.2rem;
             }
         }
 
-        .decoration-line {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 0.5rem 0 1rem;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: #f97316;
-            border-radius: 50%;
-            opacity: 0.5;
-        }
-
-        /* تخصيص شريط التمرير */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #f97316;
-            border-radius: 10px;
-        }
-        
-        /* إزالة أي أيقونات مرئية من النص الذي قد يحويها */
-        .no-icons {
-            display: inline-block;
-        }
-        .support-note br {
-            display: none;
+        /* حماية إضافية لإخفاء الأيقونات الكلاسيكية القديمة */
+        i, .fa, .fas, .far, .fab, [class*="fa-"], [class^="fa-"] {
+            display: none !important;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- نأسف على الازعاج - بدون أيقونات -->
-    <div class="apology-banner">
-        <div class="apology-text">
-            نأسف على الإزعاج
-        </div>
-    </div>
-
-    <!-- البطاقة المميزة التي تحوي رسالة الصيانة -->
-    <div class="maintenance-card">
-        <div class="message-title">صيانة دورية</div>
-        <div class="main-message">
-            <strong>الموقع متوقف مؤقتاً بسبب أعمال الصيانة والتطوير.</strong>
-        </div>
-        <p class="sub-message">
-            نعمل على تحسين تجربتك وجعل الموقع أكثر سرعة وأماناً.
-            سيعود الموقع للعمل خلال الساعات القادمة إن شاء الله.
-        </p>
-        
-        <!-- عداد تنازلي تفاعلي -->
-        <div class="timer-section">
-            <span class="timer-label">الوقت المتبقى المقدر</span>
-            <div class="countdown" id="countdownTimer">-- : -- : --</div>
-        </div>
-        
-        <!-- دعم مع اضافة الايميل المطلوب -->
-        <div class="support-note">
-            للاستفسارات العاجلة: 
-            <span class="email-highlight">amrprok99@gmail.com</span>
-            &nbsp;|&nbsp;
-            الدعم متاح خلال ساعات العمل
-        </div>
-        
-        <div class="decoration-line">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-        </div>
-        <p style="font-size: 0.9rem; color:#5b6e8c; margin-top: 12px;">
-            سيتم تحديث النظام آلياً فور انتهاء الصيانة
-        </p>
+    <!-- الهالات الضوئية النهارية في الخلفية -->
+    <div class="glowing-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
     </div>
     
-    <!-- اسم مطور النظام : عمرو مسعد الشجاع  بدون أيقونات -->
-    <div class="developer">
-        <span>مطور النظام :</span>
-        <span class="developer-name">عمرو مسعد الشجاع</span>
+    <!-- شبكة الزينة الخلفية -->
+    <div class="grid-overlay"></div>
+
+    <div class="container">
+        <!-- بنر الإعتذار المضيء -->
+        <div class="apology-banner">
+            <span class="apology-dot"></span>
+            <span class="apology-text">نأسف جداً على الإزعاج المؤقت</span>
+        </div>
+
+        <!-- بطاقة الصيانة الرئيسية الزجاجية النهارية -->
+        <div class="maintenance-card">
+            
+            <!-- تروس هندسية متحركة بصيغة SVG بدقة متناهية ودون أيقونات خارجية -->
+            <div class="maintenance-visual">
+                <svg class="visual-gear" viewBox="0 0 24 24">
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+            </div>
+
+            <h1 class="message-title">صيانة وترقية النظام</h1>
+            
+            <div class="main-message">
+                الموقع متوقف مؤقتاً لتطبيق <span class="highlight">تحديثات أمنية جديدة</span>.
+            </div>
+
+            <p class="sub-message">
+                  نعمل حالياً على تحسين أداء خوادم النظام لضمان تجربة مستخدم أكثر سرعة وأماناً. سنعود للعمل قريباً جداً فور الانتهاء.
+            </p>
+
+            <!-- قسم العداد التنازلي الاحترافي المقسم لبطاقات رقمية مبهجة -->
+            <div class="timer-section">
+                <span class="timer-label">المدة الزمنية المقدرة المتبقية</span>
+                <div class="countdown-container" id="countdown">
+                    <!-- صندوق الساعات -->
+                    <div class="time-box">
+                        <span class="time-value highlighted" id="hours">00</span>
+                        <span class="time-label">ساعة</span>
+                    </div>
+                    <span class="time-colon">:</span>
+                    <!-- صندوق الدقائق -->
+                    <div class="time-box">
+                        <span class="time-value" id="minutes">00</span>
+                        <span class="time-label">دقيقة</span>
+                    </div>
+                    <span class="time-colon">:</span>
+                    <!-- صندوق الثواني -->
+                    <div class="time-box">
+                        <span class="time-value" id="seconds">00</span>
+                        <span class="time-label">ثانية</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بطاقة الدعم والاتصال السريع النهارية -->
+            <div class="support-card">
+                <span class="support-text">هل لديك استفسار عاجل؟ فريقنا متاح للرد الفوري:</span>
+                <span class="email-badge" onclick="copyEmail()">amrprok99@gmail.com</span>
+            </div>
+
+            <div class="decoration-dots">
+                <span class="dec-dot"></span>
+                <span class="dec-dot active"></span>
+                <span class="dec-dot"></span>
+            </div>
+            
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 1.2rem;">
+                سيقوم المتصفح بإعادة تحميل الصفحة تلقائياً بمجرد تشغيل النظام.
+            </p>
+        </div>
+
+        <!-- مطور النظام بصورة عصرية واضحة في الأسفل -->
+        <div class="developer-badge">
+            <span class="dev-title">مطور النظام :</span>
+            <span class="dev-name">عمرو مسعد الشجاع</span>
+        </div>
     </div>
-</div>
 
-<script>
-    (function() {
-        // --- عداد تنازلي تفاعلي يظهر وقتاً تقديرياً حتى عودة الموقع (محاكاة واقعية) ---
-        // تحديد وقت العودة المقدر (تاريخ الهدف) بعد 4 ساعات و 35 دقيقة من الآن
-        let targetTime = new Date();
-        targetTime.setHours(targetTime.getHours() + 4);
-        targetTime.setMinutes(targetTime.getMinutes() + 35);
-        targetTime.setSeconds(0);
-        
-        // استخدام localStorage للحفاظ على الهدف عبر تحديث الصفحة
-        let storedTarget = localStorage.getItem('maintenance_target_noicons');
-        if (storedTarget && !isNaN(new Date(storedTarget).getTime())) {
-            let parsedTarget = new Date(storedTarget);
-            let now = new Date();
-            if (parsedTarget > now) {
-                targetTime = parsedTarget;
-            } else {
-                // إذا كان الوقت المخزن قد مضى، نضبط وقتاً جديداً بعد ساعتين
-                let newTarget = new Date();
-                newTarget.setHours(newTarget.getHours() + 2);
-                newTarget.setMinutes(newTarget.getMinutes() + 15);
-                targetTime = newTarget;
-                localStorage.setItem('maintenance_target_noicons', targetTime.toString());
-            }
-        } else {
-            localStorage.setItem('maintenance_target_noicons', targetTime.toString());
+    <!-- نافذة تنبيه أنيقة مخصصة عند نسخ البريد الإلكتروني ملائمة للوضع النهاري -->
+    <div id="toastMessage" style="position: fixed; bottom: 24px; right: 24px; background: rgba(16, 185, 129, 0.95); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 24px; border-radius: 14px; font-weight: bold; transform: translateY(150%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2); font-size: 0.95rem;">
+        تم نسخ البريد الإلكتروني بنجاح!
+    </div>
+
+    <script>
+        // دالة نسخ البريد الإلكتروني مع إشعار عصري بدون alert
+        function copyEmail() {
+            const email = 'amrprok99@gmail.com';
+            const tempInput = document.createElement('input');
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // تفعيل توست الإشعار
+            const toast = document.getElementById('toastMessage');
+            toast.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                toast.style.transform = 'translateY(150%)';
+            }, 2500);
         }
-        
-        // تحديث العداد كل ثانية
-        function updateCountdown() {
-            const now = new Date();
-            const distance = targetTime - now;
-            const countdownElement = document.getElementById('countdownTimer');
-            if (!countdownElement) return;
+
+        // --- نظام العداد التنازلي التفاعلي المتقدم ---
+        (function() {
+            let targetTime = new Date();
+            targetTime.setHours(targetTime.getHours() + 4);
+            targetTime.setMinutes(targetTime.getMinutes() + 35);
+            targetTime.setSeconds(0);
             
-            if (distance <= 0) {
-                countdownElement.innerHTML = `00 : 00 : 00`;
-                countdownElement.style.background = "#2e7d32";
-                countdownElement.style.color = "#ffffff";
-                const timerLabelSpan = document.querySelector('.timer-section .timer-label');
-                if (timerLabelSpan && !document.getElementById('finishedMsgNoIcon')) {
-                    const finishMsg = document.createElement('div');
-                    finishMsg.id = 'finishedMsgNoIcon';
-                    finishMsg.style.marginTop = '8px';
-                    finishMsg.style.fontSize = '0.9rem';
-                    finishMsg.style.fontWeight = 'bold';
-                    finishMsg.style.color = '#15803d';
-                    finishMsg.innerHTML = 'من المتوقع عودة الموقع الآن، جارِ التحديث قريباً';
-                    document.querySelector('.timer-section').appendChild(finishMsg);
+            let storedTarget = localStorage.getItem('maintenance_target_premium');
+            if (storedTarget && !isNaN(new Date(storedTarget).getTime())) {
+                let parsedTarget = new Date(storedTarget);
+                let now = new Date();
+                if (parsedTarget > now) {
+                    targetTime = parsedTarget;
+                } else {
+                    let newTarget = new Date();
+                    newTarget.setHours(newTarget.getHours() + 2);
+                    newTarget.setMinutes(newTarget.getMinutes() + 15);
+                    targetTime = newTarget;
+                    localStorage.setItem('maintenance_target_premium', targetTime.toString());
                 }
-                return;
-            }
-            
-            const hours = Math.floor(distance / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            const formatted = `${hours.toString().padStart(2, '0')} : ${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
-            countdownElement.innerHTML = formatted;
-            
-            if (hours === 0 && minutes < 30) {
-                countdownElement.style.animation = "pulse 1s infinite";
-                countdownElement.style.boxShadow = "0 0 8px #facc15";
             } else {
-                countdownElement.style.animation = "";
-                countdownElement.style.boxShadow = "";
+                localStorage.setItem('maintenance_target_premium', targetTime.toString());
             }
-        }
-        
-        // إضافة pulse style إذا لم يكن موجوداً
-        if (!document.querySelector('#pulseStyleNoIcon')) {
-            const style = document.createElement('style');
-            style.id = 'pulseStyleNoIcon';
-            style.innerHTML = `@keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.01); background-color: #2d3e5f; } 100% { opacity: 1; transform: scale(1); } }`;
-            document.head.appendChild(style);
-        }
-        
-        updateCountdown();
-        const interval = setInterval(updateCountdown, 1000);
-        
-        window.addEventListener('beforeunload', function() {
-            clearInterval(interval);
-        });
-        
-        document.title = "صيانة الموقع | عودة قريباً";
-        
-        // إضافة مؤشر نصي بسيط (بدون أيقونات) يظهر عمليات الخلفية
-        let loadingEffect = document.createElement('div');
-        loadingEffect.style.position = 'fixed';
-        loadingEffect.style.bottom = '20px';
-        loadingEffect.style.left = '20px';
-        loadingEffect.style.backgroundColor = 'rgba(0,0,0,0.55)';
-        loadingEffect.style.backdropFilter = 'blur(4px)';
-        loadingEffect.style.padding = '6px 14px';
-        loadingEffect.style.borderRadius = '40px';
-        loadingEffect.style.fontSize = '11px';
-        loadingEffect.style.fontFamily = "'SF Pro', 'Segoe UI', monospace";
-        loadingEffect.style.color = '#f1f5f9';
-        loadingEffect.style.zIndex = '999';
-        loadingEffect.innerHTML = 'عمليات الصيانة قيد التنفيذ ...';
-        document.body.appendChild(loadingEffect);
-        
-        setTimeout(() => {
-            if (loadingEffect) loadingEffect.style.opacity = '0.7';
-        }, 3000);
-    })();
-</script>
+            
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            
+            function updateCountdown() {
+                const now = new Date();
+                const distance = targetTime - now;
+                
+                if (distance <= 0) {
+                    hoursEl.textContent = "00";
+                    minutesEl.textContent = "00";
+                    secondsEl.textContent = "00";
+                    return;
+                }
+                
+                const hours = Math.floor(distance / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                hoursEl.textContent = hours.toString().padStart(2, '0');
+                minutesEl.textContent = minutes.toString().padStart(2, '0');
+                secondsEl.textContent = seconds.toString().padStart(2, '0');
+            }
+            
+            updateCountdown();
+            const interval = setInterval(updateCountdown, 1000);
+            
+            window.addEventListener('beforeunload', () => {
+                clearInterval(interval);
+            });
+        })();
 
-<!-- تعديلات إضافية لإخفاء أي أيقونات قد تظهر من أي نص افتراضي -->
-<style>
-    /* إزالة أي احتمال لظهور أيقونات من أي كود قديم (ضمان) */
-    .support-note::before, .support-note::after,
-    .developer::before, .developer::after,
-    .apology-banner::before, .apology-banner::after,
-    .main-message::before, .sub-message::before,
-    .message-title::before, .message-title::after {
-        display: none !important;
-        content: none !important;
-    }
-    /* ضمان أن لا تظهر أي أيقونات من الخطوط */
-    i, .fa, .fas, .far, .fab, svg:not(:root) {
-        display: none !important;
-    }
-    /* تجاهل أي أيقونات مخفية */
-    [class*="fa-"], [class^="fa-"] {
-        display: none;
-    }
-    /* إزالة أي أيقونات قد تأتي من pseudo elements المتبقية */
-    *:before, *:after {
-        font-family: inherit !important;
-    }
-    /* خط ابل برو في كل العناصر */
-    body, button, input, div, p, span, h1, h2, h3, h4, a, .developer-name, .countdown {
-        font-family: 'SF Pro', 'BlinkMacSystemFont', 'Helvetica Neue', sans-serif;
-    }
-    .countdown {
-        font-family: 'SF Pro', 'Courier New', monospace;
-    }
-    /* تحسين دعم البريد الإلكتروني */
-    .email-highlight {
-        font-weight: 600;
-        background-color: #f3e8d2;
-        padding: 0.2rem 0.6rem;
-        border-radius: 32px;
-        display: inline-block;
-        direction: ltr;
-        font-family: monospace;
-        font-size: 0.9rem;
-        letter-spacing: 0.2px;
-    }
-    /* تنسيقات إضافية */
-    .developer span {
-        font-weight: 500;
-    }
-    .main-message strong {
-        background: #fef3c7;
-        padding: 0.1rem 0.4rem;
-        border-radius: 20px;
-        font-weight: 700;
-    }
-</style>
-
+        // إشعار شريط الحالة السفلي الصامت
+        let debugStatus = document.createElement('div');
+        debugStatus.style.position = 'fixed';
+        debugStatus.style.bottom = '16px';
+        debugStatus.style.left = '16px';
+        debugStatus.style.backgroundColor = 'rgba(15, 23, 42, 0.03)';
+        debugStatus.style.border = '1px solid rgba(15, 23, 42, 0.05)';
+        debugStatus.style.backdropFilter = 'blur(4px)';
+        debugStatus.style.padding = '6px 14px';
+        debugStatus.style.borderRadius = '50px';
+        debugStatus.style.fontSize = '0.75rem';
+        debugStatus.style.color = '#475569';
+        debugStatus.style.zIndex = '999';
+        debugStatus.innerHTML = '● خوادم النظام مستقرة (جار التحسين)';
+        document.body.appendChild(debugStatus);
+    </script>
 </body>
 </html>
+
