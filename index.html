@@ -197,6 +197,18 @@
             font-size: 10px;
             font-weight: 800;
         }
+
+        .subscription-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-expiring { background: #fef3c7; color: #92400e; }
+        .status-expired { background: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body class="flex justify-center">
@@ -207,7 +219,6 @@
         </div>
 
         <div class="header-gradient">
-            <!-- تحية الصباح / المساء حسب التوقيت (12 صباحاً = صباح الخير، 12 ظهراً = مساء الخير) -->
             <div id="dynamicGreeting" class="greeting-banner">🌤️ جاري التحميل...</div>
             <h1 class="text-2xl font-black mb-1">صندوق الحالات الطارئة</h1>
             <p class="text-blue-200 text-[11px] font-semibold tracking-widest">قرية محبران</p>
@@ -229,7 +240,7 @@
             </div>
         </div>
 
-        <!-- البطاقة: عرض أسماء المسددين بالكامل (حجم أصغر + وميض 3 ثوانٍ) -->
+        <!-- البطاقة: عرض أسماء المسددين بالكامل -->
         <div class="fully-paid-card">
             <div class="floating-names-box">
                 <div class="title-highlight">اسماء المشتركين المسددين بالكامل</div>
@@ -283,6 +294,7 @@
     </div>
 
     <script>
+        // ========== Firebase Configuration ==========
         const firebaseConfig = {
             apiKey: "AIzaSyBupAOs6diz9ET8lGnMdyKjS_cMS8sA2Uc",
             authDomain: "amr4admin.firebaseapp.com",
@@ -299,11 +311,26 @@
         let donors = [];
         let currentSearchTerm = '';
         let rotationInterval = null;
-        let fullyPaidNamesList = [];
         
         const DONORS_PATH = db.collection('artifacts').doc(APP_PATH).collection('public').doc('data').collection('donors');
 
-        // دالة حساب المعلومات المالية
+        // ========== حساب حالة الاشتراك بناءً على تاريخ الانتهاء ==========
+        function getSubscriptionStatus(expiryDate) {
+            if (!expiryDate) return 'active';
+            const now = new Date();
+            let expiry;
+            if (expiryDate.toDate) expiry = expiryDate.toDate();
+            else if (expiryDate.seconds) expiry = new Date(expiryDate.seconds * 1000);
+            else expiry = new Date(expiryDate);
+            
+            const daysUntilExpiry = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+            
+            if (now > expiry) return 'expired';
+            if (daysUntilExpiry <= 7) return 'expiring';
+            return 'active';
+        }
+
+        // ========== حساب المعلومات المالية ==========
         function getInfo(d) {
             if (d.type === 'zakat') return null;
             
@@ -364,10 +391,17 @@
             else if (progress >= 50) progressColor = '#f59e0b';
             else if (progress > 0) progressColor = '#3b82f6';
             
-            return { total, paid, isFull, hasPaidSomething, updateTime, currency, rem, progress, progressColor, duration, startDate, expiryDate, recordedBy };
+            let subscriptionStatus = getSubscriptionStatus(d.expiryDate);
+            let statusText = '', statusClass = '';
+            if (subscriptionStatus === 'active') { statusText = 'نشط'; statusClass = 'status-active'; }
+            else if (subscriptionStatus === 'expiring') { statusText = 'ينتهي قريباً'; statusClass = 'status-expiring'; }
+            else { statusText = 'منتهي'; statusClass = 'status-expired'; }
+            
+            return { total, paid, isFull, hasPaidSomething, updateTime, currency, rem, progress, progressColor, 
+                     duration, startDate, expiryDate, recordedBy, subscriptionStatus, statusText, statusClass };
         }
 
-        // تحديث الإحصائيات
+        // ========== تحديث الإحصائيات ==========
         function updateStatistics() {
             const validDonors = donors.filter(d => d.type !== 'zakat');
             let paidCnt = validDonors.filter(d => { const info = getInfo(d); return info && info.hasPaidSomething; }).length;
@@ -376,7 +410,7 @@
             document.getElementById('statPending').innerText = validDonors.length - paidCnt;
         }
         
-        // استخراج أسماء المسددين بالكامل (isFull = true)
+        // ========== استخراج أسماء المسددين بالكامل ==========
         function extractFullyPaidNames() {
             const valid = donors.filter(d => d.type !== 'zakat');
             const fullNames = [];
@@ -390,7 +424,7 @@
             return fullNames;
         }
         
-        // تشغيل العرض الدوري للأسماء مع وميض (كل 3 ثوانٍ)
+        // ========== تشغيل العرض الدوري للأسماء ==========
         function startRotatingNames(namesArray) {
             if (rotationInterval) clearInterval(rotationInterval);
             if (!namesArray.length) {
@@ -417,16 +451,16 @@
             rotationInterval = setInterval(() => {
                 currentIndex = (currentIndex + 1) % namesArray.length;
                 updateNameWithBlink(namesArray[currentIndex]);
-            }, 3000); // 3 ثواني لكل اسم
+            }, 3000);
         }
         
-        // تحديث البطاقة السفلية للمسددين
+        // ========== تحديث بطاقة المسددين ==========
         function refreshFullyPaidWidget() {
-            fullyPaidNamesList = extractFullyPaidNames();
+            const fullyPaidNamesList = extractFullyPaidNames();
             startRotatingNames(fullyPaidNamesList);
         }
         
-        // دالة عرض نتائج البحث - تم إزالة بطاقة العيد بشكل كامل
+        // ========== عرض نتائج البحث ==========
         function renderResults(filteredDonors, searchName) {
             const wrapper = document.getElementById("resultsWrapper");
             if (filteredDonors.length === 0) {
@@ -437,6 +471,7 @@
             filteredDonors.forEach(m => {
                 const info = getInfo(m);
                 if (!info) return;
+                
                 let message = "", msgClass = "", statusText = "", statusClass = "";
                 if (info.isFull) {
                     message = "نرفع لكم آيات الشكر والامتنان، فقد اكتمل سدادكم بفضل الله، ودمتم فخراً للعمل الخيري.";
@@ -456,16 +491,23 @@
                 }
                 const updateDate = info.updateTime ? new Date(info.updateTime).toLocaleDateString('ar-EG') : 'غير محدد';
                 const donorDisplayName = m.name || m.donorName || 'غير محدد';
+                const dataEntryName = m.dataEntryName || m.recordedBy || 'غير محدد';
+                
                 html += `
                     <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-lg result-card">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-gray-800 text-[16px]">${donorDisplayName}</h3>
+                        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                            <div>
+                                <h3 class="font-bold text-gray-800 text-[16px]">${donorDisplayName}</h3>
+                                <div class="flex gap-1 mt-1 flex-wrap">
+                                    <span class="subscription-badge ${info.statusClass}">${info.statusText}</span>
+                                </div>
+                            </div>
                             <span class="status-badge ${statusClass}">${statusText}</span>
                         </div>
                         <div class="info-card">
                             <div class="info-grid">
                                 <div class="info-item"><div class="info-item-label">مدة الاشتراك</div><div class="info-item-value">${info.duration}</div></div>
-                                <div class="info-item"><div class="info-item-label">مدخل البيانات</div><div class="info-item-value">${info.recordedBy}</div></div>
+                                <div class="info-item"><div class="info-item-label">مدخل البيانات</div><div class="info-item-value">${dataEntryName}</div></div>
                                 <div class="info-item"><div class="info-item-label">آخر تحديث</div><div class="info-item-value">${updateDate}</div></div>
                                 ${info.startDate ? `<div class="info-item"><div class="info-item-label">تاريخ البدء</div><div class="info-item-value">${info.startDate}</div></div>` : ''}
                                 ${info.expiryDate ? `<div class="info-item"><div class="info-item-label">تاريخ الانتهاء</div><div class="info-item-value">${info.expiryDate}</div></div>` : ''}
@@ -485,7 +527,7 @@
             wrapper.innerHTML = html + '</div>';
         }
         
-        // دالة البحث الدقيق
+        // ========== دالة البحث ==========
         window.searchDonor = function() {
             const term = document.getElementById("searchInput").value.trim();
             currentSearchTerm = term;
@@ -502,22 +544,17 @@
             renderResults(filtered, term);
         };
         
-        // تحية الصباح/المساء حسب نظام 12 ساعة:
-        // من 12:00 صباحاً (منتصف الليل) حتى 11:59 صباحاً -> صباح الخير
-        // من 12:00 ظهراً حتى 11:59 مساءً -> مساء الخير
+        // ========== تحية الصباح/المساء ==========
         function updateGreeting() {
             const now = new Date();
             const hours = now.getHours();
             let greetingText = '';
             let emoji = '';
             
-            // 0 إلى 11 = صباح الخير (بما فيها 12 صباحاً = الساعة 0)
             if (hours >= 0 && hours < 12) {
                 greetingText = 'صباح الخير';
                 emoji = '🌤️';
-            } 
-            // 12 إلى 23 = مساء الخير (بما فيها 12 ظهراً = الساعة 12)
-            else {
+            } else {
                 greetingText = 'مساء الخير';
                 emoji = '🌙';
             }
@@ -528,14 +565,30 @@
             }
         }
         
-        // تحميل البيانات من Firebase
-        DONORS_PATH.get().then((snapshot) => {
+        // ========== تحميل البيانات من Firebase مع الاستماع الفوري ==========
+        // استخدام onSnapshot للاستماع للتحديثات المباشرة من الكود الآخر
+        DONORS_PATH.onSnapshot((snapshot) => {
             donors = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log(`✅ تم تحديث البيانات - ${donors.filter(d => d.type !== 'zakat').length} حالة طوارئ`);
+            
+            document.getElementById('loadingStatus').style.display = 'none';
+            
+            // تحديث جميع العناصر
             updateStatistics();
             refreshFullyPaidWidget();
-            document.getElementById('loadingStatus').style.display = 'none';
-            console.log(`✅ تم تحميل ${donors.filter(d => d.type !== 'zakat').length} سجل`);
-        }).catch((error) => {
+            
+            // إذا كان هناك بحث نشط، إعادة تنفيذه
+            if (currentSearchTerm) {
+                const term = currentSearchTerm;
+                const normalizedSearchTerm = term.toLowerCase().trim();
+                const validDonors = donors.filter(d => d.type !== 'zakat');
+                const filtered = validDonors.filter(d => {
+                    const donorName = (d.name || "").toLowerCase().trim();
+                    return donorName === normalizedSearchTerm;
+                });
+                renderResults(filtered, term);
+            }
+        }, (error) => {
             console.error("❌ خطأ Firebase:", error);
             document.getElementById('loadingStatus').innerHTML = `
                 <div class="text-center py-10 text-red-500">
@@ -549,9 +602,13 @@
         // تفعيل التحية فور تحميل الصفحة
         updateGreeting();
         
+        // تفعيل البحث عند الضغط على Enter
         document.getElementById('searchInput').addEventListener('keypress', (e) => { 
             if (e.key === 'Enter') searchDonor(); 
         });
+        
+        // تحديث التحية كل دقيقة
+        setInterval(updateGreeting, 60000);
     </script>
 </body>
 </html>
